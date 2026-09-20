@@ -7,7 +7,7 @@ Marca con ✅ las que ya probaste y funcionan.
 
 | # | Pregunta | Lo que debe recuperar | Por qué gana el RAG |
 |---|---|---|---|
-| 1 | ¿Cuánto pesa como mínimo un carro de F1 en 2026? | Reglamento Técnico, Art. C4 (Mass) | La cifra cambió (768 kg); el modelo directo suele decir 798 o 800 |
+| 1 | ¿Cuánto pesa como mínimo un carro de F1 en 2026? | Reglamento Técnico, Art. C4.1: 726 kg en clasificación y 724 kg en el resto de sesiones, más la masa nominal de los neumáticos; los 768 kg que anunció la FIA incluyen neumáticos | El modelo directo suele decir 798 u 800 kg, y ni siquiera conoce el matiz "sin neumáticos" del reglamento |
 | 2 | ¿Qué es el Straight Mode y cuándo lo puede usar un piloto? | Reglamento Técnico C3 (Rear Wing / Front Wing adjustment) y Deportivo B7 | Concepto nuevo de 2026; el directo lo confunde con el DRS |
 | 3 | ¿Todavía existe el DRS en 2026? | Deportivo B7 + guías en español | El directo responde con la regla vieja |
 | 4 | ¿Cuántos carros quedan eliminados en la Q1 en 2026? | Deportivo B5 (qualifying) | Cambió de 5 a 6 al haber 22 carros |

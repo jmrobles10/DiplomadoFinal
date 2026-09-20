@@ -13,7 +13,8 @@ Uso:
   python scripts/ingest_qdrant.py --count
 
 Modelo: gemini-embedding-2, 3072 dimensiones (la misma configuración que usa el nodo de n8n para las consultas).
-Cuota gratuita: se envían lotes de hasta 40 textos por solicitud y se espera ~1.2 s entre solicitudes.
+Cuota gratuita: lotes de 20 textos por solicitud con 20 s de pausa (~1.072 fragmentos ≈ 18-20 minutos).
+Si Gemini devuelve vectores vacíos (señal de cuota superada) el script espera 60 s y reintenta; es reanudable.
 """
 import argparse
 import json
@@ -33,8 +34,8 @@ QDRANT = "http://localhost:6333"
 COLLECTION = "pitwall_kb"
 MODEL = "gemini-embedding-2"
 DIMS = 3072
-BATCH = 40
-PAUSE = 1.2
+BATCH = 20          # textos por solicitud
+PAUSE = 20          # segundos entre solicitudes: la capa gratuita tolera ~30k tokens/min en embeddings
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:batchEmbedContents"
 GEMINI_ONE = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:embedContent"
 NAMESPACE = uuid.UUID("6f1c2a9e-0d3b-4f7a-9c1e-5b2d8e4a7c10")
@@ -67,7 +68,12 @@ def embed_batch(texts, key, task="RETRIEVAL_DOCUMENT"):
     for attempt in range(8):
         status, res = http("POST", GEMINI_URL, body, {"x-goog-api-key": key})
         if status == 200:
-            return [e["values"] for e in res["embeddings"]]
+            vectors = [e.get("values", []) for e in res.get("embeddings", [])]
+            if len(vectors) != len(texts) or any(len(v) != DIMS for v in vectors):
+                # Gemini a veces responde 200 con vectores vacíos al superar la cuota: esperar y reintentar
+                print(f"   respuesta incompleta ({sum(1 for v in vectors if len(v) != DIMS)} vectores vacíos): espero 60s")
+                time.sleep(60); continue
+            return vectors
         if status in (429, 500, 502, 503, 504):
             msg = (res.get("error") or {}).get("message", "")[:160]
             print(f"   cuota/servidor ({status}): espero {delay}s. {msg}")

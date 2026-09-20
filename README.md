@@ -11,7 +11,7 @@ servicios gratuitos.
 Usuario ──► Front (HTML/JS, blanco y negro) ──► n8n local (Chat Trigger)
                                                    │
                                                    ▼
-                                     AI Agent (Gemini 2.5 Flash, memoria por sesión)
+                                     AI Agent (Gemini 3.6 Flash, memoria por sesión)
                                                    │  herramienta: buscar_base_conocimiento
                                                    ▼
                                 Qdrant local (1.072 fragmentos, embeddings Gemini 3072d)
@@ -28,7 +28,7 @@ Usuario ──► Front (HTML/JS, blanco y negro) ──► n8n local (Chat Trig
 | Interfaz de entrada | `front/index.html` (usuarios no técnicos) y el chat de n8n (explicación técnica) |
 | Base de conocimiento | Reglamentos FIA 2026 A/B/C/D, temporada 2026 (API Jolpica), narrativa (Wikipedia), 11 guías propias en español |
 | Recuperación | Búsqueda semántica en Qdrant (top 6) como herramienta del agente |
-| Modelo de lenguaje | Google Gemini 2.5 Flash (razona antes de responder), capa gratuita |
+| Modelo de lenguaje | Google Gemini 3.6 Flash (razona antes de responder), capa gratuita |
 | Respuesta con contexto | El agente responde solo con lo recuperado y cita documento y artículo |
 | Módulo evaluador | Segunda llamada que verifica la fundamentación de cada respuesta |
 | Comparación RAG vs directo | Flujo 03 con el mismo modelo sin base de conocimiento; interruptor en el front |

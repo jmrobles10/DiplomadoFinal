@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 1 · Ingesta (se corre una vez)\n\n1. Lee `kb/processed/kb_all.jsonl` (992 fragmentos ya limpios y partidos POR ARTÍCULO por `scripts/build_kb.py`).\n2. Convierte cada línea en un ítem `{id, content, metadata}`.\n3. En lotes de 20: genera el embedding con **Gemini** (gemini-embedding-2, 3072 dims) e inserta en **Qdrant** (colección `pitwall_kb`).\n4. Espera 6 s entre lotes para respetar la cuota gratuita de Gemini.\n\nQdrant guarda los vectores en disco: la base **persiste** entre reinicios y entre chats.",
+        "content": "## Flujo 1 · Ingesta (se corre una vez)\n\n1. Lee `kb/processed/kb_all.jsonl` (1.072 fragmentos ya limpios y partidos POR ARTÍCULO por `scripts/build_kb.py`).\n2. Convierte cada línea en un ítem `{id, content, metadata}`.\n3. En lotes de 20: genera el embedding con **Gemini** (gemini-embedding-2, 3072 dims) e inserta en **Qdrant** (colección `pitwall_kb`).\n4. Espera 20 s entre lotes para respetar la cuota gratuita de Gemini.\n\nQdrant guarda los vectores en disco: la base **persiste** entre reinicios y entre chats.",
         "height": 340,
         "width": 460,
         "color": 7
@@ -245,11 +245,11 @@
     },
     {
       "parameters": {
-        "amount": 6,
+        "amount": 20,
         "unit": "seconds"
       },
       "id": "esperar",
-      "name": "Esperar 6 s (cuota Gemini)",
+      "name": "Esperar 20 s (cuota Gemini)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
@@ -337,14 +337,14 @@
       "main": [
         [
           {
-            "node": "Esperar 6 s (cuota Gemini)",
+            "node": "Esperar 20 s (cuota Gemini)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Esperar 6 s (cuota Gemini)": {
+    "Esperar 20 s (cuota Gemini)": {
       "main": [
         [
           {

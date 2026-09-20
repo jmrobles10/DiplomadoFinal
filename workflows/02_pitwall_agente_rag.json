@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 2 · Agente RAG PitWall\n\n**Entrada**: Chat Trigger (chat de n8n + webhook para el front).\n**Recuperador**: herramienta `buscar_base_conocimiento` → Qdrant (top 6) con embeddings Gemini.\n**Generador**: AI Agent con Gemini 2.5 Flash (razona internamente antes de responder), memoria por sesión.\n**Evaluador**: segunda llamada a Gemini que verifica si la respuesta está respaldada por los fragmentos recuperados.\n**Salida**: `{ output, steps, sources, suggestions, evaluacion }` → el front muestra el panel \"Pensando\" con los pasos reales.",
+        "content": "## Flujo 2 · Agente RAG PitWall\n\n**Entrada**: Chat Trigger (chat de n8n + webhook para el front).\n**Recuperador**: herramienta `buscar_base_conocimiento` → Qdrant (top 6) con embeddings Gemini.\n**Generador**: AI Agent con Gemini 3.6 Flash (razona internamente antes de responder), memoria por sesión.\n**Evaluador**: segunda llamada a Gemini que verifica si la respuesta está respaldada por los fragmentos recuperados.\n**Salida**: `{ output, steps, sources, suggestions, evaluacion }` → el front muestra el panel \"Pensando\" con los pasos reales.",
         "height": 330,
         "width": 520,
         "color": 4
@@ -60,14 +60,14 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-2.5-flash",
+        "modelName": "models/gemini-3.6-flash",
         "options": {
           "temperature": 0.3,
           "maxOutputTokens": 4096
         }
       },
       "id": "gemini-generador",
-      "name": "Gemini 2.5 Flash (generador)",
+      "name": "Gemini 3.6 Flash (generador)",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
@@ -186,14 +186,14 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-2.5-flash-lite",
+        "modelName": "models/gemini-3.6-flash",
         "options": {
           "temperature": 0,
           "maxOutputTokens": 512
         }
       },
       "id": "gemini-evaluador",
-      "name": "Gemini Flash-Lite (evaluador)",
+      "name": "Gemini 3.6 Flash (evaluador)",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
@@ -269,7 +269,7 @@
         ]
       ]
     },
-    "Gemini 2.5 Flash (generador)": {
+    "Gemini 3.6 Flash (generador)": {
       "ai_languageModel": [
         [
           {
@@ -318,7 +318,7 @@
         ]
       ]
     },
-    "Gemini Flash-Lite (evaluador)": {
+    "Gemini 3.6 Flash (evaluador)": {
       "ai_languageModel": [
         [
           {

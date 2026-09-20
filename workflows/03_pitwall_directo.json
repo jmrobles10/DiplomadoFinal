@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 3 · Chat directo (sin RAG)\n\nMismo modelo (Gemini 2.5 Flash), misma personalidad, **pero sin acceso a la base de conocimiento**.\nSirve para mostrar en la presentación la diferencia entre preguntarle al modelo \"a secas\" y consultar primero información propia y actualizada (reglamento vigente y temporada 2026).",
+        "content": "## Flujo 3 · Chat directo (sin RAG)\n\nMismo modelo (Gemini 3.6 Flash), misma personalidad, **pero sin acceso a la base de conocimiento**.\nSirve para mostrar en la presentación la diferencia entre preguntarle al modelo \"a secas\" y consultar primero información propia y actualizada (reglamento vigente y temporada 2026).",
         "height": 220,
         "width": 480,
         "color": 3
@@ -65,14 +65,14 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-2.5-flash",
+        "modelName": "models/gemini-3.6-flash",
         "options": {
           "temperature": 0.3,
           "maxOutputTokens": 2048
         }
       },
       "id": "gemini-directo",
-      "name": "Gemini 2.5 Flash",
+      "name": "Gemini 3.6 Flash",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
@@ -126,7 +126,7 @@
         ]
       ]
     },
-    "Gemini 2.5 Flash": {
+    "Gemini 3.6 Flash": {
       "ai_languageModel": [
         [
           {
