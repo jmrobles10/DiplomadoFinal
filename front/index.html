@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PitWall · Tu ingeniero de pista para la F1 2026</title>
+<meta name="description" content="PitWall es un asistente de chat sobre la Fórmula 1 2026. Consulta el reglamento oficial de la FIA y los datos de la temporada antes de responder.">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#zona-chat">Saltar al chat</a>
+
+<!-- =========================================================
+     BIBLIOTECA DE ILUSTRACIONES SVG (dibujadas a mano)
+     Van en línea para que la página funcione igual abierta
+     desde file:// o publicada en GitHub Pages.
+     ========================================================= -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+<defs>
+
+  <!-- ============ CARRO DE F1 · VISTA LATERAL (detallado) ============ -->
+  <symbol id="car-side" viewBox="0 0 412 140">
+    <g transform="translate(412,0) scale(-1,1)">
+      <!-- sombra en piso -->
+      <ellipse cx="202" cy="127" rx="178" ry="4.5" fill="#000" opacity=".12"/>
+
+      <!-- ---------- ALERON TRASERO ---------- -->
+      <!-- pilon de soporte -->
+      <path d="M324,66 L344,66 L352,86 L332,86 Z" fill="var(--l-dark,#c85c0c)"/>
+      <!-- viga inferior -->
+      <path d="M318,92 L394,89 L395,97 L319,100 Z" fill="var(--l-dark,#c85c0c)"/>
+      <!-- placa lateral, esquinas chaflanadas -->
+      <path d="M350,60 L355,55 L402,54 L407,59 L407,81 L402,86 L355,87 L350,82 Z" fill="var(--l-main,#ff7a1a)"/>
+      <!-- elementos del ala -->
+      <path d="M353,58 L404,57 L404,67 L353,68 Z" fill="#17181d"/>
+      <path d="M353,71 L404,70 L404,76 L353,77 Z" fill="#17181d" opacity=".72"/>
+      <path d="M353,80 L404,79 L404,82 L353,83 Z" fill="var(--l-light,#ffb173)"/>
+
+      <!-- ---------- PISO Y DIFUSOR ---------- -->
+      <path d="M104,106 L296,104 L306,107 L304,115 L108,117 Z" fill="#23252b"/>
+      <path d="M296,104 L316,101 L330,95 L336,99 L332,112 L304,115 Z" fill="#2e3138"/>
+
+      <!-- ---------- ALERON DELANTERO ---------- -->
+      <path d="M6,100 L44,97 L50,102 L54,118 L50,121 L8,121 L4,116 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M0,104 L44,101 L44,105 L0,108 Z" fill="#17181d" opacity=".9"/>
+      <path d="M0,111 L46,108 L46,112 L0,115 Z" fill="#17181d" opacity=".9"/>
+      <path d="M0,118 L48,115 L48,118 L0,120 Z" fill="#17181d" opacity=".65"/>
+      <path d="M44,97 L50,102 L47,104 L41,99 Z" fill="var(--l-light,#ffb173)"/>
+
+      <!-- ---------- SUSPENSIONES (detras de las llantas) ---------- -->
+      <g fill="#20222a">
+        <path d="M104,88 L80,93 L80,97 L104,94 Z"/>
+        <path d="M106,100 L82,100 L82,104 L106,105 Z"/>
+        <path d="M310,87 L334,92 L334,96 L310,93 Z"/>
+        <path d="M308,100 L332,99 L332,103 L308,105 Z"/>
+      </g>
+
+      <!-- ---------- CARROCERIA PRINCIPAL ---------- -->
+      <path d="M106,74 C124,70 138,68 150,68 L155,75 L188,75 C192,69 195,63 200,59 L208,55 L228,55 C256,57 296,61 328,66 L334,72 L330,80 C326,92 320,100 313,106 L298,110 L112,110 C102,101 100,84 106,74 Z" fill="var(--l-main,#ff7a1a)"/>
+
+      <!-- pontones: sombra inferior -->
+      <path d="M112,98 C152,104 222,103 260,99 L264,110 L112,110 Z" fill="var(--l-dark,#c85c0c)"/>
+      <!-- franja de acento sobre el pontón -->
+      <path d="M120,88 C158,84 214,82 254,85 L246,92 C210,89 158,91 120,96 Z" fill="var(--l-acc,#111111)"/>
+      <!-- filete claro encima de la franja -->
+      <path d="M120,85 C158,81 216,79 256,82 L256,84 C216,81 158,83 120,87 Z" fill="var(--l-light,#ffb173)"/>
+      <!-- entrada de aire del pontón -->
+      <path d="M112,82 L128,85 L128,100 L112,99 C109,94 109,87 112,82 Z" fill="#15161a"/>
+      <path d="M116,86 L126,88 L126,97 L116,96 Z" fill="#33363d"/>
+      <!-- brillo superior de la tapa motor -->
+      <path d="M210,57 L228,57 C256,59 294,63 322,67 L322,70 C294,66 256,62 228,60 L210,60 Z" fill="var(--l-light,#ffb173)"/>
+      <!-- aleta / quilla de la tapa motor -->
+      <path d="M240,58 C274,60 306,64 328,68 L328,70 C306,66 274,62 240,60 Z" fill="var(--l-dark,#c85c0c)"/>
+      <!-- linea de panel del chasis -->
+      <path d="M116,92 C150,88 210,86 258,89" fill="none" stroke="var(--l-dark,#c85c0c)" stroke-width="1"/>
+
+      <!-- ---------- MORRO ---------- -->
+      <path d="M24,97 C40,90 70,82 108,74 L110,98 C84,99.5 52,100.5 30,101 C25,101 22,99 24,97 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M24,97 C40,90 70,82 108,74 L108,78 C70,86 41,94 26,100 Z" fill="var(--l-light,#ffb173)"/>
+      <path d="M30,101 C52,100.5 84,99.5 110,98 L110,100.5 C84,102 52,103 30,103.5 Z" fill="var(--l-dark,#c85c0c)"/>
+
+      <!-- ---------- COCKPIT, HALO Y CASCO ---------- -->
+      <path d="M154,72 C166,69 182,69 190,72 L190,79 L154,79 Z" fill="#15161a"/>
+      <circle cx="171" cy="68" r="8.4" fill="#23252b"/>
+      <path d="M165,66 C167,62.4 175,61.8 179,64.6 L179,68.6 C174.4,66.2 168,66.6 165,69.4 Z" fill="#d9dde3"/>
+      <path d="M157,66 L167,63 L168,67 L158,69 Z" fill="#1c1e24"/>
+      <path d="M148,58 L155,58 L156,74 L150,74 Z" fill="#15161a"/>
+      <path d="M149,59 C161,53 179,51 197,56 L199,62 C181,57 164,59 154,66 Z" fill="#15161a"/>
+      <path d="M151,59 C162,54 178,53 195,57 L196,59 C178,55 162,56 152,61 Z" fill="#3b3e46"/>
+      <!-- toma de aire (airbox) -->
+      <path d="M196,61 C197,56 201,54 207,54 L207,62 C201,62 198,62 196,61 Z" fill="#15161a"/>
+
+      <!-- ---------- LLANTA DELANTERA ---------- -->
+      <g transform="translate(72,98)">
+        <circle r="26" fill="#14151a"/>
+        <circle r="26" fill="none" stroke="#33363d" stroke-width="1"/>
+        <circle r="21" fill="#1b1d23"/>
+        <path d="M-20,-6 C-16,-16 -6,-21 5,-20" fill="none" stroke="#f4f4f4" stroke-width="2.2" opacity=".8"/>
+        <circle r="13.5" fill="var(--l-light,#ffb173)"/>
+        <circle r="13.5" fill="none" stroke="var(--l-dark,#c85c0c)" stroke-width="1.6"/>
+        <g stroke="var(--l-dark,#c85c0c)" stroke-width="2.4" stroke-linecap="round">
+          <path d="M0,-10.5 L0,-4"/><path d="M10,-3.2 L4,-1.3"/><path d="M6.2,8.6 L2.5,3.4"/>
+          <path d="M-6.2,8.6 L-2.5,3.4"/><path d="M-10,-3.2 L-4,-1.3"/>
+        </g>
+        <circle r="4" fill="#14151a"/>
+        <circle r="1.5" fill="var(--l-light,#ffb173)"/>
+      </g>
+
+      <!-- ---------- LLANTA TRASERA ---------- -->
+      <g transform="translate(332,98)">
+        <circle r="26" fill="#14151a"/>
+        <circle r="26" fill="none" stroke="#33363d" stroke-width="1"/>
+        <circle r="21" fill="#1b1d23"/>
+        <path d="M-20,-6 C-16,-16 -6,-21 5,-20" fill="none" stroke="#f4f4f4" stroke-width="2.2" opacity=".8"/>
+        <circle r="13.5" fill="var(--l-light,#ffb173)"/>
+        <circle r="13.5" fill="none" stroke="var(--l-dark,#c85c0c)" stroke-width="1.6"/>
+        <g stroke="var(--l-dark,#c85c0c)" stroke-width="2.4" stroke-linecap="round">
+          <path d="M0,-10.5 L0,-4"/><path d="M10,-3.2 L4,-1.3"/><path d="M6.2,8.6 L2.5,3.4"/>
+          <path d="M-6.2,8.6 L-2.5,3.4"/><path d="M-10,-3.2 L-4,-1.3"/>
+        </g>
+        <circle r="4" fill="#14151a"/>
+        <circle r="1.5" fill="var(--l-light,#ffb173)"/>
+      </g>
+    </g>
+  </symbol>
+
+  <!-- ============ CARRO DE F1 · VISTA LATERAL (compacto) ============ -->
+  <symbol id="car-mini" viewBox="0 0 206 70">
+    <g transform="translate(206,0) scale(-1,1)">
+      <path d="M52,53 L150,52 L157,54 L156,59 L54,60 Z" fill="#1c1e24"/>
+      <path d="M165,34 L175,34 L180,44 L170,44 Z" fill="var(--l-dark,#c85c0c)"/>
+      <path d="M161,47 L199,45 L199,49 L161,51 Z" fill="var(--l-dark,#c85c0c)"/>
+      <path d="M174,30 L178,28 L200,27 L203,30 L203,40 L200,43 L177,43 L174,40 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M177,30 L200,29.5 L200,34 L177,34.5 Z" fill="#141519"/>
+      <path d="M177,36 L200,35.5 L200,38 L177,38.5 Z" fill="#141519" opacity=".7"/>
+      <path d="M2,48 L20,47 L26,55 L27,60 L2,60 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M4,51 L20,50.5 L22,53 L4,53 Z" fill="#141519" opacity=".85"/>
+      <path d="M4,56 L25,56 L26,58 L4,58 Z" fill="#141519" opacity=".6"/>
+      <path d="M54,38 C63,35 70,34 76,34 L78,37.5 L94,37.5 C96,34 98,31 100,29 L104,27 L114,27 C128,28 148,30 165,33 L167,36 L165,40 C163,46 160,50 157,53 L56,55 C51,50 51,42 54,38 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M56,49 C75,52 110,52 129,50 L131,55 L56,55 Z" fill="var(--l-dark,#c85c0c)"/>
+      <path d="M60,43 C80,41 110,40 131,42 L131,46 C110,44 80,45 60,47 Z" fill="var(--l-acc,#111111)"/>
+      <path d="M14,50 C26,46 41,42 55,39 L56,49 C43,51 28,55 16,57 C13,57 12,51 14,50 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M14,50 C26,46 41,42 55,39 L55,41 C41,44 27,49 15,53 Z" fill="var(--l-light,#ffb173)"/>
+      <path d="M105,29 L114,29 C128,30 147,32 164,34.5 L164,36 C147,33.5 128,31.5 114,31 L105,31 Z" fill="var(--l-light,#ffb173)"/>
+      <path d="M77,36.5 L94,36.5 L94,39.5 L77,39.5 Z" fill="#15161a"/>
+      <circle cx="86" cy="34.5" r="4.2" fill="#23252b"/>
+      <path d="M83,33.4 C84,31.7 88,31.4 90,32.8 L90,34.8 C87.7,33.6 84.5,33.8 83,35.2 Z" fill="#d9dde3"/>
+      <path d="M74.5,29.5 L78,29.5 L78.5,37.5 L75.5,37.5 Z" fill="#15161a"/>
+      <path d="M75,30 C81,27 90,26 99,28.5 L100,31.5 C91,29 82.5,30 77.5,33.5 Z" fill="#15161a"/>
+      <path d="M98.5,31 C99,28.5 101,27.5 104,27.5 L104,31.5 C101,31.5 99.5,31.5 98.5,31 Z" fill="#15161a"/>
+      <g transform="translate(36,49)">
+        <circle r="13" fill="#14151a"/>
+        <circle r="10.5" fill="#1b1d23"/>
+        <circle r="6.6" fill="var(--l-light,#ffb173)"/>
+        <circle r="6.6" fill="none" stroke="var(--l-dark,#c85c0c)" stroke-width="1.2"/>
+        <circle r="2" fill="#14151a"/>
+      </g>
+      <g transform="translate(166,49)">
+        <circle r="13" fill="#14151a"/>
+        <circle r="10.5" fill="#1b1d23"/>
+        <circle r="6.6" fill="var(--l-light,#ffb173)"/>
+        <circle r="6.6" fill="none" stroke="var(--l-dark,#c85c0c)" stroke-width="1.2"/>
+        <circle r="2" fill="#14151a"/>
+      </g>
+    </g>
+  </symbol>
+
+  <!-- ============ CARRO DE F1 · VISTA SUPERIOR ============ -->
+  <symbol id="car-top" viewBox="0 0 412 150">
+    <g transform="translate(412,0) scale(-1,1)">
+      <!-- aleron delantero -->
+      <path d="M8,12 L46,14 L46,136 L8,138 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M6,4 L50,6 L50,14 L6,12 Z" fill="var(--l-dark,#c85c0c)"/>
+      <path d="M6,146 L50,144 L50,136 L6,138 Z" fill="var(--l-dark,#c85c0c)"/>
+      <g fill="#141519" opacity=".85">
+        <path d="M19,13 L22,13.2 L22,136.8 L19,137 Z"/>
+        <path d="M29,13.6 L32,13.8 L32,136.2 L29,136.4 Z"/>
+        <path d="M38,14 L40.5,14.1 L40.5,135.9 L38,136 Z"/>
+      </g>
+      <!-- morro -->
+      <path d="M24,68 C22,72 22,78 24,82 L108,92 L108,58 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M26,73 C25,74 25,76 26,77 L108,80 L108,70 Z" fill="var(--l-light,#ffb173)"/>
+      <!-- bordes de piso -->
+      <path d="M96,30 L316,30 L316,40 L96,40 Z" fill="var(--l-dark,#c85c0c)"/>
+      <path d="M96,120 L316,120 L316,110 L96,110 Z" fill="var(--l-dark,#c85c0c)"/>
+      <!-- pontones -->
+      <path d="M112,28 L202,28 L248,38 L248,58 L112,54 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M112,122 L202,122 L248,112 L248,92 L112,96 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M116,32 L200,32 L240,40 L240,48 L116,44 Z" fill="var(--l-light,#ffb173)"/>
+      <path d="M116,118 L200,118 L240,110 L240,102 L116,106 Z" fill="var(--l-light,#ffb173)"/>
+      <path d="M112,28 L124,30 L124,54 L112,54 Z" fill="#15161a"/>
+      <path d="M112,122 L124,120 L124,96 L112,96 Z" fill="#15161a"/>
+      <!-- chasis / celula central -->
+      <path d="M104,56 L152,50 L206,50 L252,56 L252,94 L206,100 L152,100 L104,94 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M108,62 L152,57 L206,57 L246,62 L246,88 L206,93 L152,93 L108,88 Z" fill="var(--l-acc,#111111)" opacity=".28"/>
+      <!-- tapa motor -->
+      <path d="M250,60 L330,68 L330,82 L250,90 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M254,68 L328,73 L328,77 L254,82 Z" fill="var(--l-light,#ffb173)"/>
+      <!-- airbox -->
+      <path d="M186,62 L214,60 L214,90 L186,88 Z" fill="#15161a"/>
+      <path d="M190,66 L210,64.5 L210,85.5 L190,84 Z" fill="#33363d"/>
+      <!-- halo -->
+      <ellipse cx="170" cy="75" rx="25" ry="17" fill="none" stroke="#15161a" stroke-width="5"/>
+      <path d="M143,72 L150,72 L150,78 L143,78 Z" fill="#15161a"/>
+      <!-- casco -->
+      <ellipse cx="174" cy="75" rx="9.5" ry="8.4" fill="#23252b"/>
+      <path d="M166,71 C168,68 176,67.6 180,70 L180,80 C176,82.4 168,82 166,79 Z" fill="#d9dde3"/>
+      <!-- difusor -->
+      <path d="M336,48 L356,48 L356,102 L336,102 Z" fill="#1c1e24"/>
+      <g fill="#3b3e46">
+        <path d="M338,52 L354,52 L354,56 L338,56 Z"/>
+        <path d="M338,62 L354,62 L354,66 L338,66 Z"/>
+        <path d="M338,84 L354,84 L354,88 L338,88 Z"/>
+        <path d="M338,94 L354,94 L354,98 L338,98 Z"/>
+      </g>
+      <!-- aleron trasero -->
+      <path d="M358,16 L400,16 L400,134 L358,134 Z" fill="var(--l-main,#ff7a1a)"/>
+      <path d="M354,8 L406,8 L406,16 L354,16 Z" fill="var(--l-dark,#c85c0c)"/>
+      <path d="M354,142 L406,142 L406,134 L354,134 Z" fill="var(--l-dark,#c85c0c)"/>
+      <g fill="#141519" opacity=".85">
+        <path d="M371,17 L374,17 L374,133 L371,133 Z"/>
+        <path d="M386,17 L389,17 L389,133 L386,133 Z"/>
+      </g>
+      <!-- llantas -->
+      <g fill="#14151a">
+        <path d="M48,4 L96,4 L98,8 L98,24 L96,28 L48,28 L46,24 L46,8 Z"/>
+        <path d="M48,146 L96,146 L98,142 L98,126 L96,122 L48,122 L46,126 L46,142 Z"/>
+        <path d="M306,3 L356,3 L358,8 L358,28 L356,33 L306,33 L304,28 L304,8 Z"/>
+        <path d="M306,147 L356,147 L358,142 L358,122 L356,117 L306,117 L304,122 L304,142 Z"/>
+      </g>
+      <g fill="#2a2d34">
+        <path d="M52,8 L92,8 L92,24 L52,24 Z"/>
+        <path d="M52,142 L92,142 L92,126 L52,126 Z"/>
+        <path d="M310,8 L352,8 L352,28 L310,28 Z"/>
+        <path d="M310,142 L352,142 L352,122 L310,122 Z"/>
+      </g>
+      <g fill="var(--l-light,#ffb173)">
+        <path d="M62,12 L82,12 L82,20 L62,20 Z"/>
+        <path d="M62,138 L82,138 L82,130 L62,130 Z"/>
+        <path d="M320,13 L342,13 L342,23 L320,23 Z"/>
+        <path d="M320,137 L342,137 L342,127 L320,127 Z"/>
+      </g>
+    </g>
+  </symbol>
+
+  <!-- ============ ICONOS MONOCROMOS ============ -->
+  <symbol id="ico-circuito" viewBox="0 0 120 92">
+    <path d="M22,26 L82,17 C96,15 107,24 107,37 C107,48 96,55 79,55 L47,52 C36,51 31,62 40,68 C47,73 61,73 78,73 L94,74 C103,75 105,83 98,87 C91,91 49,88 33,84 C18,80 10,71 10,57 C10,44 15,33 22,26 Z"
+      fill="none" stroke="currentColor" stroke-width="4.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M31,17 L34,30" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="butt"/>
+  </symbol>
+
+  <symbol id="ico-bandera" viewBox="0 0 24 24">
+    <clipPath id="clip-bandera">
+      <path d="M5,4 C9,2.4 13,5.6 17,4 C19,3.2 20,3.2 21,3.8 L21,13 C20,13.6 19,13.6 17,12.8 C13,11.2 9,14.4 5,13 Z"/>
+    </clipPath>
+    <g clip-path="url(#clip-bandera)">
+      <path d="M4,2 L22,2 L22,15 L4,15 Z" fill="#ffffff"/>
+      <g fill="#000000">
+        <path d="M4,2 L9,2 L9,6 L4,6 Z"/><path d="M13,2 L17,2 L17,6 L13,6 Z"/>
+        <path d="M9,6 L13,6 L13,10 L9,10 Z"/><path d="M17,6 L22,6 L22,10 L17,10 Z"/>
+        <path d="M4,10 L9,10 L9,15 L4,15 Z"/><path d="M13,10 L17,10 L17,15 L13,15 Z"/>
+      </g>
+    </g>
+    <path d="M5,4 C9,2.4 13,5.6 17,4 C19,3.2 20,3.2 21,3.8 L21,13 C20,13.6 19,13.6 17,12.8 C13,11.2 9,14.4 5,13 Z"
+      fill="none" stroke="currentColor" stroke-width="1.3"/>
+    <path d="M4,3 L4,21.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ico-llanta" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9.4" fill="none" stroke="currentColor" stroke-width="3.2"/>
+    <circle cx="12" cy="12" r="4.6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+      <path d="M12,7.4 L12,4.4"/>
+      <path d="M16.3,10.6 L19.2,9.7"/>
+      <path d="M14.6,15.5 L16.4,18"/>
+      <path d="M9.4,15.5 L7.6,18"/>
+      <path d="M7.7,10.6 L4.8,9.7"/>
+    </g>
+    <circle cx="12" cy="12" r="1.4" fill="currentColor"/>
+  </symbol>
+
+  <symbol id="ico-casco" viewBox="0 0 24 24">
+    <path d="M3.8,14.4 C3.8,8.2 8.4,3.8 13.6,3.8 C18.6,3.8 21,7.6 21,12.4 L21,14.2 C21,16.6 19.4,17.8 17.2,17.8 L7.8,17.8 C5.4,17.8 3.8,16.6 3.8,14.4 Z"
+      fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M8.2,9.4 C11.2,7.6 16.4,7.8 19.6,9.8 L19.6,12.8 L9.6,12.8 C8.2,12.8 7.4,10.4 8.2,9.4 Z"
+      fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M4.4,15.4 L20.8,15.4" fill="none" stroke="currentColor" stroke-width="1.4"/>
+  </symbol>
+
+  <symbol id="ico-usuario" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M4.6,20 C4.6,15.8 8,13.4 12,13.4 C16,13.4 19.4,15.8 19.4,20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ico-pantalla" viewBox="0 0 24 24">
+    <path d="M3,5 L21,5 L21,17 L3,17 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M3,8.4 L21,8.4" fill="none" stroke="currentColor" stroke-width="1.3"/>
+    <path d="M8,20.4 L16,20.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="5.6" cy="6.7" r=".8" fill="currentColor"/>
+  </symbol>
+
+  <symbol id="ico-flujo" viewBox="0 0 24 24">
+    <circle cx="5" cy="6" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="5" cy="18" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="19" cy="12" r="2.6" fill="currentColor"/>
+    <path d="M7.2,7.2 L16.6,11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M7.2,16.8 L16.6,13" fill="none" stroke="currentColor" stroke-width="1.4"/>
+  </symbol>
+
+  <symbol id="ico-datos" viewBox="0 0 24 24">
+    <ellipse cx="12" cy="6" rx="7.4" ry="2.8" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M4.6,6 L4.6,18 C4.6,19.6 7.9,20.8 12,20.8 C16.1,20.8 19.4,19.6 19.4,18 L19.4,6"
+      fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M4.6,12 C4.6,13.6 7.9,14.8 12,14.8 C16.1,14.8 19.4,13.6 19.4,12" fill="none" stroke="currentColor" stroke-width="1.3"/>
+  </symbol>
+
+  <symbol id="ico-chispa" viewBox="0 0 24 24">
+    <path d="M12,2.6 L14.1,9.2 L20.8,11.4 L14.1,13.6 L12,20.2 L9.9,13.6 L3.2,11.4 L9.9,9.2 Z" fill="currentColor"/>
+  </symbol>
+
+  <symbol id="ico-respuesta" viewBox="0 0 24 24">
+    <path d="M3.2,5 L20.8,5 L20.8,16 L9.6,16 L5.4,19.8 L5.4,16 L3.2,16 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M6.6,9 L17.4,9" fill="none" stroke="currentColor" stroke-width="1.3"/>
+    <path d="M6.6,12.4 L14,12.4" fill="none" stroke="currentColor" stroke-width="1.3"/>
+  </symbol>
+
+  <symbol id="ico-lupa" viewBox="0 0 24 24">
+    <circle cx="10.6" cy="10.6" r="6.4" fill="none" stroke="currentColor" stroke-width="1.7"/>
+    <path d="M15.4,15.4 L20.4,20.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ico-tuerca" viewBox="0 0 24 24">
+    <path d="M12,3.2 L14.6,4.3 L17.4,3.8 L18.8,6.2 L21,8 L20.4,10.8 L21,13.6 L18.8,15.4 L17.4,17.8 L14.6,17.3 L12,18.4 L9.4,17.3 L6.6,17.8 L5.2,15.4 L3,13.6 L3.6,10.8 L3,8 L5.2,6.2 L6.6,3.8 L9.4,4.3 Z"
+      fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="12" cy="10.8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M8,20.6 L16,20.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ico-doc" viewBox="0 0 24 24">
+    <path d="M5.5,2.8 L14.4,2.8 L19,7.4 L19,21.2 L5.5,21.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M14,2.8 L14,8 L19,8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M8.4,12.4 L16,12.4" fill="none" stroke="currentColor" stroke-width="1.3"/>
+    <path d="M8.4,16 L16,16" fill="none" stroke="currentColor" stroke-width="1.3"/>
+  </symbol>
+
+  <symbol id="ico-enviar" viewBox="0 0 24 24">
+    <path d="M4,12 L20,12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M13.6,5.6 L20,12 L13.6,18.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <symbol id="ico-nueva" viewBox="0 0 24 24">
+    <path d="M20,12 C20,16.4 16.4,20 12,20 C7.6,20 4,16.4 4,12 C4,7.6 7.6,4 12,4 C15,4 17.6,5.6 19,8"
+      fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M19.4,3.6 L19.4,8.4 L14.6,8.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12,9 L12,15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M9,12 L15,12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ico-comparar" viewBox="0 0 24 24">
+    <path d="M3.4,4.4 L10.6,4.4 L10.6,19.6 L3.4,19.6 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M13.4,4.4 L20.6,4.4 L20.6,19.6 L13.4,19.6 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M5.6,8.4 L8.4,8.4" fill="none" stroke="currentColor" stroke-width="1.3"/>
+    <path d="M15.6,8.4 L18.4,8.4" fill="none" stroke="currentColor" stroke-width="1.3"/>
+  </symbol>
+
+  <symbol id="ico-chevron" viewBox="0 0 24 24">
+    <path d="M9,4.6 L16.4,12 L9,19.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <symbol id="ico-alerta" viewBox="0 0 24 24">
+    <path d="M12,3.4 L21.4,19.6 L2.6,19.6 Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+    <path d="M12,9 L12,14.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="12" cy="17" r="1.1" fill="currentColor"/>
+  </symbol>
+
+</defs>
+</svg>
+
+
+<!-- =========================================================
+     1 · BARRA SUPERIOR
+     ========================================================= -->
+<header class="topbar">
+  <div class="wrap topbar__inner">
+
+    <div class="brand">
+      <svg class="brand__car livery--papaya" viewBox="0 0 206 70" role="img" aria-label="Carro de Fórmula 1">
+        <use href="#car-mini"/>
+      </svg>
+      <div class="brand__text">
+        <span class="brand__name">PitWall</span>
+        <span class="brand__tagline">Tu ingeniero de pista para la F1 2026</span>
+      </div>
+    </div>
+
+    <div class="topbar__tools">
+      <fieldset class="switch" id="mode-switch">
+        <legend class="sr-only">Modo de respuesta del asistente</legend>
+        <div class="switch__track">
+          <input class="switch__input" type="radio" name="modo" id="modo-rag" value="rag" checked>
+          <label class="switch__label" for="modo-rag">Con RAG</label>
+          <input class="switch__input" type="radio" name="modo" id="modo-directo" value="directo">
+          <label class="switch__label" for="modo-directo">Sin RAG</label>
+        </div>
+      </fieldset>
+
+      <button class="btn btn--dark-ghost" type="button" id="btn-nueva">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-nueva"/></svg>
+        <span>Nueva conversación</span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+
+<main>
+
+  <!-- =========================================================
+       2 · HERO
+       ========================================================= -->
+  <section class="hero">
+    <div class="wrap hero__inner">
+
+      <p class="label hero__label">Box, box · F1 2026</p>
+
+      <div class="hero__art">
+        <svg class="car car--hero livery--papaya" viewBox="0 0 412 140" role="img"
+             aria-label="Ilustración de un monoplaza de Fórmula 1 visto de lado, con alerón delantero, halo y alerón trasero">
+          <use href="#car-side"/>
+        </svg>
+      </div>
+
+      <p class="hero__lead">
+        Pregunta lo que quieras sobre la Fórmula 1 2026. PitWall consulta primero el reglamento
+        oficial de la FIA y los datos de la temporada antes de responder.
+      </p>
+
+      <div class="chips chips--hero" id="mission-chips">
+        <p class="label chips__title">Preguntas para empezar</p>
+        <div class="chips__row">
+          <button class="chip" type="button" data-prompt="¿Qué cambió en la F1 en 2026?">¿Qué cambió en la F1 en 2026?</button>
+          <button class="chip" type="button" data-prompt="Explícame el modo de adelantamiento">Explícame el modo de adelantamiento</button>
+          <button class="chip" type="button" data-prompt="¿Quién va ganando el campeonato?">¿Quién va ganando el campeonato?</button>
+          <button class="chip" type="button" data-prompt="¿Cómo funciona un fin de semana con sprint?">¿Cómo funciona un fin de semana con sprint?</button>
+          <button class="chip" type="button" data-prompt="Soy nuevo en la F1, ¿por dónde empiezo?">Soy nuevo en la F1, ¿por dónde empiezo?</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- separador: tren de carros vista superior -->
+  <div class="train train--top" aria-hidden="true">
+    <span class="train__rule"></span>
+    <svg class="car car--train-top livery--papaya" viewBox="0 0 412 150"><use href="#car-top"/></svg>
+    <svg class="car car--train-top livery--rosso" viewBox="0 0 412 150"><use href="#car-top"/></svg>
+    <svg class="car car--train-top livery--plata" viewBox="0 0 412 150"><use href="#car-top"/></svg>
+    <svg class="car car--train-top livery--navy train__hide-sm" viewBox="0 0 412 150"><use href="#car-top"/></svg>
+    <svg class="car car--train-top livery--verde train__hide-sm" viewBox="0 0 412 150"><use href="#car-top"/></svg>
+    <span class="train__rule"></span>
+  </div>
+
+
+  <!-- =========================================================
+       3 · CHAT
+       ========================================================= -->
+  <section class="chat" id="zona-chat">
+    <div class="wrap">
+
+      <div class="chat__head">
+        <h2 class="label">Consola de chat</h2>
+        <p class="chat__meta" id="chat-mode-tag">Modo · Con RAG</p>
+      </div>
+
+      <div class="chat__list" id="messages" role="log" aria-live="polite" aria-relevant="additions text"
+           aria-label="Conversación con PitWall" tabindex="0"></div>
+
+      <!-- panel Pensando -->
+      <div class="thinking" id="thinking" hidden>
+        <p class="sr-only" role="status" id="thinking-a11y">PitWall está buscando la respuesta.</p>
+        <div class="thinking__head">
+          <span class="label">Pensando</span>
+          <span class="thinking__timer" id="thinking-timer">0.0 s</span>
+        </div>
+        <div class="track" aria-hidden="true">
+          <svg class="track__line" viewBox="0 0 400 4" preserveAspectRatio="none">
+            <path d="M0,2 L400,2" stroke="currentColor" stroke-width="1" stroke-dasharray="7 6"/>
+          </svg>
+          <span class="track__car">
+            <svg class="car livery--papaya" viewBox="0 0 206 70"><use href="#car-mini"/></svg>
+          </span>
+        </div>
+        <p class="thinking__status" id="thinking-status" aria-hidden="true">Leyendo tu pregunta</p>
+      </div>
+
+      <form class="composer" id="composer" autocomplete="off">
+        <label class="sr-only" for="input">Escribe tu pregunta sobre la Fórmula 1 2026</label>
+        <textarea class="composer__input" id="input" name="pregunta" rows="1"
+                  placeholder="Escribe tu pregunta sobre la F1 2026…"></textarea>
+        <div class="composer__actions">
+          <button class="btn btn--outline" type="button" id="btn-comparar"
+                  title="Envía la misma pregunta a los dos modos y muestra las respuestas lado a lado">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-comparar"/></svg>
+            <span>Comparar</span>
+          </button>
+          <button class="btn btn--solid" type="submit" id="btn-enviar">
+            <span>Enviar</span>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-enviar"/></svg>
+          </button>
+        </div>
+      </form>
+      <p class="composer__help">Enter para enviar · Shift+Enter para salto de línea</p>
+
+    </div>
+  </section>
+
+
+  <!-- separador: tren de carros vista lateral -->
+  <div class="train train--side" aria-hidden="true">
+    <span class="train__rule"></span>
+    <svg class="car car--train-side livery--azul" viewBox="0 0 206 70"><use href="#car-mini"/></svg>
+    <svg class="car car--train-side livery--verde" viewBox="0 0 206 70"><use href="#car-mini"/></svg>
+    <svg class="car car--train-side livery--rosso" viewBox="0 0 206 70"><use href="#car-mini"/></svg>
+    <svg class="car car--train-side livery--blanco train__hide-sm" viewBox="0 0 206 70"><use href="#car-mini"/></svg>
+    <svg class="car car--train-side livery--navy train__hide-sm" viewBox="0 0 206 70"><use href="#car-mini"/></svg>
+    <svg class="car car--train-side livery--papaya" viewBox="0 0 206 70"><use href="#car-mini"/></svg>
+    <span class="train__rule"></span>
+  </div>
+
+
+  <!-- =========================================================
+       4 · CÓMO FUNCIONA
+       ========================================================= -->
+  <section class="how">
+    <div class="wrap">
+
+      <header class="how__head">
+        <p class="label">Detrás del muro de boxes</p>
+        <h2 class="how__title">Cómo funciona</h2>
+        <p class="how__sub">
+          Cada pregunta recorre este camino antes de volver a tu pantalla. Ningún paso está escondido:
+          al final de cada respuesta puedes abrir el detalle y ver qué se consultó.
+        </p>
+      </header>
+
+      <ol class="flow">
+        <li class="flow__step">
+          <div class="flow__node">
+            <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-usuario"/></svg>
+            <span class="flow__num">01</span>
+            <h3 class="flow__name">Usuario</h3>
+            <p class="flow__cap">Tú escribes la pregunta, en español y con tus palabras.</p>
+          </div>
+          <svg class="flow__arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chevron"/></svg>
+        </li>
+        <li class="flow__step">
+          <div class="flow__node">
+            <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-pantalla"/></svg>
+            <span class="flow__num">02</span>
+            <h3 class="flow__name">Front</h3>
+            <p class="flow__cap">Esta página. Guarda la conversación y envía tu pregunta al agente.</p>
+          </div>
+          <svg class="flow__arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chevron"/></svg>
+        </li>
+        <li class="flow__step">
+          <div class="flow__node">
+            <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-flujo"/></svg>
+            <span class="flow__num">03</span>
+            <h3 class="flow__name">n8n</h3>
+            <p class="flow__cap">El agente: decide qué buscar, con qué herramienta y en qué orden.</p>
+          </div>
+          <svg class="flow__arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chevron"/></svg>
+        </li>
+        <li class="flow__step">
+          <div class="flow__node">
+            <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-datos"/></svg>
+            <span class="flow__num">04</span>
+            <h3 class="flow__name">Supabase</h3>
+            <p class="flow__cap">La base de conocimiento vectorial: los documentos convertidos en datos buscables.</p>
+          </div>
+          <svg class="flow__arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chevron"/></svg>
+        </li>
+        <li class="flow__step">
+          <div class="flow__node">
+            <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chispa"/></svg>
+            <span class="flow__num">05</span>
+            <h3 class="flow__name">Gemini</h3>
+            <p class="flow__cap">El modelo de lenguaje: redacta la respuesta usando lo que se encontró.</p>
+          </div>
+          <svg class="flow__arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chevron"/></svg>
+        </li>
+        <li class="flow__step">
+          <div class="flow__node">
+            <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-respuesta"/></svg>
+            <span class="flow__num">06</span>
+            <h3 class="flow__name">Respuesta con fuentes</h3>
+            <p class="flow__cap">Vuelve a tu pantalla junto con los documentos que se consultaron.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="notes">
+        <article class="note">
+          <svg class="ico ico--circuito" viewBox="0 0 120 92" aria-hidden="true"><use href="#ico-circuito"/></svg>
+          <h3 class="note__title">¿Qué es RAG?</h3>
+          <p>
+            RAG quiere decir <strong>generación aumentada por recuperación</strong>. Antes de escribir una
+            sola línea, el asistente busca en una base de conocimiento y responde con ese material a la vista,
+            en lugar de confiar solo en la memoria del modelo. Menos invento, más documento.
+          </p>
+        </article>
+        <article class="note">
+          <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-doc"/></svg>
+          <h3 class="note__title">¿Qué hay en la base de conocimiento?</h3>
+          <p>
+            Los reglamentos oficiales de la FIA 2026 —<strong>deportivo, técnico, general y financiero</strong>—,
+            los resultados y las clasificaciones de la <strong>temporada 2026</strong>, y guías y un glosario
+            en español para quien está llegando a este deporte.
+          </p>
+        </article>
+        <article class="note">
+          <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-llanta"/></svg>
+          <h3 class="note__title">«Con RAG» y «Sin RAG»</h3>
+          <p>
+            <strong>Con RAG</strong> el agente busca en la base de conocimiento antes de responder.
+            <strong>Sin RAG</strong> le pregunta directo al modelo de lenguaje, sin consultar documentos.
+            Cámbialo arriba, o usa <strong>Comparar</strong> para ver las dos respuestas lado a lado.
+          </p>
+        </article>
+        <article class="note">
+          <svg class="ico ico--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-bandera"/></svg>
+          <h3 class="note__title">Las respuestas muestran sus fuentes</h3>
+          <p>
+            Cada respuesta con RAG termina con el <strong>documento, el artículo y la página</strong> que se
+            consultaron, y con el detalle de los pasos que siguió el agente. Así puedes verificarlo tú mismo.
+          </p>
+        </article>
+      </div>
+
+      <div class="glyphs" aria-hidden="true">
+        <svg class="glyph glyph--circuito" viewBox="0 0 120 92"><use href="#ico-circuito"/></svg>
+        <svg class="glyph" viewBox="0 0 24 24"><use href="#ico-llanta"/></svg>
+        <svg class="glyph" viewBox="0 0 24 24"><use href="#ico-casco"/></svg>
+        <svg class="glyph" viewBox="0 0 24 24"><use href="#ico-bandera"/></svg>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+
+<!-- =========================================================
+     5 · PIE
+     ========================================================= -->
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <svg class="footer__car livery--plata" viewBox="0 0 206 70" role="img" aria-label="Carro de Fórmula 1">
+      <use href="#car-mini"/>
+    </svg>
+    <div class="footer__text">
+      <p class="footer__line">Proyecto final · Diplomado en IA Generativa · Mateo Robles · 2026</p>
+      <p class="footer__note">Fuentes: reglamentos oficiales de la FIA 2026 y datos públicos de la temporada.</p>
+    </div>
+    <p class="tag tag--demo" id="demo-tag" hidden>modo demo</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

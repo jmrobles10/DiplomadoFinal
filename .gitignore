@@ -1,0 +1,27 @@
+# ---- Secretos y datos locales de n8n (NUNCA subir: contiene credenciales cifradas y la clave de cifrado)
+.n8n/
+*.sqlite
+*.sqlite-journal
+
+# ---- Binarios y datos de Qdrant (85 MB el ejecutable; la base vectorial se regenera con la ingesta)
+tools/
+
+# ---- Fuentes crudas pesadas (se descargan con scripts/download_sources.py)
+kb/raw/*.pdf
+kb/raw/wiki_2026_season.json
+
+# ---- Progreso local de ingesta y cachés
+kb/processed/ingest_progress.json
+__pycache__/
+*.pyc
+
+# ---- Plantillas de terceros descargadas de n8n.io (contienen datos de sus autores)
+workflows/templates/
+
+# ---- Recursos con licencia de Envato (no se redistribuyen)
+front/assets/envato/
+
+# ---- Sistema
+Thumbs.db
+.DS_Store
+*.log

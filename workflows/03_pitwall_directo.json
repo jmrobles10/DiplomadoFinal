@@ -1,0 +1,145 @@
+{
+  "name": "PitWall · 03 Chat directo (sin RAG, para comparar)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Flujo 3 · Chat directo (sin RAG)\n\nMismo modelo (Gemini 2.5 Flash), misma personalidad, **pero sin acceso a la base de conocimiento**.\nSirve para mostrar en la presentación la diferencia entre preguntarle al modelo \"a secas\" y consultar primero información propia y actualizada (reglamento vigente y temporada 2026).",
+        "height": 220,
+        "width": 480,
+        "color": 3
+      },
+      "id": "nota-directo",
+      "name": "Nota · Directo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "mode": "hostedChat",
+        "initialMessages": "Hola, soy PitWall en modo directo: respondo solo con el conocimiento general del modelo, sin consultar la base. ¿Qué quieres saber?",
+        "options": {
+          "allowedOrigins": "*",
+          "responseMode": "lastNode",
+          "title": "PitWall · modo directo",
+          "subtitle": "Sin base de conocimiento (comparación)",
+          "inputPlaceholder": "Pregunta sobre la F1 2026..."
+        }
+      },
+      "id": "chat-trigger-directo",
+      "name": "Cuando llega un mensaje",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "SystemMessagePromptTemplate",
+              "message": "Eres PitWall, un asistente amable sobre Fórmula 1 que responde en español claro (tuteo, Colombia) a personas no expertas. En este modo NO tienes acceso a ninguna base de conocimiento ni a datos actualizados: responde únicamente con tu conocimiento general y, cuando no estés seguro o el dato pueda haber cambiado (por ejemplo reglas o resultados de 2026), dilo con honestidad en vez de inventar. Máximo unas 150 palabras, sin emojis.\n\nAl final de cada respuesta agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta y un JSON válido:\n```pitwall-meta\n{\"razonamiento\": \"una frase sobre en qué basaste la respuesta\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "cadena-directa",
+      "name": "Gemini responde sin contexto",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        280,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {
+          "temperature": 0.3,
+          "maxOutputTokens": 2048
+        }
+      },
+      "id": "gemini-directo",
+      "name": "Gemini 2.5 Flash",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        300,
+        220
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "gYtsz1P7OZ8s2VoQ",
+          "name": "Gemini PitWall"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nlet output = (item.text ?? item.output ?? '').toString();\nlet meta = { razonamiento: '', sugerencias: [] };\nconst m = output.match(/```\\s*pitwall-meta\\s*([\\s\\S]*?)```/i);\nif (m) {\n  try { meta = { ...meta, ...JSON.parse(m[1]) }; } catch (e) {}\n  output = output.replace(m[0], '').trim();\n}\nconst steps = [\n  { tipo: 'razonamiento', titulo: 'Respondió sin consultar la base de conocimiento', detalle: 'Modo directo: solo conocimiento general del modelo, sin recuperación de información.' }\n];\nif (meta.razonamiento) steps.push({ tipo: 'razonamiento', titulo: 'En qué se basó', detalle: meta.razonamiento });\nlet sessionId = '';\ntry { sessionId = $('Cuando llega un mensaje').first().json.sessionId || ''; } catch (e) {}\nreturn [{ json: { output, steps, sources: [], suggestions: Array.isArray(meta.sugerencias) ? meta.sugerencias.slice(0, 4).map(String) : [], razonamiento: meta.razonamiento || '', mode: 'directo', sessionId } }];"
+      },
+      "id": "formatear-directo",
+      "name": "Formatear respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Cuando llega un mensaje": {
+      "main": [
+        [
+          {
+            "node": "Gemini responde sin contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini responde sin contexto": {
+      "main": [
+        [
+          {
+            "node": "Formatear respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini 2.5 Flash": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gemini responde sin contexto",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

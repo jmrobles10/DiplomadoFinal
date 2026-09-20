@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "n8n",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:\\Fuentes_Git\\rag-f1-n8n\\scripts\\start_n8n.ps1"],
+      "port": 5678
+    },
+    {
+      "name": "qdrant",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:\\Fuentes_Git\\rag-f1-n8n\\scripts\\start_qdrant.ps1"],
+      "port": 6333
+    },
+    {
+      "name": "front",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "C:\\Fuentes_Git\\rag-f1-n8n\\front"],
+      "port": 8765
+    },
+    {
+      "name": "workflows",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8766", "--directory", "C:\\Fuentes_Git\\rag-f1-n8n\\workflows"],
+      "port": 8766
+    }
+  ]
+}

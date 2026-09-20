@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PitWall">
+  <title>PitWall</title>
+  <rect width="64" height="64" fill="#000000"/>
+  <!-- carro de F1 simplificado, en blanco -->
+  <g fill="#ffffff">
+    <path d="M6,34 L14,33 L17,39 L17,42 L6,42 Z"/>
+    <path d="M14,35 C20,33 28,31 34,30 L35,36 C29,37 21,39 15,41 C13,41 12.5,35.5 14,35 Z"/>
+    <path d="M34,29 C38,27.5 41,27 44,27 L45,29 L52,29 C53,27.5 54,26 55,25 L58,24 L58,29 C56,29 52,30 47,31 L43,33 L34,34 Z"/>
+    <path d="M34,38 L52,37 L52,41 L34,42 Z"/>
+    <path d="M54,24 L58,23 L58,34 L54,34 Z"/>
+    <path d="M42,26 C45,24 49,23.5 53,25 L53,27 C49,25.5 45,26 43,28 Z"/>
+  </g>
+  <g fill="#ffffff">
+    <circle cx="24" cy="42" r="8"/>
+    <circle cx="50" cy="42" r="8"/>
+  </g>
+  <g fill="#000000">
+    <circle cx="24" cy="42" r="3.4"/>
+    <circle cx="50" cy="42" r="3.4"/>
+  </g>
+  <rect x="6" y="53" width="52" height="2" fill="#ffffff" opacity=".5"/>
+</svg>

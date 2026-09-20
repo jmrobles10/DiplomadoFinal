@@ -1,0 +1,396 @@
+{
+  "name": "PitWall · 01 Ingesta de la base de conocimiento",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Flujo 1 · Ingesta (se corre una vez)\n\n1. Lee `kb/processed/kb_all.jsonl` (992 fragmentos ya limpios y partidos POR ARTÍCULO por `scripts/build_kb.py`).\n2. Convierte cada línea en un ítem `{id, content, metadata}`.\n3. En lotes de 20: genera el embedding con **Gemini** (gemini-embedding-2, 3072 dims) e inserta en **Qdrant** (colección `pitwall_kb`).\n4. Espera 6 s entre lotes para respetar la cuota gratuita de Gemini.\n\nQdrant guarda los vectores en disco: la base **persiste** entre reinicios y entre chats.",
+        "height": 340,
+        "width": 460,
+        "color": 7
+      },
+      "id": "nota-ingesta",
+      "name": "Nota · Ingesta",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -420
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "trigger-manual",
+      "name": "Ejecutar ingesta",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "C:\\Fuentes_Git\\rag-f1-n8n\\kb\\processed\\kb_all.jsonl",
+        "options": {}
+      },
+      "id": "leer-jsonl",
+      "name": "Leer kb_all.jsonl",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "id": "extraer-texto",
+      "name": "Extraer texto",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Cada línea del JSONL es un fragmento {id, content, metadata}\nconst raw = $input.first().json.data || '';\nconst lines = raw.split(/\\r?\\n/).filter(l => l.trim().length > 0);\nconst items = [];\nfor (const line of lines) {\n  try {\n    const d = JSON.parse(line);\n    items.push({ json: { id: d.id, content: d.content, metadata: d.metadata || {} } });\n  } catch (e) { /* línea corrupta: se ignora */ }\n}\nreturn items;"
+      },
+      "id": "una-fila-por-fragmento",
+      "name": "Una fila por fragmento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 20,
+        "options": {}
+      },
+      "id": "lotes",
+      "name": "Lotes de 20",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "mode": "id",
+          "value": "pitwall_kb"
+        },
+        "options": {}
+      },
+      "id": "insertar-qdrant",
+      "name": "Insertar en Qdrant",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        1140,
+        20
+      ],
+      "credentials": {
+        "qdrantApi": {
+          "id": "Q7jonI6Fg4mZyQxo",
+          "name": "Qdrant local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-2"
+      },
+      "id": "embeddings-gemini-ingesta",
+      "name": "Embeddings Gemini",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        260
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "gYtsz1P7OZ8s2VoQ",
+          "name": "Gemini PitWall"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "json",
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.content }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "id",
+                "value": "={{ $json.id }}"
+              },
+              {
+                "name": "tipo",
+                "value": "={{ $json.metadata.tipo ?? '' }}"
+              },
+              {
+                "name": "seccion",
+                "value": "={{ $json.metadata.seccion ?? '' }}"
+              },
+              {
+                "name": "documento",
+                "value": "={{ $json.metadata.documento ?? '' }}"
+              },
+              {
+                "name": "edicion",
+                "value": "={{ $json.metadata.edicion ?? '' }}"
+              },
+              {
+                "name": "articulo_grupo",
+                "value": "={{ $json.metadata.articulo_grupo ?? '' }}"
+              },
+              {
+                "name": "titulo_grupo",
+                "value": "={{ $json.metadata.titulo_grupo ?? '' }}"
+              },
+              {
+                "name": "articulo",
+                "value": "={{ $json.metadata.articulo ?? '' }}"
+              },
+              {
+                "name": "titulo_articulo",
+                "value": "={{ $json.metadata.titulo_articulo ?? '' }}"
+              },
+              {
+                "name": "sub_articulos",
+                "value": "={{ $json.metadata.sub_articulos ?? '' }}"
+              },
+              {
+                "name": "pagina",
+                "value": "={{ $json.metadata.pagina ?? '' }}"
+              },
+              {
+                "name": "url",
+                "value": "={{ $json.metadata.url ?? '' }}"
+              },
+              {
+                "name": "fuente",
+                "value": "={{ $json.metadata.fuente ?? '' }}"
+              },
+              {
+                "name": "idioma",
+                "value": "={{ $json.metadata.idioma ?? '' }}"
+              },
+              {
+                "name": "subtipo",
+                "value": "={{ $json.metadata.subtipo ?? '' }}"
+              },
+              {
+                "name": "titulo",
+                "value": "={{ $json.metadata.titulo ?? '' }}"
+              },
+              {
+                "name": "ronda",
+                "value": "={{ $json.metadata.ronda ?? '' }}"
+              },
+              {
+                "name": "gran_premio",
+                "value": "={{ $json.metadata.gran_premio ?? '' }}"
+              },
+              {
+                "name": "parte",
+                "value": "={{ $json.metadata.parte ?? '' }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "cargar-documento",
+      "name": "Cargar fragmento",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1240,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "chunkSize": 20000,
+        "chunkOverlap": 0,
+        "options": {}
+      },
+      "id": "sin-dividir",
+      "name": "Sin dividir (ya viene por artículo)",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 6,
+        "unit": "seconds"
+      },
+      "id": "esperar",
+      "name": "Esperar 6 s (cuota Gemini)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        20
+      ],
+      "webhookId": "a4c1e8d2-ingesta-wait-0001"
+    },
+    {
+      "parameters": {},
+      "id": "listo",
+      "name": "Listo",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        -180
+      ]
+    }
+  ],
+  "connections": {
+    "Ejecutar ingesta": {
+      "main": [
+        [
+          {
+            "node": "Leer kb_all.jsonl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer kb_all.jsonl": {
+      "main": [
+        [
+          {
+            "node": "Extraer texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer texto": {
+      "main": [
+        [
+          {
+            "node": "Una fila por fragmento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Una fila por fragmento": {
+      "main": [
+        [
+          {
+            "node": "Lotes de 20",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lotes de 20": {
+      "main": [
+        [
+          {
+            "node": "Listo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insertar en Qdrant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insertar en Qdrant": {
+      "main": [
+        [
+          {
+            "node": "Esperar 6 s (cuota Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar 6 s (cuota Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Lotes de 20",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insertar en Qdrant",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cargar fragmento": {
+      "ai_document": [
+        [
+          {
+            "node": "Insertar en Qdrant",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin dividir (ya viene por artículo)": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Cargar fragmento",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
