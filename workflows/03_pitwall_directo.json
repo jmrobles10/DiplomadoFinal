@@ -65,15 +65,15 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-3.6-flash",
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
         "options": {
-          "temperature": 0.3,
-          "maxOutputTokens": 2048
+          "maxTokensToSample": 2048,
+          "temperature": 0.3
         }
       },
       "id": "gemini-directo",
-      "name": "Gemini 3.6 Flash",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "name": "Groq Llama 4 Scout",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
         300,
@@ -81,11 +81,11 @@
       ],
       "retryOnFail": true,
       "maxTries": 3,
-      "waitBetweenTries": 4000,
+      "waitBetweenTries": 6000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "groqApi": {
+          "id": "PENDIENTE",
+          "name": "Groq PitWall"
         }
       }
     },
@@ -126,7 +126,7 @@
         ]
       ]
     },
-    "Gemini 3.6 Flash": {
+    "Groq Llama 4 Scout": {
       "ai_languageModel": [
         [
           {

@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 2 · Agente RAG PitWall\n\n**Entrada**: Chat Trigger (chat de n8n + webhook para el front).\n**Recuperador**: herramienta `buscar_base_conocimiento` → Qdrant (top 6) con embeddings Gemini.\n**Generador**: AI Agent con Gemini 3.6 Flash (razona internamente antes de responder), memoria por sesión.\n**Evaluador**: segunda llamada a Gemini que verifica si la respuesta está respaldada por los fragmentos recuperados.\n**Salida**: `{ output, steps, sources, suggestions, evaluacion }` → el front muestra el panel \"Pensando\" con los pasos reales.",
+        "content": "## Flujo 2 · Agente RAG PitWall\n\n**Entrada**: Chat Trigger (chat de n8n + webhook para el front).\n**Recuperador**: herramienta `buscar_base_conocimiento` → Qdrant (top 6) con embeddings Gemini.\n**Generador**: AI Agent con Llama 4 Scout vía Groq (capa gratuita, tool calling), memoria por sesión.\n**Evaluador**: segunda llamada a Llama 3.1 8B (Groq) que verifica si la respuesta está respaldada por los fragmentos recuperados.\n**Salida**: `{ output, steps, sources, suggestions, evaluacion }` → el front muestra el panel \"Pensando\" con los pasos reales.",
         "height": 330,
         "width": 520,
         "color": 4
@@ -63,15 +63,15 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-3.6-flash",
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
         "options": {
-          "temperature": 0.3,
-          "maxOutputTokens": 4096
+          "maxTokensToSample": 4096,
+          "temperature": 0.3
         }
       },
       "id": "gemini-generador",
-      "name": "Gemini 3.6 Flash (generador)",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "name": "Groq Llama 4 Scout (generador)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
         160,
@@ -79,11 +79,11 @@
       ],
       "retryOnFail": true,
       "maxTries": 3,
-      "waitBetweenTries": 4000,
+      "waitBetweenTries": 6000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "groqApi": {
+          "id": "PENDIENTE",
+          "name": "Groq PitWall"
         }
       }
     },
@@ -189,27 +189,27 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-3.6-flash",
+        "model": "llama-3.1-8b-instant",
         "options": {
-          "temperature": 0,
-          "maxOutputTokens": 512
+          "maxTokensToSample": 512,
+          "temperature": 0.0
         }
       },
       "id": "gemini-evaluador",
-      "name": "Gemini 3.6 Flash (evaluador)",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "name": "Groq Llama 3.1 8B (evaluador)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
         960,
         220
       ],
       "retryOnFail": true,
-      "maxTries": 2,
-      "waitBetweenTries": 3000,
+      "maxTries": 3,
+      "waitBetweenTries": 6000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "groqApi": {
+          "id": "PENDIENTE",
+          "name": "Groq PitWall"
         }
       }
     },
@@ -272,17 +272,6 @@
         ]
       ]
     },
-    "Gemini 3.6 Flash (generador)": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Agente PitWall",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Memoria de la conversación": {
       "ai_memory": [
         [
@@ -321,7 +310,18 @@
         ]
       ]
     },
-    "Gemini 3.6 Flash (evaluador)": {
+    "Groq Llama 4 Scout (generador)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente PitWall",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Llama 3.1 8B (evaluador)": {
       "ai_languageModel": [
         [
           {

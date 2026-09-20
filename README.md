@@ -11,13 +11,13 @@ servicios gratuitos.
 Usuario ──► Front (HTML/JS, blanco y negro) ──► n8n local (Chat Trigger)
                                                    │
                                                    ▼
-                                     AI Agent (Gemini 3.6 Flash, memoria por sesión)
+                                     AI Agent (Llama 4 Scout vía Groq, memoria por sesión)
                                                    │  herramienta: buscar_base_conocimiento
                                                    ▼
                                 Qdrant local (1.072 fragmentos, embeddings Gemini 3072d)
                                                    │
                                                    ▼
-                          Evaluador (Gemini Flash-Lite): ¿la respuesta está respaldada por las fuentes?
+                          Evaluador (Llama 3.1 8B vía Groq): ¿la respuesta está respaldada por las fuentes?
                                                    │
                                                    ▼
                     Respuesta + pasos ("Pensando") + fuentes + sugerencias ──► Front / chat de n8n
@@ -28,7 +28,7 @@ Usuario ──► Front (HTML/JS, blanco y negro) ──► n8n local (Chat Trig
 | Interfaz de entrada | `front/index.html` (usuarios no técnicos) y el chat de n8n (explicación técnica) |
 | Base de conocimiento | Reglamentos FIA 2026 A/B/C/D, temporada 2026 (API Jolpica), narrativa (Wikipedia), 11 guías propias en español |
 | Recuperación | Búsqueda semántica en Qdrant (top 6) como herramienta del agente |
-| Modelo de lenguaje | Google Gemini 3.6 Flash (razona antes de responder), capa gratuita |
+| Modelo de lenguaje | Llama 4 Scout vía Groq (capa gratuita, 1.000 solicitudes/día); embeddings con Gemini |
 | Respuesta con contexto | El agente responde solo con lo recuperado y cita documento y artículo |
 | Módulo evaluador | Segunda llamada que verifica la fundamentación de cada respuesta |
 | Comparación RAG vs directo | Flujo 03 con el mismo modelo sin base de conocimiento; interruptor en el front |
