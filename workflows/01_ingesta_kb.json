@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 1 · Ingesta (se corre una vez)\n\n1. Lee `kb/processed/kb_all.jsonl` (1.072 fragmentos ya limpios y partidos POR ARTÍCULO por `scripts/build_kb.py`).\n2. Convierte cada línea en un ítem `{id, content, metadata}`.\n3. En lotes de 20: genera el embedding con **Gemini** (gemini-embedding-2, 3072 dims) e inserta en **Qdrant** (colección `pitwall_kb`).\n4. Espera 15 s entre lotes para respetar la cuota gratuita de Gemini.\n\nQdrant guarda los vectores en disco: la base **persiste** entre reinicios y entre chats.",
+        "content": "## Flujo 1 · Ingesta (se corre una vez)\n\n1. Lee `kb/processed/kb_all.jsonl` (1.072 fragmentos ya limpios y partidos POR ARTÍCULO por `scripts/build_kb.py`).\n2. Convierte cada línea en un ítem `{id, content, metadata}`.\n3. En lotes de 40: genera el embedding con **Gemini** (gemini-embedding-2, 3072 dims) e inserta en **Qdrant** (colección `pitwall_kb`).\n4. Espera 3 s entre lotes (key de pago).\n\nQdrant guarda los vectores en disco: la base **persiste** entre reinicios y entre chats.",
         "height": 340,
         "width": 460,
         "color": 7
@@ -71,11 +71,11 @@
     },
     {
       "parameters": {
-        "batchSize": 20,
+        "batchSize": 40,
         "options": {}
       },
       "id": "lotes",
-      "name": "Lotes de 20",
+      "name": "Lotes de 40",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
@@ -245,11 +245,11 @@
     },
     {
       "parameters": {
-        "amount": 15,
+        "amount": 3,
         "unit": "seconds"
       },
       "id": "esperar",
-      "name": "Esperar 15 s (cuota Gemini)",
+      "name": "Esperar 3 s",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
@@ -308,14 +308,14 @@
       "main": [
         [
           {
-            "node": "Lotes de 20",
+            "node": "Lotes de 40",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Lotes de 20": {
+    "Lotes de 40": {
       "main": [
         [
           {
@@ -337,18 +337,18 @@
       "main": [
         [
           {
-            "node": "Esperar 15 s (cuota Gemini)",
+            "node": "Esperar 3 s",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Esperar 15 s (cuota Gemini)": {
+    "Esperar 3 s": {
       "main": [
         [
           {
-            "node": "Lotes de 20",
+            "node": "Lotes de 40",
             "type": "main",
             "index": 0
           }
