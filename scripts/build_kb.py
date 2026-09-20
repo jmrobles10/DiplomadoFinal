@@ -118,6 +118,9 @@ def clean_page(text: str) -> str:
         text = text.replace(k, v)
     text = re.sub(r"(?<=[A-Za-z])\u2018(?=[a-z])", "ff", text)      # ligadura "ff" mal decodificada
     text = text.replace("\u2019", "'").replace("\u201c", '"').replace("\u201d", '"')
+    # l\u00edneas de puntos de formularios ("Nombre: \u2026\u2026\u2026\u2026\u2026\u2026") y casillas: Gemini devuelve vectores vac\u00edos con ellas
+    text = re.sub(r"[\u2026]{2,}|\.{4,}|_{4,}", " ___ ", text)
+    text = re.sub(r"[\u2610\u2611\u2612\u25a1\u25a0]", " ", text)
     lines = []
     for line in text.split("\n"):
         line = line.rstrip()
@@ -302,6 +305,12 @@ def chunk_regulation(pages_file: str, vocab):
         else:
             current["parts"].append((tup, txt))
     flush()
+
+    # descartar fragmentos que son formularios (casi sin texto real: menos del 55 % de letras)
+    def letters_ratio(t):
+        body = t.split("\n", 1)[1] if "\n" in t else t
+        return sum(ch.isalpha() for ch in body) / max(1, len(body))
+    chunks = [c for c in chunks if letters_ratio(c["content"]) >= 0.55]
 
     # fusionar fragmentos muy cortos con el anterior del mismo artículo
     merged = []
