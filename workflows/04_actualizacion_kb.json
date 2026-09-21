@@ -1,0 +1,71 @@
+{
+  "id": "PitWall04ActualizacionKB",
+  "name": "PitWall · 04 Actualización de la base de conocimiento",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Actualización incremental (todo local)\n\nEjecuta `scripts/actualizar_kb.py --si-hace-falta`, que:\n1. Vuelve a consultar la API de la temporada (Jolpica), Wikipedia y la página oficial de reglamentos de la FIA y reemplaza solo lo que cambió (nueva carrera, nuevo Issue de un reglamento).\n2. Regenera los fragmentos. El id de cada fragmento es el hash de su contenido: lo que no cambió no se toca ni se duplica; lo nuevo se vectoriza con Ollama (bge-m3) y se inserta; lo que quedó obsoleto se elimina.\n3. Exporta los vectores.\n\nSe dispara cada 6 h y también en segundo plano cada vez que alguien pregunta (el flujo 02 lo llama sin esperar). `--si-hace-falta` hace que salga enseguida si ya se revisó en las últimas 6 h, así una consulta nunca se demora por esto.\n\nRequiere la variable de entorno PITWALL_ROOT (la define scripts/start_n8n.ps1).",
+        "height": 420,
+        "width": 520,
+        "color": 7
+      },
+      "id": "nota-04",
+      "name": "Nota · Actualización",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-700, -260]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "cada-6-horas",
+      "name": "Cada 6 horas",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [-120, -120]
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "llamado-desde-02",
+      "name": "Llamado desde el agente (flujo 02)",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-120, 100]
+    },
+    {
+      "parameters": {
+        "executeOnce": true,
+        "command": "=cd /d \"{{ $env.PITWALL_ROOT }}\" && set PYTHONIOENCODING=utf-8 && python scripts\\actualizar_kb.py --si-hace-falta"
+      },
+      "id": "actualizar-kb",
+      "name": "Actualizar la base (actualizar_kb.py)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [160, 0]
+    }
+  ],
+  "connections": {
+    "Cada 6 horas": {
+      "main": [[{ "node": "Actualizar la base (actualizar_kb.py)", "type": "main", "index": 0 }]]
+    },
+    "Llamado desde el agente (flujo 02)": {
+      "main": [[{ "node": "Actualizar la base (actualizar_kb.py)", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 3600,
+    "saveManualExecutions": true
+  },
+  "pinData": {}
+}

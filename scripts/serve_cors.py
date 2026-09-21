@@ -3,7 +3,7 @@ Servidor de archivos estático con cabeceras CORS (para que n8n pueda "Import fr
 y para servir el front en local).
 
 Uso: python scripts/serve_cors.py <puerto> <carpeta>
-     python scripts/serve_cors.py 8766 C:\Fuentes_Git\rag-f1-n8n\workflows
+     python scripts/serve_cors.py 8766 workflows
 """
 import sys
 from functools import partial

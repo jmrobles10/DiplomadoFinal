@@ -11,7 +11,7 @@ const CONFIG = {
   APP_NAME: "PitWall",
   WEBHOOK_RAG: "http://localhost:5678/webhook/7f3b2c9e-1a5d-4e8f-9b6a-2c4d8e0f1a23/chat",
   WEBHOOK_DIRECTO: "http://localhost:5678/webhook/c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f/chat",
-  TIMEOUT_MS: 90000,
+  TIMEOUT_MS: 180000, // modelo local: la primera respuesta puede tardar más de un minuto mientras Ollama carga el modelo
 };
 
 /* =========================================================
@@ -316,8 +316,8 @@ const PASOS_DEMO = (consulta, cuantos) => [
   },
   {
     tipo: "busqueda",
-    titulo: "Busqué en la base de conocimiento",
-    detalle: cuantos + " fragmentos relevantes recuperados de Supabase (similitud 0.89, 0.86, 0.82).",
+    titulo: "Consulté las fuentes oficiales",
+    detalle: "Reglamento General 2026 · Art. A2.2 (pág. 9) | El fin de semana de F1: clasificación, sprint y puntos",
   },
   {
     tipo: "herramienta",
@@ -327,12 +327,12 @@ const PASOS_DEMO = (consulta, cuantos) => [
   {
     tipo: "razonamiento",
     titulo: "Redacté la respuesta",
-    detalle: "Uní los fragmentos recuperados, ordené la explicación y cité los documentos consultados.",
+    detalle: "Me basé en el Reglamento General 2026 y en la guía del fin de semana de F1.",
   },
   {
     tipo: "evaluacion",
     titulo: "Revisé que todo tuviera respaldo",
-    detalle: "Contrasté cada afirmación con los fragmentos recuperados antes de entregarte la respuesta.",
+    detalle: "Todo lo que dice está en los documentos oficiales.",
   },
 ];
 
@@ -385,8 +385,8 @@ const DEMO_RAG = [
         },
         {
           tipo: "busqueda",
-          titulo: "Busqué en la base de conocimiento",
-          detalle: '3 fragmentos sobre "modo de adelantamiento" y "manual override" (similitud 0.91, 0.87, 0.80).',
+          titulo: "Consulté las fuentes oficiales",
+          detalle: 'Reglamento Deportivo 2026 · Art. B7.2 (pág. 41) | Reglamento Técnico 2026 · Art. C5.12',
         },
         {
           tipo: "herramienta",
@@ -435,7 +435,7 @@ const DEMO_RAG = [
         {
           tipo: "busqueda",
           titulo: "Busqué el sistema de puntaje",
-          detalle: "1 fragmento del reglamento deportivo con la tabla de puntos (similitud 0.84).",
+          detalle: "Reglamento General 2026 · Art. A2.2 (pág. 9)",
         },
       ],
       sources: [FUENTES_DEMO.temporada, FUENTES_DEMO.deportivo],

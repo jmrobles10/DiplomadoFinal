@@ -9,13 +9,14 @@ Precios de referencia (USD por millón de tokens) — ajústalos si Google los c
   gemini-embedding-2: 0.15 por millón de tokens de entrada
 """
 import json
+import os
 import re
 import sqlite3
 import sys
 from datetime import date
 
 sys.stdout.reconfigure(encoding="utf-8")
-DB = r"C:\Fuentes_Git\rag-f1-n8n\.n8n\.n8n\database.sqlite"
+DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".n8n", ".n8n", "database.sqlite")
 PRECIO_IN, PRECIO_OUT, PRECIO_EMB = 0.50, 3.00, 0.15
 TOKEN_RE = re.compile(r'"completionTokens":(\d+),"promptTokens":(\d+),"totalTokens":(\d+)')
 

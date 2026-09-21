@@ -1,9 +1,10 @@
 {
+  "id": "PitWall03Directo",
   "name": "PitWall · 03 Chat directo (sin RAG, para comparar)",
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 3 · Chat directo (sin RAG)\n\nMismo modelo (Gemini 3.6 Flash), misma personalidad, **pero sin acceso a la base de conocimiento**.\nSirve para mostrar en la presentación la diferencia entre preguntarle al modelo \"a secas\" y consultar primero información propia y actualizada (reglamento vigente y temporada 2026).",
+        "content": "## Flujo 3 · Chat directo (sin RAG)\n\nMismo modelo (Ollama (qwen3:8b, local)), misma personalidad, **pero sin acceso a la base de conocimiento**.\nSirve para mostrar en la presentación la diferencia entre preguntarle al modelo \"a secas\" y consultar primero información propia y actualizada (reglamento vigente y temporada 2026).",
         "height": 220,
         "width": 480,
         "color": 3
@@ -48,14 +49,14 @@
           "messageValues": [
             {
               "type": "SystemMessagePromptTemplate",
-              "message": "Eres PitWall, un asistente amable sobre Fórmula 1 que responde en español claro (tuteo, Colombia) a personas no expertas. En este modo NO tienes acceso a ninguna base de conocimiento ni a datos actualizados: responde únicamente con tu conocimiento general y, cuando no estés seguro o el dato pueda haber cambiado (por ejemplo reglas o resultados de 2026), dilo con honestidad en vez de inventar. Máximo unas 150 palabras, sin emojis.\n\nAl final de cada respuesta agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta y un JSON válido:\n```pitwall-meta\n{\"razonamiento\": \"una frase sobre en qué basaste la respuesta\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```"
+              "message": "Eres PitWall, un asistente amable sobre Fórmula 1 que responde en español claro (tuteo, Colombia) a personas no expertas. En este modo NO tienes acceso a ninguna base de conocimiento ni a datos actualizados: responde únicamente con tu conocimiento general y, cuando no estés seguro o el dato pueda haber cambiado (por ejemplo reglas o resultados de 2026), dilo con honestidad en vez de inventar. Máximo unas 150 palabras, sin emojis.\n\nAl final de cada respuesta (también si es un saludo o rechazas un tema ajeno a la F1) agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta y un JSON válido:\n```pitwall-meta\n{\"razonamiento\": \"una frase sobre en qué basaste la respuesta\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```\n/no_think"
             }
           ]
         },
         "batching": {}
       },
       "id": "cadena-directa",
-      "name": "Gemini responde sin contexto",
+      "name": "Ollama responde sin contexto",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
@@ -65,15 +66,18 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-3.6-flash",
+        "model": "qwen3:8b",
         "options": {
           "temperature": 0.3,
-          "maxOutputTokens": 2048
+          "numCtx": 16384,
+          "numPredict": 1024,
+          "keepAlive": "30m",
+          "think": false
         }
       },
       "id": "gemini-directo",
-      "name": "Gemini 3.6 Flash",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "name": "Ollama qwen3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
         300,
@@ -83,15 +87,15 @@
       "maxTries": 3,
       "waitBetweenTries": 4000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "ollamaApi": {
+          "id": "ollama-local",
+          "name": "Ollama local"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first().json;\nlet output = (item.text ?? item.output ?? '').toString();\nlet meta = { razonamiento: '', sugerencias: [] };\nconst m = output.match(/```\\s*pitwall-meta\\s*([\\s\\S]*?)```/i);\nif (m) {\n  try { meta = { ...meta, ...JSON.parse(m[1]) }; } catch (e) {}\n  output = output.replace(m[0], '').trim();\n}\nconst steps = [\n  { tipo: 'razonamiento', titulo: 'Respondió sin consultar la base de conocimiento', detalle: 'Modo directo: solo conocimiento general del modelo, sin recuperación de información.' }\n];\nif (meta.razonamiento) steps.push({ tipo: 'razonamiento', titulo: 'En qué se basó', detalle: meta.razonamiento });\nlet sessionId = '';\ntry { sessionId = $('Cuando llega un mensaje').first().json.sessionId || ''; } catch (e) {}\nreturn [{ json: { output, steps, sources: [], suggestions: Array.isArray(meta.sugerencias) ? meta.sugerencias.slice(0, 4).map(String) : [], razonamiento: meta.razonamiento || '', mode: 'directo', sessionId } }];"
+        "jsCode": "const item = $input.first().json;\nlet output = (item.text ?? item.output ?? '').toString();\noutput = output.replace(/<think>[\\s\\S]*?<\\/think>/gi, '').trim();\n// Bloque pitwall-meta (razonamiento + sugerencias). Tolerante a JSON imperfecto de modelos locales.\nconst parseMeta = (txt) => {\n  let meta = { razonamiento: '', sugerencias: [] };\n  let m = txt.match(/```\\s*pitwall-meta\\s*([\\s\\S]*?)```/i) || txt.match(/```\\s*(?:json)?\\s*(\\{[\\s\\S]*?\"sugerencias\"[\\s\\S]*?\\})\\s*```/i);\n  if (!m) return { meta, cleaned: txt };\n  const body = m[1];\n  try { meta = { ...meta, ...JSON.parse(body) }; }\n  catch (e) {\n    const r = body.match(/\"razonamiento\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"/);\n    if (r) meta.razonamiento = r[1];\n    const s = body.match(/\"sugerencias\"\\s*:\\s*\\[([\\s\\S]*?)\\]/);\n    if (s) meta.sugerencias = [...s[1].matchAll(/\"((?:[^\"\\\\]|\\\\.)*)\"/g)].map(x => x[1]);\n  }\n  return { meta, cleaned: txt.replace(m[0], '').trim() };\n};\nconst parsed = parseMeta(output);\nlet meta = parsed.meta;\noutput = parsed.cleaned;\nconst steps = [\n  { tipo: 'razonamiento', titulo: 'Respondió sin consultar la base de conocimiento', detalle: 'Modo directo: solo conocimiento general del modelo, sin recuperación de información.' }\n];\nif (meta.razonamiento) steps.push({ tipo: 'razonamiento', titulo: 'En qué se basó', detalle: meta.razonamiento });\n// Si el modelo no entregó sugerencias, se ofrecen preguntas de arranque sobre la F1 2026\nconst SUGERENCIAS_BASE = ['¿Qué cambió en la F1 en 2026?', '¿Quién va ganando el campeonato?', '¿Cómo funciona un fin de semana con sprint?', '¿Qué es el Overtake Mode?'];\nlet sugerencias = Array.isArray(meta.sugerencias) ? meta.sugerencias.map(String).filter(s => s.trim()).slice(0, 4) : [];\nif (sugerencias.length === 0) sugerencias = SUGERENCIAS_BASE.slice(0, 3);\nlet sessionId = '';\ntry { sessionId = $('Cuando llega un mensaje').first().json.sessionId || ''; } catch (e) {}\nreturn [{ json: { output, steps, sources: [], suggestions: sugerencias, razonamiento: meta.razonamiento || '', mode: 'directo', sessionId } }];"
       },
       "id": "formatear-directo",
       "name": "Formatear respuesta",
@@ -108,14 +112,14 @@
       "main": [
         [
           {
-            "node": "Gemini responde sin contexto",
+            "node": "Ollama responde sin contexto",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Gemini responde sin contexto": {
+    "Ollama responde sin contexto": {
       "main": [
         [
           {
@@ -126,11 +130,11 @@
         ]
       ]
     },
-    "Gemini 3.6 Flash": {
+    "Ollama qwen3": {
       "ai_languageModel": [
         [
           {
-            "node": "Gemini responde sin contexto",
+            "node": "Ollama responde sin contexto",
             "type": "ai_languageModel",
             "index": 0
           }

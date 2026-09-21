@@ -12,6 +12,9 @@ kb/raw/wiki_2026_season.json
 
 # ---- Progreso local de ingesta y cachés
 kb/processed/ingest_progress.json
+kb/processed/update_state.json
+kb/processed/update_log.jsonl
+kb/processed/.update.lock
 __pycache__/
 *.pyc
 

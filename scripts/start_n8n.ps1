@@ -3,7 +3,7 @@
 #  Uso:  powershell -ExecutionPolicy Bypass -File scripts\start_n8n.ps1
 #  Editor: http://localhost:5678
 # =====================================================================
-$root = "C:\Fuentes_Git\rag-f1-n8n"
+$root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 $env:N8N_PORT = "5678"
 $env:N8N_HOST = "localhost"
@@ -17,10 +17,13 @@ $env:N8N_VERSION_NOTIFICATIONS_ENABLED = "false"
 $env:N8N_RUNNERS_TASK_TIMEOUT = "300"                 # 5 min por nodo Code (la ingesta usa lotes largos)
 $env:N8N_DEFAULT_BINARY_DATA_MODE = "filesystem"
 # n8n crea dentro de esta carpeta su propia subcarpeta ".n8n" (base SQLite, credenciales cifradas, logs).
-# Queda en el proyecto: C:\Fuentes_Git\rag-f1-n8n\.n8n\.n8n  (no cambiar: ahí ya está la base creada el 2026-09-20)
+# Queda en el proyecto: <repo>\.n8n\.n8n
 $env:N8N_USER_FOLDER = Join-Path $root ".n8n"
+$env:PITWALL_ROOT = $root                          # lo usa el flujo 04 para ejecutar scripts\actualizar_kb.py
 $env:N8N_RESTRICT_FILE_ACCESS_TO = $root              # permite al nodo de archivos leer la base de conocimiento del proyecto
 $env:N8N_COMMUNITY_PACKAGES_ENABLED = "true"
+$env:N8N_BLOCK_ENV_ACCESS_IN_NODE = "false"          # permite usar {{ $env.PITWALL_ROOT }} en el flujo 04
+$env:NODES_EXCLUDE = "[]"                            # n8n 2.x excluye Execute Command por defecto; el flujo 04 lo necesita para correr actualizar_kb.py
 $env:N8N_LOG_LEVEL = "info"
 
 New-Item -ItemType Directory -Force $env:N8N_USER_FOLDER | Out-Null

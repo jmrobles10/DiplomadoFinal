@@ -1,11 +1,11 @@
 {
-  "generado": "2026-09-20",
+  "generado": "2026-09-13",
   "tipos": {
-    "guia": {
-      "fragmentos": 80,
-      "chars_total": 80099,
-      "chars_promedio": 1001,
-      "chars_max": 2060
+    "temporada": {
+      "fragmentos": 24,
+      "chars_total": 53967,
+      "chars_promedio": 2248,
+      "chars_max": 3543
     },
     "temporada_narrativa": {
       "fragmentos": 29,
@@ -19,11 +19,11 @@
       "chars_promedio": 1167,
       "chars_max": 4750
     },
-    "temporada": {
-      "fragmentos": 24,
-      "chars_total": 53967,
-      "chars_promedio": 2248,
-      "chars_max": 3543
+    "guia": {
+      "fragmentos": 80,
+      "chars_total": 80099,
+      "chars_promedio": 1001,
+      "chars_max": 2060
     }
   },
   "total_fragmentos": 1056,

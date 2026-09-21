@@ -2,13 +2,13 @@
 
 ```json
 {
-  "generado": "2026-09-20",
+  "generado": "2026-09-13",
   "tipos": {
-    "guia": {
-      "fragmentos": 80,
-      "chars_total": 80099,
-      "chars_promedio": 1001,
-      "chars_max": 2060
+    "temporada": {
+      "fragmentos": 24,
+      "chars_total": 53967,
+      "chars_promedio": 2248,
+      "chars_max": 3543
     },
     "temporada_narrativa": {
       "fragmentos": 29,
@@ -22,11 +22,11 @@
       "chars_promedio": 1167,
       "chars_max": 4750
     },
-    "temporada": {
-      "fragmentos": 24,
-      "chars_total": 53967,
-      "chars_promedio": 2248,
-      "chars_max": 3543
+    "guia": {
+      "fragmentos": 80,
+      "chars_total": 80099,
+      "chars_promedio": 1001,
+      "chars_max": 2060
     }
   },
   "total_fragmentos": 1056,
@@ -269,7 +269,7 @@ sanctions set out below that may be applied in case of failure to comply.
 
 ---
 
-## temporada:calendario · 00eb3dc58ecd9c7a
+## temporada:calendario · 2cc57e50dcf2f576
 
 ```json
 {
@@ -278,13 +278,13 @@ sanctions set out below that may be applied in case of failure to comply.
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "calendario",
  "titulo": "Calendario F1 2026"
 }
 ```
 
-Calendario del Campeonato Mundial de Fórmula 1 2026 (23 Grandes Premios). Estado al 20 de septiembre de 2026: 14 rondas disputadas; próxima carrera: Gran Premio de Azerbaiyán el 26 de septiembre de 2026.
+Calendario del Campeonato Mundial de Fórmula 1 2026 (23 Grandes Premios). Estado al 13 de septiembre de 2026: 14 rondas disputadas; próxima carrera: Gran Premio de Azerbaiyán el 26 de septiembre de 2026.
 Ronda 1: Gran Premio de Australia (Australian Grand Prix), 8 de marzo de 2026, circuito Albert Park Grand Prix Circuit, Melbourne, Australia.
 Ronda 2: Gran Premio de China (Chinese Grand Prix), 15 de marzo de 2026, circuito Shanghai International Circuit, Shanghai, China · fin de semana con Sprint.
 Ronda 3: Gran Premio de Japón (Japanese Grand Prix), 29 de marzo de 2026, circuito Suzuka Circuit, Suzuka, Japan.
@@ -307,7 +307,7 @@ Ronda 10: Gran Premio de Bélgica (Belg
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "resultado_carrera",
  "ronda": 1,
  "gran_premio": "Gran Premio de Australia",
@@ -341,7 +341,7 @@ Resultados del Gran Premio de Australia 2026 (ronda 1 de 23), disputado el 8 de 
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "resultado_carrera",
  "ronda": 2,
  "gran_premio": "Gran Premio de China",
@@ -376,7 +376,7 @@ Resultados del Gran Premio de China 2026 (ronda 2 de 23), disputado el 15 de mar
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "resultado_sprint",
  "ronda": 2,
  "gran_premio": "Gran Premio de China",
@@ -410,7 +410,7 @@ Resultados de la carrera Sprint del Gran Premio de China 2026 (ronda 2), fin de 
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "resultado_sprint",
  "ronda": 4,
  "gran_premio": "Gran Premio de Miami",
@@ -444,7 +444,7 @@ Resultados de la carrera Sprint del Gran Premio de Miami 2026 (ronda 4), fin de 
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "clasificacion_pilotos",
  "ronda": 14,
  "titulo": "Clasificación de pilotos tras ronda 14"
@@ -482,7 +482,7 @@ Clasificación del Campeonato Mundial de Pilotos de Fórmula 1 2026 tras 14 rond
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "clasificacion_constructores",
  "ronda": 14,
  "titulo": "Clasificación de constructores tras ronda 14"
@@ -504,7 +504,7 @@ Clasificación del Campeonato Mundial de Constructores de Fórmula 1 2026 tras 1
 
 ---
 
-## temporada:equipos_pilotos · fa52c9586b30e791
+## temporada:equipos_pilotos · 00fb14191b4c60fc
 
 ```json
 {
@@ -513,13 +513,13 @@ Clasificación del Campeonato Mundial de Constructores de Fórmula 1 2026 tras 1
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "equipos_pilotos",
  "titulo": "Equipos y pilotos F1 2026"
 }
 ```
 
-Equipos y pilotos de la temporada 2026 de Fórmula 1 (11 equipos, 22 autos). Alineaciones según participación real en las 14 rondas disputadas hasta el 20 de septiembre de 2026:
+Equipos y pilotos de la temporada 2026 de Fórmula 1 (11 equipos, 22 autos). Alineaciones según participación real en las 14 rondas disputadas hasta el 13 de septiembre de 2026:
 Alpine F1 Team: Pierre Gasly (French, dorsal 10, nacido el 7 de febrero de 1996; rondas 1–14); Franco Colapinto (Argentine, dorsal 43, nacido el 27 de mayo de 2003; rondas 1–14).
 Aston Martin: Lance Stroll (Canadian, dorsal 18, nacido el 29 de octubre de 1998; rondas 1–14); Fernando Alonso (Spanish, dorsal 14, nacido el 29 de julio de 1981; rondas 1–14).
 Audi: Gabriel Bortoleto (Brazilian, dorsal 5, nacido el 14 de octubre de 2004; rondas 1–14); Nico Hülkenberg (German, dorsal 27, nacido el 19 de agosto de 1987; rondas 1–14).
@@ -540,7 +540,7 @@ Mercedes: George Russell (British, dorsal 63, nacido el 15 de febrero de 1998; r
  "idioma": "es",
  "fuente": "Jolpica F1 API (datos oficiales de resultados, sucesora de Ergast)",
  "url": "https://api.jolpi.ca/ergast/f1/2026.json",
- "fecha_consulta": "2026-09-20",
+ "fecha_consulta": "2026-09-13",
  "subtipo": "ganadores",
  "ronda": 14,
  "titulo": "Ganadores 2026"
@@ -578,7 +578,7 @@ Victorias por piloto: Andrea Kimi Antonelli: 8; George Russell: 2; Lando Norris:
  "parte": 1,
  "fuente": "Wikipedia: 2026 Formula One World Championship",
  "url": "https://en.wikipedia.org/wiki/2026_Formula_One_World_Championship",
- "fecha_consulta": "2026-09-20"
+ "fecha_consulta": "2026-09-13"
 }
 ```
 
@@ -603,7 +603,7 @@ Ford returned to Formula One as an engine supplier for the first time since it p
  "parte": 2,
  "fuente": "Wikipedia: 2026 Formula One World Championship",
  "url": "https://en.wikipedia.org/wiki/2026_Formula_One_World_Championship",
- "fecha_consulta": "2026-09-20"
+ "fecha_consulta": "2026-09-13"
 }
 ```
 

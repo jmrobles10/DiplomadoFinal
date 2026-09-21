@@ -3,8 +3,9 @@ PitWall · Crea (o verifica) la colección de Qdrant para la base de conocimient
 
 Uso:  python scripts/qdrant_setup.py            (Qdrant debe estar corriendo en http://localhost:6333)
       python scripts/qdrant_setup.py --recreate  (borra y vuelve a crear la colección)
+      python scripts/qdrant_setup.py --recreate --dims 3072   (otro tamaño de vector, p. ej. Gemini)
 
-La colección guarda un vector por fragmento (embeddings de Gemini, 3072 dimensiones, distancia coseno)
+La colección guarda un vector por fragmento (embeddings de bge-m3 vía Ollama, 1024 dimensiones, distancia coseno)
 y el texto + metadatos como "payload". Los vectores quedan en disco: no se pierden al reiniciar.
 """
 import json
@@ -16,7 +17,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 QDRANT = "http://localhost:6333"
 COLLECTION = "pitwall_kb"
-VECTOR_SIZE = 3072          # gemini-embedding-2 / gemini-embedding-001 vía el nodo de n8n
+VECTOR_SIZE = 1024          # bge-m3 (Ollama, local). Con --dims N se puede cambiar (3072 para gemini-embedding-2)
 DISTANCE = "Cosine"
 PAYLOAD_INDEXES = {         # filtros rápidos por metadatos (n8n guarda los metadatos bajo "metadata.*")
     "metadata.tipo": "keyword",
@@ -37,7 +38,10 @@ def call(method, path, body=None):
 
 
 def main():
+    global VECTOR_SIZE
     recreate = "--recreate" in sys.argv
+    if "--dims" in sys.argv:
+        VECTOR_SIZE = int(sys.argv[sys.argv.index("--dims") + 1])
     status, info = call("GET", "/")
     if status != 200:
         print(f"Qdrant no responde en {QDRANT} (status {status}). Arráncalo con scripts/start_qdrant.ps1"); sys.exit(1)

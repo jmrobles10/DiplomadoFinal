@@ -1,9 +1,10 @@
 {
+  "id": "PitWall01IngestaKB",
   "name": "PitWall · 01 Ingesta de la base de conocimiento",
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 1 · Ingesta (se corre una vez)\n\n1. Lee `kb/processed/kb_all.jsonl` (1.072 fragmentos ya limpios y partidos POR ARTÍCULO por `scripts/build_kb.py`).\n2. Convierte cada línea en un ítem `{id, content, metadata}`.\n3. En lotes de 40: genera el embedding con **Gemini** (gemini-embedding-2, 3072 dims) e inserta en **Qdrant** (colección `pitwall_kb`).\n4. Espera 3 s entre lotes (key de pago).\n\nQdrant guarda los vectores en disco: la base **persiste** entre reinicios y entre chats.",
+        "content": "## Flujo 1 · Ingesta (se corre una vez)\n\n1. Lee `kb/processed/kb_all.jsonl` (1.072 fragmentos ya limpios y partidos POR ARTÍCULO por `scripts/build_kb.py`).\n2. Convierte cada línea en un ítem `{id, content, metadata}`.\n3. En lotes de 40: genera el embedding con **Ollama (bge-m3, local)** (gemini-embedding-2, 3072 dims) e inserta en **Qdrant** (colección `pitwall_kb`).\n4. Espera 3 s entre lotes (key de pago).\n\nQdrant guarda los vectores en disco: la base **persiste** entre reinicios y entre chats.",
         "height": 340,
         "width": 460,
         "color": 7
@@ -30,7 +31,7 @@
     },
     {
       "parameters": {
-        "fileSelector": "C:\\Fuentes_Git\\rag-f1-n8n\\kb\\processed\\kb_all.jsonl",
+        "fileSelector": "C:\\Fuentes_Git\\DiplomadoFinal\\kb\\processed\\kb_all.jsonl",
         "options": {}
       },
       "id": "leer-jsonl",
@@ -103,18 +104,18 @@
       ],
       "credentials": {
         "qdrantApi": {
-          "id": "Q7jonI6Fg4mZyQxo",
+          "id": "qdrant-local",
           "name": "Qdrant local"
         }
       }
     },
     {
       "parameters": {
-        "modelName": "models/gemini-embedding-2"
+        "model": "bge-m3"
       },
       "id": "embeddings-gemini-ingesta",
-      "name": "Embeddings Gemini",
-      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "name": "Embeddings Ollama bge-m3",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
       "typeVersion": 1,
       "position": [
         1060,
@@ -124,9 +125,9 @@
       "maxTries": 5,
       "waitBetweenTries": 5000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "ollamaApi": {
+          "id": "ollama-local",
+          "name": "Ollama local"
         }
       }
     },
@@ -355,17 +356,6 @@
         ]
       ]
     },
-    "Embeddings Gemini": {
-      "ai_embedding": [
-        [
-          {
-            "node": "Insertar en Qdrant",
-            "type": "ai_embedding",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Cargar fragmento": {
       "ai_document": [
         [
@@ -383,6 +373,17 @@
           {
             "node": "Cargar fragmento",
             "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama bge-m3": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insertar en Qdrant",
+            "type": "ai_embedding",
             "index": 0
           }
         ]

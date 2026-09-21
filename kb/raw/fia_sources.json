@@ -1,0 +1,30 @@
+{
+  "fia_2026_A_general_iss03.pdf": {
+    "url": "https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_a_general_provisions_-_iss_03_-_2026-06-25.pdf",
+    "seccion": "A",
+    "documento": "Reglamento General 2026 (Sección A)",
+    "edicion": "Issue 03",
+    "fecha": "2026-06-25"
+  },
+  "fia_2026_B_sporting_iss08.pdf": {
+    "url": "https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_b_sporting_-_iss_08_-_2026-08-05_7.pdf",
+    "seccion": "B",
+    "documento": "Reglamento Deportivo 2026 (Sección B)",
+    "edicion": "Issue 08",
+    "fecha": "2026-08-05"
+  },
+  "fia_2026_C_technical_iss20.pdf": {
+    "url": "https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_c_technical_-_iss_20_-_2026-08-05.pdf",
+    "seccion": "C",
+    "documento": "Reglamento Técnico 2026 (Sección C)",
+    "edicion": "Issue 20",
+    "fecha": "2026-08-05"
+  },
+  "fia_2026_D_financial_iss07.pdf": {
+    "url": "https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_d_financial_-_f1_teams_-_iss_07_-_2026-06-25.pdf",
+    "seccion": "D",
+    "documento": "Reglamento Financiero 2026 (Sección D)",
+    "edicion": "Issue 07",
+    "fecha": "2026-06-25"
+  }
+}

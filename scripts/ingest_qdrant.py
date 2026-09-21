@@ -27,7 +27,7 @@ import uuid
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-ROOT = r"C:\Fuentes_Git\rag-f1-n8n"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KB = os.path.join(ROOT, "kb", "processed", "kb_all.jsonl")
 PROGRESS = os.path.join(ROOT, "kb", "processed", "ingest_progress.json")
 QDRANT = "http://localhost:6333"

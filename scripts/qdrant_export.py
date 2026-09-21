@@ -2,7 +2,7 @@
 PitWall · Exporta los vectores de Qdrant a archivos versionables, para restaurarlos en otro PC sin recalcular embeddings.
 
 Salida:
-  kb/processed/vectors.f32         vectores float32 concatenados (n × 3072)
+  kb/processed/vectors.f32         vectores float32 concatenados (n × dims, 1024 con bge-m3)
   kb/processed/vectors_index.json  lista de ids de fragmento en el mismo orden + dimensión
 
 Uso: python scripts/qdrant_export.py     (Qdrant corriendo en http://localhost:6333)
@@ -56,7 +56,7 @@ def main():
             break
     with open(OUT_VEC, "wb") as fh:
         vec.tofile(fh)
-    json.dump({"collection": COLLECTION, "dims": dims, "model": "gemini-embedding-2", "ids": ids},
+    json.dump({"collection": COLLECTION, "dims": dims, "model": os.environ.get("EMBED_MODEL", "bge-m3"), "ids": ids},
               open(OUT_IDX, "w", encoding="utf-8"))
     print(f"\n{len(ids)} vectores de {dims} dimensiones -> {OUT_VEC} ({os.path.getsize(OUT_VEC)/1e6:.1f} MB)")
 

@@ -21,9 +21,9 @@ Un agente conversacional que, antes de responder, busca en una base de conocimie
 |---|---|---|
 | Orquestación y agente | n8n 2.39 en local (Node 24) | Gratis |
 | Base vectorial | Qdrant 1.19 en local, persistente en disco | Gratis |
-| Embeddings | Google Gemini `gemini-embedding-2`, 3.072 dimensiones | Capa gratuita |
-| Modelo generador | Gemini 3.6 Flash (tool calling, razonamiento) | Key de pago, centavos por demo |
-| Modelo evaluador | Gemini 3.6 Flash | Key de pago |
+| Embeddings | `bge-m3` en Ollama (local), 1.024 dimensiones, multilingüe | Gratis |
+| Modelo generador | `qwen3:8b` en Ollama (local, tool calling) | Gratis |
+| Modelo evaluador | `qwen3:8b` en Ollama (temperatura 0, salida JSON) | Gratis |
 | Preparación de datos | Python (pypdf, chunking por artículo) | Gratis |
 | Front | HTML, CSS y JS sin frameworks | Gratis |
 
@@ -38,11 +38,12 @@ Un agente conversacional que, antes de responder, busca en una base de conocimie
 ## 7. Flujo RAG implementado [1:30]
 Mostrar el lienzo de n8n del flujo 02:
 1. **Chat Trigger** recibe la pregunta (del front o del chat de n8n) con un id de sesión.
-2. **Agente** (Gemini 3.6 Flash) con memoria de conversación y una regla de oro: siempre consultar la herramienta antes de afirmar un dato.
-3. **Recuperador**: la herramienta `buscar_base_conocimiento` convierte la consulta en un vector con Gemini y trae los 6 fragmentos más parecidos de Qdrant. El agente formula la consulta en inglés para el reglamento y en español para la temporada.
+2. **Reformulador + recuperación** (qwen3:8b + bge-m3): la pregunta se reescribe con el historial y se buscan los 6 fragmentos más parecidos en Qdrant antes de que el agente responda.
+2b. **Agente** (qwen3:8b vía Ollama) con memoria de conversación y una regla de oro: siempre consultar la herramienta antes de afirmar un dato.
+3. **Recuperador**: la herramienta `buscar_base_conocimiento` convierte la consulta en un vector con bge-m3 (Ollama) y trae los 6 fragmentos más parecidos de Qdrant. El agente formula la consulta en inglés para el reglamento y en español para la temporada.
 4. **Generador**: el agente redacta en español, cita documento y artículo, y agrega un bloque oculto con su razonamiento y tres preguntas sugeridas.
 5. **Formateo**: un nodo de código extrae los pasos reales (qué buscó, qué encontró) y las fuentes con metadatos.
-6. **Evaluador** (Gemini 3.6 Flash): recibe respuesta y fragmentos y devuelve si está fundamentada.
+6. **Evaluador** (qwen3:8b vía Ollama): recibe respuesta y fragmentos y devuelve si está fundamentada.
 7. **Respuesta final** al usuario: texto, pasos, fuentes, sugerencias y veredicto.
 Flujo 01 (ingesta) y flujo 03 (chat directo para comparar) se muestran en 20 segundos.
 
@@ -62,7 +63,8 @@ Mostrar el panel "Pensando" del front o el nodo de la herramienta en n8n: consul
 - Persistencia real: Qdrant en disco y memoria por sesión; nada se pierde al cerrar el chat.
 - Thinking visible y honesto: pasos reales del agente, no una animación.
 - Evaluador como segunda opinión barata.
-- Todo local: n8n, Qdrant y el front corren en el portátil; el único costo es la API de Gemini, unos 0,7 centavos por pregunta.
+- Todo local: n8n, Qdrant, Ollama y el front corren en el mismo PC; no hay ninguna API externa ni costo por pregunta.
+- La base se actualiza sola: cada 6 h y con cada consulta (en segundo plano) se revisan la API de resultados, Wikipedia y la página de reglamentos de la FIA; como el id de cada fragmento es el hash de su contenido, solo se vectoriza lo nuevo y se retira lo obsoleto, sin duplicar ni reescribir lo demás.
 
 ## 12. Dificultades encontradas [1:00]
 - La key gratuita de Gemini para usuarios nuevos solo permite 20 respuestas al día con `gemini-3.6-flash`: se resolvió pasando a una key de Gemini con facturación (costo de centavos); Groq queda como plan B gratuito.

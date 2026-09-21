@@ -1,9 +1,10 @@
 {
+  "id": "PitWall02AgenteRAG",
   "name": "PitWall · 02 Agente RAG (con base de conocimiento)",
   "nodes": [
     {
       "parameters": {
-        "content": "## Flujo 2 · Agente RAG PitWall\n\n**Entrada**: Chat Trigger (chat de n8n + webhook para el front).\n**Recuperador**: herramienta `buscar_base_conocimiento` → Qdrant (top 6) con embeddings Gemini.\n**Generador**: AI Agent con Gemini 3.6 Flash (razona internamente antes de responder), memoria por sesión.\n**Evaluador**: segunda llamada a Gemini que verifica si la respuesta está respaldada por los fragmentos recuperados.\n**Salida**: `{ output, steps, sources, suggestions, evaluacion }` → el front muestra el panel \"Pensando\" con los pasos reales.",
+        "content": "## Flujo 2 · Agente RAG PitWall\n\n**Entrada**: Chat Trigger (chat de n8n + webhook para el front).\n**Recuperador**: herramienta `buscar_base_conocimiento` → Qdrant (top 6) con embeddings Ollama.\n**Generador**: AI Agent con Ollama (qwen3:8b, local) (razona internamente antes de responder), memoria por sesión.\n**Evaluador**: segunda llamada a Ollama que verifica si la respuesta está respaldada por los fragmentos recuperados.\n**Salida**: `{ output, steps, sources, suggestions, evaluacion }` → el front muestra el panel \"Pensando\" con los pasos reales.\n\n**Recuperación determinista (modelo local):** Cargar historial → Reformular consulta → Buscar en la base (Qdrant) → Armar contexto → Agente. El agente recibe los fragmentos en el prompt y conserva la herramienta para búsquedas extra. Si el modelo escribe la llamada a la herramienta como texto, se reintenta sin memoria.\n\n**Auto-actualización:** en cada pregunta se llama al flujo 04 sin esperar su resultado; este revisa las fuentes como máximo cada 6 h y solo vectoriza lo nuevo.",
         "height": 330,
         "width": 520,
         "color": 4
@@ -36,7 +37,7 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.5,
       "position": [
-        0,
+        -620,
         0
       ],
       "webhookId": "7f3b2c9e-1a5d-4e8f-9b6a-2c4d8e0f1a23"
@@ -44,10 +45,12 @@
     {
       "parameters": {
         "options": {
-          "systemMessage": "=Eres PitWall, el \"ingeniero de pista\" virtual de un aficionado a la Fórmula 1. Hoy es {{ $now.setZone('America/Bogota').setLocale('es').toFormat('d \\'de\\' LLLL \\'de\\' yyyy') }} y la temporada en curso es la 2026.\n\n# TU MISIÓN\nAyudar a personas que no son expertas (ni en F1 ni en tecnología) a entender la Fórmula 1 2026: reglamento, formato del fin de semana, equipos, pilotos, resultados y clasificación. Respondes en español claro y cercano (tuteo, Colombia), sin tecnicismos innecesarios; si usas un término técnico, explícalo en pocas palabras.\n\n# REGLA DE ORO: PRIMERO LA BASE DE CONOCIMIENTO\n- Antes de afirmar cualquier dato sobre la F1 2026 (reglas, cifras, fechas, resultados, puntos, quién es quién) DEBES llamar a la herramienta buscar_base_conocimiento. Sin excepción, incluso si crees saber la respuesta.\n- Escribe la consulta con palabras clave específicas: en inglés para el reglamento (por ejemplo \"Straight Mode active aerodynamics rear wing\", \"points scored sprint session\"), en español para temporada, equipos y guías (por ejemplo \"resultados Gran Premio de Italia 2026\"). Si la primera búsqueda no trae lo necesario, busca de nuevo con otras palabras (máximo 3 búsquedas).\n- Responde SOLO con lo que encuentres en la base. Si no está, dilo con honestidad: \"No encontré esto en mi base de conocimiento\" y ofrece lo más cercano que sí tengas. Nunca inventes cifras, artículos ni resultados.\n- Cierra siempre con una línea de fuentes usando los nombres de documento y artículo que trae la herramienta, por ejemplo: Fuentes: Reglamento Deportivo 2026, Art. B6.2 · Resultados Gran Premio de Italia 2026.\n\n# CÓMO CONVERSAR\n- Si la pregunta es clara, responde directo: primero la respuesta en 1 a 3 frases, luego el detalle en una lista corta si hace falta.\n- Si la pregunta es vaga o ambigua, no adivines: haz UNA pregunta corta para aclarar y ofrece hasta 3 opciones concretas.\n- Si la persona es nueva en la F1, guíala paso a paso, una idea por mensaje, y ofrece continuar.\n- Máximo unas 180 palabras por respuesta salvo que pidan más detalle. Negritas con moderación, listas solo cuando ayudan, sin emojis.\n- Recuerda lo que la persona contó antes en esta conversación y no repitas preguntas ya respondidas.\n- Los reglamentos están en inglés: traduce y explica en español, conservando los nombres propios de sistemas (Straight Mode, Corner Mode, Overtake Mode) con su explicación.\n- La base incluye resultados hasta la última ronda cargada; si preguntan por algo posterior, aclara hasta qué fecha llega tu información.\n\n# FORMATO OBLIGATORIO AL FINAL DE CADA RESPUESTA\nDespués del texto y de la línea de fuentes, agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta que contenga un JSON válido, así:\n```pitwall-meta\n{\"razonamiento\": \"una frase que resume qué buscaste y qué encontraste para responder\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```\nLas sugerencias son preguntas que la persona podría hacer a continuación, en primera persona y de máximo 10 palabras cada una.",
+          "systemMessage": "=Eres PitWall, el \"ingeniero de pista\" virtual de un aficionado a la Fórmula 1. Hoy es {{ $now.setZone('America/Bogota').setLocale('es').toFormat('d \\'de\\' LLLL \\'de\\' yyyy') }} y la temporada en curso es la 2026.\n\n# TU MISIÓN\nAyudar a personas que no son expertas (ni en F1 ni en tecnología) a entender la Fórmula 1 2026: reglamento, formato del fin de semana, equipos, pilotos, resultados y clasificación. Respondes en español claro y cercano (tuteo, Colombia), sin tecnicismos innecesarios; si usas un término técnico, explícalo en pocas palabras.\n\n# REGLA DE ORO: PRIMERO LA BASE DE CONOCIMIENTO\n- Llama a la herramienta de forma nativa (tool call). NUNCA escribas en tu respuesta texto como \"Calling buscar_base_conocimiento with input: ...\": eso no ejecuta nada y deja al usuario sin respuesta.\n- Abajo, en \"FRAGMENTOS RECUPERADOS\", ya tienes lo que la base de conocimiento devolvió para esta pregunta: úsalos como fuente principal y cita documento y artículo.\n- Si esos fragmentos no bastan para responder, llama a la herramienta buscar_base_conocimiento con otras palabras clave antes de responder.\n- Responde solo con datos que estén en los fragmentos (los de abajo o los de la herramienta). Nunca completes con conocimiento propio: si no está, dilo.\n- Escribe la consulta con palabras clave específicas: en inglés para el reglamento (por ejemplo \"Straight Mode active aerodynamics rear wing\", \"points scored sprint session\"), en español para temporada, equipos y guías (por ejemplo \"resultados Gran Premio de Italia 2026\"). Si la primera búsqueda no trae lo necesario, busca de nuevo con otras palabras (máximo 3 búsquedas).\n- Responde SOLO con lo que encuentres en la base. Si no está, dilo con honestidad: \"No encontré esto en mi base de conocimiento\" y ofrece lo más cercano que sí tengas. Nunca inventes cifras, artículos ni resultados.\n- Cierra siempre con una línea de fuentes usando los nombres de documento y artículo que trae la herramienta, por ejemplo: Fuentes: Reglamento Deportivo 2026, Art. B6.2 · Resultados Gran Premio de Italia 2026.\n\n# CÓMO CONVERSAR\n- Si la pregunta es clara, responde directo: primero la respuesta en 1 a 3 frases, luego el detalle en una lista corta si hace falta.\n- Si la pregunta es vaga o ambigua, no adivines: haz UNA pregunta corta para aclarar y ofrece hasta 3 opciones concretas.\n- Si la persona es nueva en la F1, guíala paso a paso, una idea por mensaje, y ofrece continuar.\n- Máximo unas 180 palabras por respuesta salvo que pidan más detalle. Negritas con moderación, listas solo cuando ayudan, sin emojis.\n- Recuerda lo que la persona contó antes en esta conversación y no repitas preguntas ya respondidas.\n- Los reglamentos están en inglés: traduce y explica en español, conservando los nombres propios de sistemas (Straight Mode, Corner Mode, Overtake Mode) con su explicación.\n- La base incluye resultados hasta la última ronda cargada; si preguntan por algo posterior, aclara hasta qué fecha llega tu información.\n\n# FORMATO OBLIGATORIO AL FINAL DE CADA RESPUESTA\nDespués del texto y de la línea de fuentes, agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta que contenga un JSON válido, así:\n```pitwall-meta\n{\"razonamiento\": \"una frase sencilla, para alguien no técnico, que diga en qué documentos y artículos te basaste (por ejemplo: Me basé en el artículo A2.2 del Reglamento General y en la guía del fin de semana). Nunca uses las palabras fragmento, vector, base de conocimiento ni herramienta\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```\nLas sugerencias son preguntas que la persona podría hacer a continuación, en primera persona y de máximo 10 palabras cada una.\nEl bloque pitwall-meta es obligatorio en TODAS las respuestas, también en saludos, preguntas aclaratorias y cuando rechaces un tema que no sea de Fórmula 1: en esos casos las sugerencias deben ser preguntas sobre la F1 2026 que sí puedas responder.\n\n# FRAGMENTOS RECUPERADOS DE LA BASE PARA ESTA PREGUNTA (consulta: {{ $json.consulta }})\n{{ $json.contexto_texto }}\n\n/no_think",
           "maxIterations": 8,
           "returnIntermediateSteps": true
-        }
+        },
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}"
       },
       "id": "agente-pitwall",
       "name": "Agente PitWall",
@@ -57,33 +60,36 @@
       "maxTries": 3,
       "waitBetweenTries": 5000,
       "position": [
-        300,
+        1200,
         0
       ]
     },
     {
       "parameters": {
-        "modelName": "models/gemini-3.6-flash",
+        "model": "qwen3:8b",
         "options": {
           "temperature": 0.3,
-          "maxOutputTokens": 4096
+          "numCtx": 16384,
+          "numPredict": 2048,
+          "keepAlive": "30m",
+          "think": false
         }
       },
       "id": "gemini-generador",
-      "name": "Gemini 3.6 Flash (generador)",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "name": "Ollama qwen3 (generador)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        160,
-        260
+        1160,
+        240
       ],
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 4000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "ollamaApi": {
+          "id": "ollama-local",
+          "name": "Ollama local"
         }
       }
     },
@@ -96,8 +102,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        340,
-        260
+        -400,
+        220
       ]
     },
     {
@@ -118,48 +124,48 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
       "typeVersion": 1.3,
       "position": [
-        520,
-        260
+        1360,
+        240
       ],
       "credentials": {
         "qdrantApi": {
-          "id": "Q7jonI6Fg4mZyQxo",
+          "id": "qdrant-local",
           "name": "Qdrant local"
         }
       }
     },
     {
       "parameters": {
-        "modelName": "models/gemini-embedding-2"
+        "model": "bge-m3"
       },
       "id": "embeddings-consulta",
-      "name": "Embeddings Gemini (consulta)",
-      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "name": "Embeddings Ollama bge-m3 (consulta)",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
       "typeVersion": 1,
       "position": [
-        560,
-        440
+        780,
+        420
       ],
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 4000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "ollamaApi": {
+          "id": "ollama-local",
+          "name": "Ollama local"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "// Convierte la salida del agente en el contrato que espera el front:\n// { output, steps, sources, suggestions, razonamiento, mode, sessionId }\nconst item = $input.first().json;\nlet output = (item.output ?? item.text ?? '').toString();\n\n// 1) Bloque pitwall-meta (razonamiento + sugerencias) que el agente agrega al final\nlet meta = { razonamiento: '', sugerencias: [] };\nconst metaMatch = output.match(/```\\s*pitwall-meta\\s*([\\s\\S]*?)```/i);\nif (metaMatch) {\n  try { meta = { ...meta, ...JSON.parse(metaMatch[1]) }; } catch (e) { /* JSON inválido: se ignora */ }\n  output = output.replace(metaMatch[0], '').trim();\n}\n\n// 2) Pasos intermedios reales: qué buscó y qué encontró\nconst parseMaybe = (v) => { if (typeof v !== 'string') return v; try { return JSON.parse(v); } catch (e) { return v; } };\n// La herramienta de Qdrant devuelve: [{ response: [{ type: 'text', text: '{\"pageContent\":..., \"metadata\":{...}}' }, ...] }]\nconst extractDocs = (obs) => {\n  let o = parseMaybe(obs);\n  const out = [];\n  const visit = (x) => {\n    if (x == null) return;\n    if (Array.isArray(x)) { x.forEach(visit); return; }\n    if (typeof x === 'string') { const p = parseMaybe(x); if (p !== x) visit(p); return; }\n    if (typeof x === 'object') {\n      if (Array.isArray(x.response)) { visit(x.response); return; }\n      if (typeof x.text === 'string' && x.type === 'text') { visit(x.text); return; }\n      if ('pageContent' in x || 'metadata' in x) { out.push({ pageContent: x.pageContent || '', metadata: x.metadata || {} }); return; }\n    }\n  };\n  visit(o);\n  return out;\n};\n\nconst steps = [];\nconst sources = [];\nconst contexto = [];\nconst seen = new Set();\nfor (const s of (item.intermediateSteps || [])) {\n  const action = s.action || {};\n  const ti = action.toolInput;\n  const q = typeof ti === 'string' ? ti : (ti?.input ?? ti?.query ?? JSON.stringify(ti ?? ''));\n  steps.push({ tipo: 'busqueda', titulo: 'Buscó en la base de conocimiento', detalle: q });\n  const docs = extractDocs(s.observation);\n  const names = [];\n  for (const dDoc of docs) {\n    const md = dDoc.metadata || {};\n    const text = (dDoc.pageContent || '').toString();\n    const documento = md.documento || md.titulo || md.fuente || 'Fragmento de la base';\n    const articulo = md.articulo || md.subtipo || '';\n    const key = documento + '|' + articulo + '|' + (md.parte || '');\n    if (!seen.has(key)) {\n      seen.add(key);\n      sources.push({ documento, articulo, titulo: md.titulo_articulo || md.titulo || '', pagina: md.pagina || '', url: md.url || '', tipo: md.tipo || '', extracto: text.slice(0, 240) });\n      contexto.push({ ref: documento + (articulo ? ' · Art. ' + articulo : ''), texto: text.slice(0, 1800) });\n    }\n    if (names.length < 3) names.push(documento + (articulo ? ' · Art. ' + articulo : ''));\n  }\n  steps.push({ tipo: 'herramienta', titulo: `Encontró ${docs.length} fragmento${docs.length === 1 ? '' : 's'} relevante${docs.length === 1 ? '' : 's'}`, detalle: names.join(' | ') });\n}\nif (meta.razonamiento) steps.push({ tipo: 'razonamiento', titulo: 'Cómo llegó a la respuesta', detalle: meta.razonamiento });\n\nlet sessionId = '';\ntry { sessionId = $('Cuando llega un mensaje').first().json.sessionId || ''; } catch (e) {}\n\nreturn [{ json: {\n  output,\n  steps,\n  sources,\n  suggestions: Array.isArray(meta.sugerencias) ? meta.sugerencias.slice(0, 4).map(String) : [],\n  razonamiento: meta.razonamiento || '',\n  mode: 'rag',\n  sessionId,\n  contexto,\n  prompt_evaluador: 'RESPUESTA DEL ASISTENTE:' + String.fromCharCode(10) + output + String.fromCharCode(10) + String.fromCharCode(10) + 'FRAGMENTOS RECUPERADOS DE LA BASE DE CONOCIMIENTO (texto completo):' + String.fromCharCode(10) + (contexto.length ? contexto.map((c, i) => '[' + (i + 1) + '] ' + c.ref + String.fromCharCode(10) + c.texto).join(String.fromCharCode(10) + String.fromCharCode(10)) : '(no se recuperó ningún fragmento)')\n} }];"
+        "jsCode": "// Convierte la salida del agente en el contrato que espera el front:\n// { output, steps, sources, suggestions, razonamiento, mode, sessionId }\nconst item = $input.first().json;\nlet output = (item.output ?? item.text ?? '').toString();\noutput = output.replace(/<think>[\\s\\S]*?<\\/think>/gi, '').trim();\nif (/^\\s*Calling\\s+\\w+\\s+with\\s+input/i.test(output)) {\n  output = 'No logré consultar la base de conocimiento en este intento. ¿Puedes repetir la pregunta o pulsar «Nueva» para empezar otra conversación?';\n}\n\n// Bloque pitwall-meta (razonamiento + sugerencias). Tolerante a JSON imperfecto de modelos locales.\nconst parseMeta = (txt) => {\n  let meta = { razonamiento: '', sugerencias: [] };\n  let m = txt.match(/```\\s*pitwall-meta\\s*([\\s\\S]*?)```/i) || txt.match(/```\\s*(?:json)?\\s*(\\{[\\s\\S]*?\"sugerencias\"[\\s\\S]*?\\})\\s*```/i);\n  if (!m) return { meta, cleaned: txt };\n  const body = m[1];\n  try { meta = { ...meta, ...JSON.parse(body) }; }\n  catch (e) {\n    const r = body.match(/\"razonamiento\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"/);\n    if (r) meta.razonamiento = r[1];\n    const s = body.match(/\"sugerencias\"\\s*:\\s*\\[([\\s\\S]*?)\\]/);\n    if (s) meta.sugerencias = [...s[1].matchAll(/\"((?:[^\"\\\\]|\\\\.)*)\"/g)].map(x => x[1]);\n  }\n  return { meta, cleaned: txt.replace(m[0], '').trim() };\n};\nconst parsed = parseMeta(output);\nlet meta = parsed.meta;\noutput = parsed.cleaned;\n\n// 2) Pasos intermedios reales: qué buscó y qué encontró\nconst parseMaybe = (v) => { if (typeof v !== 'string') return v; try { return JSON.parse(v); } catch (e) { return v; } };\n// La herramienta de Qdrant devuelve: [{ response: [{ type: 'text', text: '{\"pageContent\":..., \"metadata\":{...}}' }, ...] }]\nconst extractDocs = (obs) => {\n  let o = parseMaybe(obs);\n  const out = [];\n  const visit = (x) => {\n    if (x == null) return;\n    if (Array.isArray(x)) { x.forEach(visit); return; }\n    if (typeof x === 'string') { const p = parseMaybe(x); if (p !== x) visit(p); return; }\n    if (typeof x === 'object') {\n      if (Array.isArray(x.response)) { visit(x.response); return; }\n      if (typeof x.text === 'string' && x.type === 'text') { visit(x.text); return; }\n      if ('pageContent' in x || 'metadata' in x) { out.push({ pageContent: x.pageContent || '', metadata: x.metadata || {} }); return; }\n    }\n  };\n  visit(o);\n  return out;\n};\n\nconst steps = [];\nconst sources = [];\nconst contexto = [];\nconst seen = new Set();\n// Etiqueta legible de una fuente: \"Documento · Art. X (pág. N)\" o solo el título de la guía\nconst etiqueta = (src) => src.documento + (src.articulo ? ' · Art. ' + src.articulo : '') + (src.pagina ? ' (pág. ' + src.pagina + ')' : '');\nconst registrar = (src, texto) => {\n  const key = src.documento + '|' + src.articulo;\n  if (seen.has(key)) return false;\n  seen.add(key);\n  sources.push(src);\n  contexto.push({ ref: src.documento + (src.articulo ? ' · Art. ' + src.articulo : ''), texto });\n  return true;\n};\nconst pasoFuentes = (nuevas) => {\n  if (nuevas.length === 0) {\n    steps.push({ tipo: 'herramienta', titulo: 'No encontró información sobre este tema en los documentos', detalle: '' });\n    return;\n  }\n  steps.push({ tipo: 'herramienta', titulo: nuevas.length === 1 ? 'Consultó 1 fuente' : `Consultó ${nuevas.length} fuentes`, detalle: nuevas.map(etiqueta).join(' | ') });\n};\n\n// Búsqueda hecha antes de que el agente respondiera\nlet pre = {};\ntry { pre = $('Armar contexto').first().json || {}; } catch (e) {}\nif (pre.consulta) {\n  steps.push({ tipo: 'busqueda', titulo: 'Buscó en los documentos oficiales', detalle: pre.consulta });\n  const nuevas = [];\n  for (const cx of (pre.contexto || [])) {\n    if (registrar(cx.source, cx.texto)) nuevas.push(cx.source);\n  }\n  pasoFuentes(nuevas);\n}\n// Búsquedas adicionales que el agente decidió hacer con la herramienta\nfor (const s of (item.intermediateSteps || [])) {\n  const action = s.action || {};\n  const ti = action.toolInput;\n  const q = typeof ti === 'string' ? ti : (ti?.input ?? ti?.query ?? JSON.stringify(ti ?? ''));\n  steps.push({ tipo: 'busqueda', titulo: 'Amplió la búsqueda', detalle: q });\n  const nuevas = [];\n  for (const dDoc of extractDocs(s.observation)) {\n    const md = dDoc.metadata || {};\n    const text = (dDoc.pageContent || '').toString();\n    const src = { documento: md.documento || md.titulo || md.fuente || 'Base de conocimiento', articulo: md.articulo || md.subtipo || '', titulo: md.titulo_articulo || md.titulo || '', pagina: md.pagina || '', url: md.url || '', tipo: md.tipo || '', extracto: text.slice(0, 240) };\n    if (registrar(src, text.slice(0, 1800))) nuevas.push(src);\n  }\n  if (nuevas.length) pasoFuentes(nuevas);\n}\nif (meta.razonamiento) steps.push({ tipo: 'razonamiento', titulo: 'En qué se basó', detalle: meta.razonamiento });\n\n// Si el modelo no entregó sugerencias, se ofrecen preguntas de arranque sobre la F1 2026\nconst SUGERENCIAS_BASE = ['¿Qué cambió en la F1 en 2026?', '¿Quién va ganando el campeonato?', '¿Cómo funciona un fin de semana con sprint?', '¿Qué es el Overtake Mode?'];\nlet sugerencias = Array.isArray(meta.sugerencias) ? meta.sugerencias.map(String).filter(s => s.trim()).slice(0, 4) : [];\nif (sugerencias.length === 0) sugerencias = SUGERENCIAS_BASE.slice(0, 3);\n// El panel \"Cómo llegué a esta respuesta\" muestra solo las fuentes consultadas: una línea por documento con sus artículos y páginas\nconst porDocumento = new Map();\nfor (const s of sources) {\n  const g = porDocumento.get(s.documento) || { tipo: s.tipo, articulos: [], paginas: [] };\n  if (s.articulo && !g.articulos.includes(s.articulo)) g.articulos.push(s.articulo);\n  if (s.pagina && !g.paginas.includes(s.pagina)) g.paginas.push(s.pagina);\n  porDocumento.set(s.documento, g);\n}\nconst listar = (arr, sing, plur) => arr.length === 0 ? '' : (arr.length === 1 ? sing + ' ' + arr[0] : plur + ' ' + arr.slice(0, -1).join(', ') + ' y ' + arr[arr.length - 1]);\nconst pasosFuentes = [];\nfor (const [documento, g] of porDocumento) {\n  let detalle = listar(g.articulos, 'Artículo', 'Artículos');\n  const pags = listar(g.paginas, 'página', 'páginas');\n  if (pags) detalle += (detalle ? ' · ' : '') + pags;\n  if (!detalle) detalle = g.tipo === 'guia' ? 'Guía en español de PitWall' : (g.tipo === 'temporada' ? 'Datos oficiales de la temporada 2026' : (g.tipo === 'temporada_narrativa' ? 'Resumen de la temporada 2026' : ''));\n  pasosFuentes.push({ tipo: 'busqueda', titulo: documento, detalle });\n}\nif (pasosFuentes.length === 0) pasosFuentes.push({ tipo: 'busqueda', titulo: 'No hizo falta consultar los documentos', detalle: '' });\nsteps.length = 0;\nsteps.push(...pasosFuentes);\nlet sessionId = '';\ntry { sessionId = $('Cuando llega un mensaje').first().json.sessionId || ''; } catch (e) {}\n\nreturn [{ json: {\n  output,\n  steps,\n  sources,\n  suggestions: sugerencias,\n  razonamiento: meta.razonamiento || '',\n  mode: 'rag',\n  sessionId,\n  contexto,\n  prompt_evaluador: 'RESPUESTA DEL ASISTENTE:' + String.fromCharCode(10) + output + String.fromCharCode(10) + String.fromCharCode(10) + 'FRAGMENTOS RECUPERADOS DE LA BASE DE CONOCIMIENTO (texto completo):' + String.fromCharCode(10) + (contexto.length ? contexto.map((c, i) => '[' + (i + 1) + '] ' + c.ref + String.fromCharCode(10) + c.texto).join(String.fromCharCode(10) + String.fromCharCode(10)) : '(no se recuperó ningún fragmento)')\n} }];"
       },
       "id": "formatear",
       "name": "Formatear respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        720,
+        2040,
         0
       ]
     },
@@ -171,7 +177,7 @@
           "messageValues": [
             {
               "type": "SystemMessagePromptTemplate",
-              "message": "Eres el módulo evaluador de un sistema RAG sobre Fórmula 1 2026. Tu única tarea es verificar si la RESPUESTA DEL ASISTENTE está respaldada por los FRAGMENTOS RECUPERADOS.\nReglas:\n- Si no se recuperó ningún fragmento, fundamentada = false y comentario = \"La respuesta no consultó la base de conocimiento\".\n- Si la respuesta es una pregunta aclaratoria o un saludo sin datos, fundamentada = true y comentario = \"Sin afirmaciones que verificar\".\n- Marca fundamentada = false si la respuesta afirma cifras, fechas, reglas o resultados que NO aparecen en los fragmentos.\n- Responde ÚNICAMENTE con un JSON válido, sin texto adicional ni bloques de código, con esta forma exacta:\n{\"fundamentada\": true, \"confianza\": 0.0, \"comentario\": \"una frase en español\"}"
+              "message": "Eres el módulo evaluador de un sistema RAG sobre Fórmula 1 2026. Tu única tarea es verificar si la RESPUESTA DEL ASISTENTE está respaldada por los FRAGMENTOS RECUPERADOS.\nReglas:\n- Si la respuesta es un saludo, una pregunta aclaratoria, o rechaza/redirige un tema ajeno a la Fórmula 1 sin afirmar cifras, fechas, reglas ni resultados, fundamentada = true, confianza = 1.0 y comentario = \"Sin afirmaciones que verificar\". Esta regla va primero.\n- Si la respuesta sí afirma datos y no se recuperó ningún fragmento, fundamentada = false y comentario = \"La respuesta no se apoya en los documentos oficiales\".\n- Marca fundamentada = false si la respuesta afirma cifras, fechas, reglas o resultados que NO aparecen en los fragmentos.\n- Responde ÚNICAMENTE con un JSON válido, sin texto adicional ni bloques de código, con esta forma exacta:\n{\"fundamentada\": true, \"confianza\": 0.0, \"comentario\": \"una frase sencilla en español, dirigida al usuario\"}\nEl comentario debe hablar de \"las fuentes\" o \"los documentos\" (por ejemplo: Todo lo que dice está en el Reglamento General, artículo A2.2). Nunca uses las palabras fragmento, recuperado ni base de conocimiento.\n/no_think"
             }
           ]
         },
@@ -182,49 +188,299 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        940,
+        2260,
         0
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "modelName": "models/gemini-3.6-flash",
+        "model": "qwen3:8b",
         "options": {
           "temperature": 0,
-          "maxOutputTokens": 2048
+          "numCtx": 16384,
+          "numPredict": 512,
+          "keepAlive": "30m",
+          "format": "json",
+          "think": false
         }
       },
       "id": "gemini-evaluador",
-      "name": "Gemini 3.6 Flash (evaluador)",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "name": "Ollama qwen3 (evaluador)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        960,
+        2260,
         220
       ],
       "retryOnFail": true,
       "maxTries": 2,
       "waitBetweenTries": 3000,
       "credentials": {
-        "googlePalmApi": {
-          "id": "gYtsz1P7OZ8s2VoQ",
-          "name": "Gemini PitWall"
+        "ollamaApi": {
+          "id": "ollama-local",
+          "name": "Ollama local"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "// Une el veredicto del evaluador con la respuesta ya formateada\nconst base = $('Formatear respuesta').first().json;\nlet raw = ($input.first().json.text ?? $input.first().json.output ?? '').toString();\nlet evaluacion = { fundamentada: null, confianza: null, comentario: 'El evaluador no respondió' };\nconst m = raw.match(/\\{[\\s\\S]*\\}/);\nif (m) { try { evaluacion = { ...evaluacion, ...JSON.parse(m[0]) }; } catch (e) {} }\nconst steps = [...(base.steps || [])];\nif (evaluacion.fundamentada === true) {\n  steps.push({ tipo: 'evaluacion', titulo: 'Verificación: la respuesta está respaldada por las fuentes', detalle: evaluacion.comentario || '' });\n} else if (evaluacion.fundamentada === false) {\n  steps.push({ tipo: 'evaluacion', titulo: 'Verificación: hay afirmaciones sin respaldo en las fuentes', detalle: evaluacion.comentario || '' });\n}\nconst { contexto, prompt_evaluador, ...limpio } = base;\nreturn [{ json: { ...limpio, steps, evaluacion } }];"
+        "jsCode": "// Une el veredicto del evaluador con la respuesta ya formateada\nconst base = $('Formatear respuesta').first().json;\n// Con Ollama en modo JSON el nodo ya entrega el objeto parseado; si no, viene como texto.\nconst ev = $input.first().json;\nlet evaluacion = { fundamentada: null, confianza: null, comentario: 'El evaluador no respondió' };\nif (ev && typeof ev === 'object' && 'fundamentada' in ev) {\n  evaluacion = { ...evaluacion, ...ev };\n} else {\n  let raw = ev.text ?? ev.output ?? '';\n  if (raw && typeof raw === 'object') raw = JSON.stringify(raw);\n  raw = String(raw).replace(/<think>[\\s\\S]*?<\\/think>/gi, '').trim();\n  const m = raw.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { evaluacion = { ...evaluacion, ...JSON.parse(m[0]) }; } catch (e) {} }\n}\nif (typeof evaluacion.fundamentada === 'string') evaluacion.fundamentada = evaluacion.fundamentada.toLowerCase() === 'true';\nif (typeof evaluacion.confianza === 'string') evaluacion.confianza = parseFloat(evaluacion.confianza) || null;\n// Regla determinista: saludos, aclaraciones y rechazos de temas ajenos (sin consultar la base y sin cifras) no tienen nada que verificar.\nconst sinFragmentos = !Array.isArray(base.contexto) || base.contexto.length === 0;\nconst sinCifras = !/\\d/.test(String(base.output || '').replace(/f[óo]rmula\\s*(uno|1)|\\bF1\\b|\\b2026\\b/gi, ''));\nif (sinFragmentos && sinCifras) {\n  evaluacion = { fundamentada: true, confianza: 1, comentario: 'Sin afirmaciones que verificar' };\n}\nconst steps = [...(base.steps || [])];\nif (evaluacion.fundamentada === true) {\n  steps.push({ tipo: 'evaluacion', titulo: 'Verificado: la respuesta está respaldada por las fuentes', detalle: evaluacion.comentario || '' });\n} else if (evaluacion.fundamentada === false) {\n  steps.push({ tipo: 'evaluacion', titulo: 'Atención: hay afirmaciones que no aparecen en las fuentes', detalle: evaluacion.comentario || '' });\n}\nconst { contexto, prompt_evaluador, ...limpio } = base;\nreturn [{ json: { ...limpio, steps, evaluacion } }];"
       },
       "id": "unir-evaluacion",
       "name": "Respuesta final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
+        2520,
         0
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1-calling-as-text",
+              "leftValue": "={{ $json.output ?? '' }}",
+              "rightValue": "^\\s*Calling\\s+\\w+\\s+with\\s+input",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-calling-as-text",
+      "name": "¿Escribió la llamada como texto?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1560,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Eres PitWall, el \"ingeniero de pista\" virtual de un aficionado a la Fórmula 1. Hoy es {{ $now.setZone('America/Bogota').setLocale('es').toFormat('d \\'de\\' LLLL \\'de\\' yyyy') }} y la temporada en curso es la 2026.\n\n# TU MISIÓN\nAyudar a personas que no son expertas (ni en F1 ni en tecnología) a entender la Fórmula 1 2026: reglamento, formato del fin de semana, equipos, pilotos, resultados y clasificación. Respondes en español claro y cercano (tuteo, Colombia), sin tecnicismos innecesarios; si usas un término técnico, explícalo en pocas palabras.\n\n# REGLA DE ORO: PRIMERO LA BASE DE CONOCIMIENTO\n- Llama a la herramienta de forma nativa (tool call). NUNCA escribas en tu respuesta texto como \"Calling buscar_base_conocimiento with input: ...\": eso no ejecuta nada y deja al usuario sin respuesta.\n- Abajo, en \"FRAGMENTOS RECUPERADOS\", ya tienes lo que la base de conocimiento devolvió para esta pregunta: úsalos como fuente principal y cita documento y artículo.\n- Si esos fragmentos no bastan para responder, llama a la herramienta buscar_base_conocimiento con otras palabras clave antes de responder.\n- Responde solo con datos que estén en los fragmentos (los de abajo o los de la herramienta). Nunca completes con conocimiento propio: si no está, dilo.\n- Escribe la consulta con palabras clave específicas: en inglés para el reglamento (por ejemplo \"Straight Mode active aerodynamics rear wing\", \"points scored sprint session\"), en español para temporada, equipos y guías (por ejemplo \"resultados Gran Premio de Italia 2026\"). Si la primera búsqueda no trae lo necesario, busca de nuevo con otras palabras (máximo 3 búsquedas).\n- Responde SOLO con lo que encuentres en la base. Si no está, dilo con honestidad: \"No encontré esto en mi base de conocimiento\" y ofrece lo más cercano que sí tengas. Nunca inventes cifras, artículos ni resultados.\n- Cierra siempre con una línea de fuentes usando los nombres de documento y artículo que trae la herramienta, por ejemplo: Fuentes: Reglamento Deportivo 2026, Art. B6.2 · Resultados Gran Premio de Italia 2026.\n\n# CÓMO CONVERSAR\n- Si la pregunta es clara, responde directo: primero la respuesta en 1 a 3 frases, luego el detalle en una lista corta si hace falta.\n- Si la pregunta es vaga o ambigua, no adivines: haz UNA pregunta corta para aclarar y ofrece hasta 3 opciones concretas.\n- Si la persona es nueva en la F1, guíala paso a paso, una idea por mensaje, y ofrece continuar.\n- Máximo unas 180 palabras por respuesta salvo que pidan más detalle. Negritas con moderación, listas solo cuando ayudan, sin emojis.\n- Recuerda lo que la persona contó antes en esta conversación y no repitas preguntas ya respondidas.\n- Los reglamentos están en inglés: traduce y explica en español, conservando los nombres propios de sistemas (Straight Mode, Corner Mode, Overtake Mode) con su explicación.\n- La base incluye resultados hasta la última ronda cargada; si preguntan por algo posterior, aclara hasta qué fecha llega tu información.\n\n# FORMATO OBLIGATORIO AL FINAL DE CADA RESPUESTA\nDespués del texto y de la línea de fuentes, agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta que contenga un JSON válido, así:\n```pitwall-meta\n{\"razonamiento\": \"una frase sencilla, para alguien no técnico, que diga en qué documentos y artículos te basaste (por ejemplo: Me basé en el artículo A2.2 del Reglamento General y en la guía del fin de semana). Nunca uses las palabras fragmento, vector, base de conocimiento ni herramienta\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```\nLas sugerencias son preguntas que la persona podría hacer a continuación, en primera persona y de máximo 10 palabras cada una.\nEl bloque pitwall-meta es obligatorio en TODAS las respuestas, también en saludos, preguntas aclaratorias y cuando rechaces un tema que no sea de Fórmula 1: en esos casos las sugerencias deben ser preguntas sobre la F1 2026 que sí puedas responder.\n\n# FRAGMENTOS RECUPERADOS DE LA BASE PARA ESTA PREGUNTA (consulta: {{ $('Armar contexto').first().json.consulta }})\n{{ $('Armar contexto').first().json.contexto_texto }}\n\n/no_think",
+          "maxIterations": 8,
+          "returnIntermediateSteps": true
+        },
+        "promptType": "define",
+        "text": "={{ $('Armar contexto').first().json.chatInput }}"
+      },
+      "id": "agente-reintento",
+      "name": "Agente PitWall (reintento sin memoria)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "position": [
+        1780,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "simplifyOutput": true,
+        "options": {
+          "groupMessages": true
+        }
+      },
+      "id": "cargar-historial",
+      "name": "Cargar historial",
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Arma el prompt para convertir la última pregunta en una consulta de búsqueda autónoma\nconst trigger = $('Cuando llega un mensaje').first().json;\nconst chatInput = String(trigger.chatInput ?? '').trim();\nconst sessionId = trigger.sessionId ?? '';\nconst grupos = ($input.first().json.messages || []).slice(-3);\nconst historial = grupos.map(g => (g.human ? 'Usuario: ' + String(g.human).slice(0, 400) : '') + (g.ai ? '\\nAsistente: ' + String(g.ai).replace(/```[\\s\\S]*?```/g, '').slice(0, 400) : '')).join('\\n');\nconst hayHistorial = grupos.length > 0;\nconst prompt_reformular = 'HISTORIAL RECIENTE:\\n' + (historial || '(vacío)') + '\\n\\nÚLTIMA PREGUNTA DEL USUARIO:\\n' + chatInput + '\\n\\nCONSULTA DE BÚSQUEDA:';\nreturn [{ json: { chatInput, sessionId, hayHistorial, prompt_reformular } }];"
+      },
+      "id": "preparar-reformulacion",
+      "name": "Preparar reformulación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hay-historial",
+              "leftValue": "={{ $json.hayHistorial }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-hay-historial",
+      "name": "¿Hay historial?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        40,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt_reformular }}",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "SystemMessagePromptTemplate",
+              "message": "Eres un reescritor de consultas para un buscador semántico sobre la Fórmula 1 2026 (reglamentos FIA en inglés, resultados de la temporada y guías en español).\nConvierte la ÚLTIMA PREGUNTA DEL USUARIO en una consulta de búsqueda autónoma y completa, resolviendo pronombres y referencias al historial (por ejemplo, \"¿y el de pilotos?\" tras hablar del campeonato de constructores → \"clasificación del campeonato de pilotos 2026\").\nReglas: una sola línea, máximo 20 palabras, sin comillas, sin explicaciones, sin responder la pregunta. Si la pregunta ya es autónoma, devuélvela casi igual. Si es un saludo o no trata de Fórmula 1, devuélvela tal cual.\n/no_think"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "reformular-consulta",
+      "name": "Reformular consulta",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        260,
+        -140
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:8b",
+        "options": {
+          "temperature": 0,
+          "numCtx": 8192,
+          "numPredict": 80,
+          "keepAlive": "30m",
+          "think": false
+        }
+      },
+      "id": "ollama-reformulador",
+      "name": "Ollama qwen3 (reformulador)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        300,
+        60
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "ollama-local",
+          "name": "Ollama local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normaliza la consulta (venga del reformulador o directa) y conserva chatInput/sessionId\nconst base = $('Preparar reformulación').first().json;\nconst item = $input.first().json || {};\nlet consulta = '';\nif (typeof item.text === 'string') consulta = item.text;\nelse if (typeof item.output === 'string') consulta = item.output;\nconsulta = consulta.replace(/<think>[\\s\\S]*?<\\/think>/gi, '').replace(/^CONSULTA DE BÚSQUEDA:\\s*/i, '').replace(/[\"“”`]/g, '').split('\\n').map(s => s.trim()).filter(Boolean)[0] || '';\nif (!consulta || consulta.length > 200) consulta = base.chatInput;\nreturn [{ json: { chatInput: base.chatInput, sessionId: base.sessionId, consulta } }];"
+      },
+      "id": "armar-consulta",
+      "name": "Armar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "qdrantCollection": {
+          "__rl": true,
+          "mode": "id",
+          "value": "pitwall_kb"
+        },
+        "prompt": "={{ $json.consulta }}",
+        "topK": 6,
+        "includeDocumentMetadata": true,
+        "options": {}
+      },
+      "id": "buscar-en-la-base",
+      "name": "Buscar en la base",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        740,
+        0
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "qdrantApi": {
+          "id": "qdrant-local",
+          "name": "Qdrant local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Reúne los fragmentos recuperados en un contexto para el agente y en fuentes/pasos para el front\nconst q = $('Armar consulta').first().json;\nconst contexto = [];\nconst seen = new Set();\nfor (const it of $input.all()) {\n  const j = it.json || {};\n  const doc = j.document || j;\n  const text = String(doc.pageContent ?? j.pageContent ?? '').trim();\n  if (!text) continue;\n  const md = doc.metadata || j.metadata || {};\n  const documento = md.documento || md.titulo || md.fuente || 'Fragmento de la base';\n  const articulo = md.articulo || md.subtipo || '';\n  const key = documento + '|' + articulo + '|' + (md.parte || '');\n  if (seen.has(key)) continue;\n  seen.add(key);\n  contexto.push({ ref: documento + (articulo ? ' · Art. ' + articulo : ''), texto: text.slice(0, 1800), score: j.score ?? null,\n    source: { documento, articulo, titulo: md.titulo_articulo || md.titulo || '', pagina: md.pagina || '', url: md.url || '', tipo: md.tipo || '', extracto: text.slice(0, 240) } });\n}\nconst contexto_texto = contexto.length\n  ? contexto.map((c, i) => '[' + (i + 1) + '] ' + c.ref + '\\n' + c.texto).join('\\n\\n')\n  : '(no se encontraron fragmentos para esta consulta)';\nreturn [{ json: { chatInput: q.chatInput, sessionId: q.sessionId, consulta: q.consulta, contexto, contexto_texto, n_fragmentos: contexto.length } }];"
+      },
+      "id": "armar-contexto",
+      "name": "Armar contexto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "PitWall04ActualizacionKB"
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "id": "actualizar-si-hace-falta",
+      "name": "Actualizar la base si hace falta",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        -220
+      ],
+      "onError": "continueRegularOutput"
     }
   ],
   "connections": {
@@ -232,7 +488,12 @@
       "main": [
         [
           {
-            "node": "Agente PitWall",
+            "node": "Cargar historial",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Actualizar la base si hace falta",
             "type": "main",
             "index": 0
           }
@@ -243,7 +504,7 @@
       "main": [
         [
           {
-            "node": "Formatear respuesta",
+            "node": "¿Escribió la llamada como texto?",
             "type": "main",
             "index": 0
           }
@@ -272,17 +533,6 @@
         ]
       ]
     },
-    "Gemini 3.6 Flash (generador)": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Agente PitWall",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Memoria de la conversación": {
       "ai_memory": [
         [
@@ -293,6 +543,11 @@
           },
           {
             "node": "Cuando llega un mensaje",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Cargar historial",
             "type": "ai_memory",
             "index": 0
           }
@@ -306,27 +561,177 @@
             "node": "Agente PitWall",
             "type": "ai_tool",
             "index": 0
+          },
+          {
+            "node": "Agente PitWall (reintento sin memoria)",
+            "type": "ai_tool",
+            "index": 0
           }
         ]
       ]
     },
-    "Embeddings Gemini (consulta)": {
+    "Ollama qwen3 (generador)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente PitWall",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Agente PitWall (reintento sin memoria)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama bge-m3 (consulta)": {
       "ai_embedding": [
         [
           {
             "node": "buscar_base_conocimiento",
             "type": "ai_embedding",
             "index": 0
+          },
+          {
+            "node": "Buscar en la base",
+            "type": "ai_embedding",
+            "index": 0
           }
         ]
       ]
     },
-    "Gemini 3.6 Flash (evaluador)": {
+    "Ollama qwen3 (evaluador)": {
       "ai_languageModel": [
         [
           {
             "node": "Evaluador (verifica fundamentación)",
             "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Escribió la llamada como texto?": {
+      "main": [
+        [
+          {
+            "node": "Agente PitWall (reintento sin memoria)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Formatear respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente PitWall (reintento sin memoria)": {
+      "main": [
+        [
+          {
+            "node": "Formatear respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cargar historial": {
+      "main": [
+        [
+          {
+            "node": "Preparar reformulación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar reformulación": {
+      "main": [
+        [
+          {
+            "node": "¿Hay historial?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay historial?": {
+      "main": [
+        [
+          {
+            "node": "Reformular consulta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Armar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama qwen3 (reformulador)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Reformular consulta",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reformular consulta": {
+      "main": [
+        [
+          {
+            "node": "Armar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar consulta": {
+      "main": [
+        [
+          {
+            "node": "Buscar en la base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar en la base": {
+      "main": [
+        [
+          {
+            "node": "Armar contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar contexto": {
+      "main": [
+        [
+          {
+            "node": "Agente PitWall",
+            "type": "main",
             "index": 0
           }
         ]

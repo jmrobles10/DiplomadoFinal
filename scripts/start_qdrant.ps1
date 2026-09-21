@@ -3,7 +3,7 @@
 #  Uso:  powershell -ExecutionPolicy Bypass -File scripts\start_qdrant.ps1
 #  API:   http://localhost:6333      Panel: http://localhost:6333/dashboard
 # =====================================================================
-$root = "C:\Fuentes_Git\rag-f1-n8n"
+$root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $exe = Join-Path $root "tools\qdrant\qdrant.exe"
 $storage = Join-Path $root "tools\qdrant\storage"
 $snapshots = Join-Path $root "tools\qdrant\snapshots"

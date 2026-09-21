@@ -27,7 +27,7 @@ from datetime import date
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-ROOT = r"C:\Fuentes_Git\rag-f1-n8n"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEXT_DIR = os.path.join(ROOT, "kb", "processed", "text")
 JOLPICA = os.path.join(ROOT, "kb", "raw", "jolpica")
 WIKI = os.path.join(ROOT, "kb", "raw", "wiki_sections.json")
@@ -36,7 +36,24 @@ OUT = os.path.join(ROOT, "kb", "processed")
 CHUNKS = os.path.join(OUT, "chunks")
 os.makedirs(CHUNKS, exist_ok=True)
 
-HOY = date(2026, 9, 20)
+def _hoy():
+    """Fecha de referencia de la base: la de la última carrera con resultados (o PITWALL_HOY=YYYY-MM-DD).
+    Se usa la fecha del dato y no la del reloj para que los fragmentos no cambien (ni se re-vectoricen) si no hay datos nuevos."""
+    v = os.environ.get("PITWALL_HOY")
+    if v:
+        return date.fromisoformat(v)
+    last = None
+    for f in glob.glob(os.path.join(JOLPICA, "results_*.json")):
+        try:
+            for r in json.load(open(f, encoding="utf-8"))["MRData"]["RaceTable"]["Races"]:
+                if r.get("Results"):
+                    last = max(last or r["date"], r["date"])
+        except Exception:
+            pass
+    return date.fromisoformat(last) if last else date.today()
+
+
+HOY = _hoy()
 MAX_CHARS = 2000   # tamaño objetivo máximo de un fragmento
 MIN_CHARS = 250    # fragmentos más cortos se fusionan con el anterior del mismo artículo
 # Grupos del reglamento técnico que son listas de materiales/componentes: ruido para un asistente de aficionados
