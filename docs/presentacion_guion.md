@@ -62,7 +62,7 @@ Mostrar el panel "Pensando" del front o el nodo de la herramienta en n8n: consul
 - Persistencia real: Qdrant en disco y memoria por sesión; nada se pierde al cerrar el chat.
 - Thinking visible y honesto: pasos reales del agente, no una animación.
 - Evaluador como segunda opinión barata.
-- Todo local y gratuito: sin cuentas de pago, sin nube.
+- Todo local: n8n, Qdrant y el front corren en el portátil; el único costo es la API de Gemini, unos 0,7 centavos por pregunta.
 
 ## 12. Dificultades encontradas [1:00]
 - La key gratuita de Gemini para usuarios nuevos solo permite 20 respuestas al día con `gemini-3.6-flash`: se resolvió pasando a una key de Gemini con facturación (costo de centavos); Groq queda como plan B gratuito.

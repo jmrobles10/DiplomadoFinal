@@ -57,7 +57,7 @@ sql/          Esquema alternativo para Supabase (no usado en la versión local)
 
 ## Cómo ejecutarlo en local (Windows)
 
-Requisitos: Node 24, Python 3.12, una API key gratuita de Google AI Studio.
+Requisitos: Node 24, Python 3.12 y una API key de Google AI Studio (la capa gratuita para usuarios nuevos limita a 20 respuestas/día con gemini-3.6-flash; con facturación activa el proyecto cuesta centavos).
 
 ```powershell
 npm install -g n8n
