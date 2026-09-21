@@ -46,6 +46,14 @@ const ICONO_PASO = {
   razonamiento: "#ico-chispa",
   busqueda: "#ico-lupa",
   herramienta: "#ico-tuerca",
+  evaluacion: "#ico-escudo",
+};
+
+/** Rótulos de la insignia de evaluación (monocroma). */
+const VEREDICTO = {
+  si: "Verificada contra las fuentes",
+  no: "Con afirmaciones sin respaldo",
+  neutro: "Respuesta revisada",
 };
 
 const LS = {
@@ -321,6 +329,11 @@ const PASOS_DEMO = (consulta, cuantos) => [
     titulo: "Redacté la respuesta",
     detalle: "Uní los fragmentos recuperados, ordené la explicación y cité los documentos consultados.",
   },
+  {
+    tipo: "evaluacion",
+    titulo: "Revisé que todo tuviera respaldo",
+    detalle: "Contrasté cada afirmación con los fragmentos recuperados antes de entregarte la respuesta.",
+  },
 ];
 
 const DEMO_RAG = [
@@ -504,6 +517,11 @@ const DEMO_RAG_DEFECTO = {
     "Explícame el modo de adelantamiento",
     "Soy nuevo en la F1, ¿por dónde empiezo?",
   ],
+  evaluacion: {
+    fundamentada: true,
+    confianza: "media",
+    comentario: "Todo lo que te dije sale de los documentos que aparecen en «Fuentes consultadas».",
+  },
 };
 
 function demoDirecto(texto) {
@@ -522,6 +540,11 @@ function demoDirecto(texto) {
     ],
     sources: [],
     suggestions: [],
+    evaluacion: {
+      fundamentada: false,
+      confianza: "baja",
+      comentario: "Sin búsqueda no hay documentos que respalden las cifras: tómalas como aproximadas.",
+    },
   };
 }
 
@@ -579,6 +602,41 @@ function limpiarFuentes(valor) {
     .filter((f) => f && (f.documento || f.articulo || f.url));
 }
 
+/** { fundamentada, confianza, comentario } → normalizado o null. */
+function limpiarEvaluacion(valor) {
+  if (!valor || typeof valor !== "object" || Array.isArray(valor)) return null;
+
+  const cruda = valor.fundamentada != null ? valor.fundamentada : valor.grounded;
+  let fundamentada = null;
+  if (typeof cruda === "boolean") fundamentada = cruda;
+  else if (typeof cruda === "string") {
+    const t = cruda.trim().toLowerCase();
+    if (/^(true|s[ií]|si|yes|1)$/.test(t)) fundamentada = true;
+    else if (/^(false|no|0)$/.test(t)) fundamentada = false;
+  }
+
+  const confianza = String(valor.confianza || valor.confidence || "").trim();
+  const comentario = String(valor.comentario || valor.comment || "").trim();
+
+  if (fundamentada === null && !confianza && !comentario) return null;
+  return { fundamentada: fundamentada, confianza: confianza, comentario: comentario };
+}
+
+/** Si el agente no mandó el objeto `evaluacion` pero sí un paso de
+ *  tipo `evaluacion`, deducimos el veredicto de su texto. */
+function evaluacionDePasos(pasos) {
+  if (!Array.isArray(pasos)) return null;
+  const paso = pasos.find((p) => p && p.tipo === "evaluacion");
+  if (!paso) return null;
+
+  const texto = (paso.titulo + " " + paso.detalle).toLowerCase();
+  let fundamentada = null;
+  if (/sin respaldo|no fundament|no verificad|infundad|sin sustento|sin fuente/.test(texto)) fundamentada = false;
+  else if (/respald|fundament|verificad|sustentad|coincide con/.test(texto)) fundamentada = true;
+
+  return { fundamentada: fundamentada, confianza: "", comentario: "" };
+}
+
 function limpiarSugerencias(valor) {
   if (!Array.isArray(valor)) return [];
   return valor
@@ -599,18 +657,21 @@ function normalizar(cruda) {
 
   // no es JSON: el texto crudo es la respuesta
   if (typeof d === "string") {
-    return { output: d, steps: [], sources: [], suggestions: [] };
+    return { output: d, steps: [], sources: [], suggestions: [], evaluacion: null, mode: "" };
   }
   if (!d || typeof d !== "object") {
-    return { output: "", steps: [], sources: [], suggestions: [] };
+    return { output: "", steps: [], sources: [], suggestions: [], evaluacion: null, mode: "" };
   }
 
   const texto = primerTexto(d);
+  const pasos = limpiarPasos(d.steps || d.pasos);
   return {
     output: texto || "El agente respondió, pero sin texto que mostrar.",
-    steps: limpiarPasos(d.steps || d.pasos),
+    steps: pasos,
     sources: limpiarFuentes(d.sources || d.fuentes),
     suggestions: limpiarSugerencias(d.suggestions || d.sugerencias),
+    evaluacion: limpiarEvaluacion(d.evaluacion || d.evaluation) || evaluacionDePasos(pasos),
+    mode: String(d.mode || d.modo || ""),
   };
 }
 
@@ -624,6 +685,13 @@ function esperar(ms) {
 
 function urlDeModo(modo) {
   return modo === "directo" ? CONFIG.WEBHOOK_DIRECTO : CONFIG.WEBHOOK_RAG;
+}
+
+/** Etiqueta chiquita RAG / DIRECTO. Si el agente devuelve `mode`, ese manda. */
+function etiquetaDeModo(modoLocal, modoServidor) {
+  const m = String(modoServidor || modoLocal || "").trim().toLowerCase();
+  if (m.indexOf("direct") === 0 || m === "sin rag" || m === "llm") return "DIRECTO";
+  return "RAG";
 }
 
 async function preguntar(texto, modo) {
@@ -692,7 +760,16 @@ function mensajeDeError(e) {
 async function preguntarSeguro(texto, modo) {
   try {
     const r = await preguntar(texto, modo);
-    return { ok: true, modo: modo, output: r.output, steps: r.steps, sources: r.sources, suggestions: r.suggestions };
+    return {
+      ok: true,
+      modo: modo,
+      output: r.output,
+      steps: r.steps,
+      sources: r.sources,
+      suggestions: r.suggestions,
+      evaluacion: r.evaluacion,
+      mode: r.mode,
+    };
   } catch (e) {
     if (window.console && console.warn) console.warn("[PitWall] fallo la consulta:", e);
     return { ok: false, modo: modo, error: mensajeDeError(e) };
@@ -722,8 +799,12 @@ const dom = {
   nueva: $("#btn-nueva"),
   etiquetaModo: $("#chat-mode-tag"),
   etiquetaDemo: $("#demo-tag"),
-  radios: $$('input[name="modo"]'),
+  /* dos interruptores: el de la tarjeta del chat y el del menú de teléfono.
+     Son grupos de radio distintos para que los dos puedan quedar marcados. */
+  radios: $$('input[name="modo"], input[name="modo-nav"]'),
   chipsHero: $("#mission-chips"),
+  nav: $("#nav"),
+  navBoton: $("#nav-toggle"),
 };
 
 let nodoSugerencias = null;
@@ -781,11 +862,35 @@ function htmlFuentes(fuentes) {
   );
 }
 
+/** Insignia monocroma con el veredicto de la evaluación. */
+function htmlVeredicto(ev) {
+  if (!ev) return "";
+
+  let clase = "neutro";
+  let texto = VEREDICTO.neutro;
+  if (ev.fundamentada === true) { clase = "si"; texto = VEREDICTO.si; }
+  else if (ev.fundamentada === false) { clase = "no"; texto = VEREDICTO.no; }
+
+  const extra = ev.confianza
+    ? ' <span class="veredicto__extra">· confianza ' + escapeHtml(ev.confianza) + "</span>"
+    : "";
+
+  return (
+    '<p class="veredicto veredicto--' + clase + '">' +
+      '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-escudo"/></svg>' +
+      "<span>" + escapeHtml(texto) + extra + "</span>" +
+    "</p>"
+  );
+}
+
 function htmlDetalles(rec) {
   const pasos = htmlPasos(rec.steps);
   const fuentes = htmlFuentes(rec.sources);
-  // Sin pasos ni fuentes no hay nada que abrir: el bloque no se dibuja.
-  if (!pasos && !fuentes) return "";
+  const comentario = rec.evaluacion && rec.evaluacion.comentario
+    ? '<p class="comentario">' + escapeHtml(rec.evaluacion.comentario) + "</p>"
+    : "";
+  // Sin pasos, fuentes ni comentario no hay nada que abrir: el bloque no se dibuja.
+  if (!pasos && !fuentes && !comentario) return "";
   return (
     '<details class="detalles">' +
       "<summary>" +
@@ -794,6 +899,7 @@ function htmlDetalles(rec) {
       "</summary>" +
       pasos +
       fuentes +
+      comentario +
     "</details>"
   );
 }
@@ -813,7 +919,11 @@ function nodoMensajeBot(rec, extraClase) {
   art.className = "msg msg--bot" + (extraClase ? " " + extraClase : "");
   art.innerHTML =
     htmlMeta(CONFIG.APP_NAME, rec.tag || "", rec.ts) +
-    '<div class="bubble">' + mdToHtml(rec.output) + htmlDetalles(rec) + "</div>";
+    '<div class="bubble">' +
+      mdToHtml(rec.output) +
+      htmlVeredicto(rec.evaluacion) +
+      htmlDetalles(rec) +
+    "</div>";
   return art;
 }
 
@@ -862,7 +972,8 @@ function nodoComparacion(rec) {
       }));
     } else {
       caja.appendChild(nodoMensajeBot({
-        output: it.output, steps: it.steps, sources: it.sources, tag: it.tag, ts: rec.ts,
+        output: it.output, steps: it.steps, sources: it.sources,
+        evaluacion: it.evaluacion, tag: it.tag, ts: rec.ts,
       }));
     }
   });
@@ -1028,7 +1139,8 @@ async function enviar(texto, opciones) {
         steps: r.steps,
         sources: r.sources,
         suggestions: r.suggestions,
-        tag: modo === "directo" ? "DIRECTO" : "RAG",
+        evaluacion: r.evaluacion,
+        tag: etiquetaDeModo(modo, r.mode),
       });
     } else {
       agregar({ role: "error", text: r.error, retryText: t, retryKind: modo });
@@ -1075,6 +1187,48 @@ function ajustarAlto() {
   el.style.height = Math.min(el.scrollHeight, 180) + "px";
 }
 
+/** Deja los dos interruptores (chat y menú) mostrando el mismo modo. */
+function sincronizarRadios() {
+  dom.radios.forEach(function (r) {
+    const debe = r.value === estado.modo;
+    if (r.checked !== debe) r.checked = debe;
+  });
+}
+
+/* --- menú de teléfono --- */
+function cerrarMenu() {
+  if (!dom.nav || !dom.navBoton) return;
+  dom.nav.setAttribute("data-open", "false");
+  dom.navBoton.setAttribute("aria-expanded", "false");
+}
+
+function alternarMenu() {
+  if (!dom.nav || !dom.navBoton) return;
+  const abierto = dom.nav.getAttribute("data-open") === "true";
+  dom.nav.setAttribute("data-open", abierto ? "false" : "true");
+  dom.navBoton.setAttribute("aria-expanded", abierto ? "false" : "true");
+}
+
+/* --- huecos de Envato: si la foto o el video no están, queda el
+       bloque de respaldo y la maquetación no se mueve --- */
+function prepararMedios() {
+  $$(".media").forEach(function (fig) {
+    const el = $(".media__el", fig);
+    if (!el) {
+      fig.classList.add("media--fallback");
+      return;
+    }
+    const marcar = function () { fig.classList.add("media--fallback"); };
+    el.addEventListener("error", marcar);
+    // pudo fallar antes de que este script corriera
+    if (el.tagName === "IMG" && el.complete && el.naturalWidth === 0) marcar();
+    if (el.tagName === "VIDEO") {
+      if (el.error) marcar();
+      el.addEventListener("stalled", function () { if (el.error) marcar(); });
+    }
+  });
+}
+
 function actualizarEtiquetas() {
   const rotulo = estado.modo === "directo" ? "Sin RAG" : "Con RAG";
   dom.etiquetaModo.textContent = "Modo · " + rotulo;
@@ -1086,6 +1240,7 @@ function actualizarEtiquetas() {
 }
 
 function nuevaConversacion() {
+  cerrarMenu();
   lsDel(LS.hist(estado.sid));
   estado.sid = uuid();
   lsSet(LS.sid, estado.sid);
@@ -1142,11 +1297,26 @@ function conectarEventos() {
       if (!r.checked) return;
       estado.modo = r.value === "directo" ? "directo" : "rag";
       lsSet(LS.modo, estado.modo);
+      sincronizarRadios();
       actualizarEtiquetas();
     });
   });
 
-  // chips: del hero y de las sugerencias
+  // menú de teléfono
+  if (dom.navBoton) {
+    dom.navBoton.addEventListener("click", alternarMenu);
+  }
+  $$("#nav-panel a").forEach(function (a) {
+    a.addEventListener("click", cerrarMenu);
+  });
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") cerrarMenu();
+  });
+  window.addEventListener("resize", function () {
+    if (window.innerWidth >= 900) cerrarMenu();
+  });
+
+  // chips: los de las sugerencias y los del bloque de datos
   document.addEventListener("click", function (ev) {
     const boton = ev.target && ev.target.closest ? ev.target.closest("[data-prompt]") : null;
     if (!boton) return;
@@ -1174,9 +1344,10 @@ function iniciar() {
   // modo
   const modoGuardado = lsGet(LS.modo);
   estado.modo = modoGuardado === "directo" ? "directo" : "rag";
-  dom.radios.forEach(function (r) { r.checked = r.value === estado.modo; });
+  sincronizarRadios();
 
   actualizarEtiquetas();
+  prepararMedios();
   conectarEventos();
   ajustarAlto();
 

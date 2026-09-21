@@ -430,8 +430,8 @@ section[id], body#top { scroll-margin-top: calc(var(--nav-h) + 20px); }
 .card__num {
   display: block;
   margin-bottom: 14px;
-  font-size: 14px
-  ;font-weight: 700;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: .14em;
   color: var(--muted);
 }
