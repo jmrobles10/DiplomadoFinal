@@ -17,8 +17,8 @@ if (-not (Test-Path (Join-Path $env:N8N_USER_FOLDER ".n8n\database.sqlite"))) {
 Write-Host "[1/3] Credenciales Ollama local + Qdrant local" -ForegroundColor Cyan
 n8n import:credentials --input="$root\workflows\credentials_local.json"
 
-Write-Host "[2/3] Flujos 01, 02, 03 y 04" -ForegroundColor Cyan
-foreach ($f in "01_ingesta_kb.json", "02_pitwall_agente_rag.json", "03_pitwall_directo.json", "04_actualizacion_kb.json") {
+Write-Host "[2/3] Flujos 01 a 05" -ForegroundColor Cyan
+foreach ($f in "01_ingesta_kb.json", "02_pitwall_agente_rag.json", "03_pitwall_directo.json", "04_actualizacion_kb.json", "05_podium_pilotos.json") {
   n8n import:workflow --input="$root\workflows\$f"
 }
 
@@ -26,6 +26,7 @@ Write-Host "[3/3] Activando los flujos 02 (RAG), 03 (directo) y 04 (actualizaci√
 n8n update:workflow --id=PitWall02AgenteRAG --active=true
 n8n update:workflow --id=PitWall03Directo --active=true
 n8n update:workflow --id=PitWall04ActualizacionKB --active=true
+n8n update:workflow --id=PitWall05Palmares --active=true
 
 Write-Host @"
 

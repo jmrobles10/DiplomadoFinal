@@ -21,3 +21,7 @@ $env:QDRANT__TELEMETRY_DISABLED = "true"
 Write-Host "PitWall :: Qdrant en http://localhost:6333  (datos en $storage)"
 Set-Location (Split-Path $exe)
 & $exe
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "`nEl servicio termino con error (codigo $LASTEXITCODE). Revisa el mensaje de arriba." -ForegroundColor Red
+  Read-Host "Pulsa Enter para cerrar"
+}

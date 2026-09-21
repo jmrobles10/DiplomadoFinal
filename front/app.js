@@ -7,12 +7,17 @@
 /* ---------------------------------------------------------
    1 · CONFIGURACIÓN  —  esto es lo único que debes editar
    --------------------------------------------------------- */
-const CONFIG = {
+/** Cada página puede redefinir la configuración antes de cargar este archivo
+ *  (window.PITWALL_OVERRIDES). Así palmares.html usa su propio webhook, su
+ *  propia sesión y su propio historial: los chats no se mezclan. */
+const OV = window.PITWALL_OVERRIDES || {};
+
+const CONFIG = Object.assign({
   APP_NAME: "PitWall",
   WEBHOOK_RAG: "http://localhost:5678/webhook/7f3b2c9e-1a5d-4e8f-9b6a-2c4d8e0f1a23/chat",
   WEBHOOK_DIRECTO: "http://localhost:5678/webhook/c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f/chat",
   TIMEOUT_MS: 180000, // modelo local: la primera respuesta puede tardar más de un minuto mientras Ollama carga el modelo
-};
+}, OV.CONFIG || {});
 
 /* =========================================================
    2 · CONSTANTES
@@ -23,7 +28,7 @@ const CONFIG = {
 const MOCK_MARCAS = ["TU-INSTANCIA", "REEMPLAZAR"];
 const MOCK_DELAY_MS = 2500;
 
-const BIENVENIDA =
+const BIENVENIDA = OV.BIENVENIDA ||
   "Hola, soy PitWall. Consulto el reglamento oficial y la temporada 2026 antes de responderte. ¿Qué quieres saber?";
 
 /** Respaldo: si el HTML no trae los chips, se usan estos. */
@@ -35,7 +40,7 @@ const MISSION_FALLBACK = [
   "Soy nuevo en la F1, ¿por dónde empiezo?",
 ];
 
-const ESTADOS_PENSANDO = [
+const ESTADOS_PENSANDO = OV.ESTADOS_PENSANDO || [
   "Leyendo tu pregunta",
   "Buscando en el reglamento FIA 2026",
   "Revisando la temporada 2026",
@@ -56,10 +61,11 @@ const VEREDICTO = {
   neutro: "Respuesta revisada",
 };
 
+const LS_PREFIX = OV.LS_PREFIX || "pitwall";   // palmares.html usa "palmares": sesión e historial aparte
 const LS = {
-  sid: "pitwall.sessionId",
-  modo: "pitwall.mode",
-  hist: (sid) => "pitwall.history." + sid,
+  sid: LS_PREFIX + ".sessionId",
+  modo: LS_PREFIX + ".mode",
+  hist: (sid) => LS_PREFIX + ".history." + sid,
 };
 
 /* =========================================================
@@ -771,7 +777,7 @@ async function preguntarSeguro(texto, modo) {
       mode: r.mode,
     };
   } catch (e) {
-    if (window.console && console.warn) console.warn("[PitWall] fallo la consulta:", e);
+    if (window.console && console.warn) console.warn("[" + CONFIG.APP_NAME + "] fallo la consulta:", e);
     return { ok: false, modo: modo, error: mensajeDeError(e) };
   }
 }
@@ -1358,7 +1364,7 @@ function iniciar() {
 
   if (window.console && console.info) {
     console.info(
-      "[PitWall] sesión " + estado.sid + " · modo " + estado.modo +
+      "[" + CONFIG.APP_NAME + "] sesión " + estado.sid + " · modo " + estado.modo +
       (esMock(urlDeModo(estado.modo)) ? " · MODO DEMO (edita CONFIG en app.js)" : " · conectado a n8n")
     );
   }

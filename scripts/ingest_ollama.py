@@ -32,7 +32,7 @@ KB = os.path.join(ROOT, "kb", "processed", "kb_all.jsonl")
 PROGRESS = os.path.join(ROOT, "kb", "processed", "ingest_progress.json")
 QDRANT = os.environ.get("QDRANT_URL", "http://localhost:6333")
 OLLAMA = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434")
-COLLECTION = "pitwall_kb"
+COLLECTION = os.environ.get("QDRANT_COLLECTION", "pitwall_kb")
 MODEL = os.environ.get("EMBED_MODEL", "bge-m3")
 DIMS = int(os.environ.get("EMBED_DIMS", "1024"))
 BATCH = 16          # textos por solicitud a Ollama
@@ -157,7 +157,14 @@ if __name__ == "__main__":
     ap.add_argument("--query")
     ap.add_argument("--count", action="store_true")
     ap.add_argument("--reset-progress", action="store_true")
+    ap.add_argument("--collection", help="colección de Qdrant (por defecto pitwall_kb)")
+    ap.add_argument("--kb", help="ruta del JSONL de fragmentos (por defecto kb/processed/kb_all.jsonl)")
     a = ap.parse_args()
+    if a.collection:
+        COLLECTION = a.collection
+        PROGRESS = os.path.join(ROOT, "kb", "processed", f"ingest_progress_{COLLECTION}.json")
+    if a.kb:
+        KB = a.kb
     if a.reset_progress and os.path.exists(PROGRESS):
         os.remove(PROGRESS); print("progreso reiniciado")
     if a.count:

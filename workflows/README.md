@@ -7,6 +7,7 @@ Tres flujos listos para importar en tu n8n local (`http://localhost:5678`).
 | `01_ingesta_kb.json` | Lee `kb/processed/kb_all.jsonl`, genera embeddings con Ollama (`bge-m3`) e inserta en Qdrant | Una vez (o cuando cambie la base); alternativa: `scripts/ingest_ollama.py` |
 | `02_pitwall_agente_rag.json` | Reformula la pregunta con el historial, busca en Qdrant, agente con memoria (y la búsqueda como herramienta extra) + evaluador. Es el RAG | Siempre activo: lo usa el chat de n8n y el front |
 | `03_pitwall_directo.json` | Mismo modelo sin base de conocimiento | Comparación en la presentación |
+| `05_podium_pilotos.json` | Podium: mismo diseño que el 02 sobre la colección `historia_pilotos` (logros históricos por piloto), con su propio webhook, memoria y personalidad | Siempre activo: lo usa `front/podium.html` |
 | `04_actualizacion_kb.json` | Ejecuta `scripts/actualizar_kb.py --si-hace-falta`: refresca fuentes y sincroniza Qdrant de forma incremental | Cada 6 h y en segundo plano con cada pregunta (lo llama el 02) |
 
 ## 1. Credenciales (una sola vez)
@@ -44,6 +45,7 @@ Abre `02 Agente RAG` y `03 Directo` y pon el interruptor **Active** en verde. La
 
 - RAG: `http://localhost:5678/webhook/7f3b2c9e-1a5d-4e8f-9b6a-2c4d8e0f1a23/chat`
 - Directo: `http://localhost:5678/webhook/c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f/chat`
+- Podium (RAG histórico, base separada): `http://localhost:5678/webhook/a7c1e2d3-5b6f-4a8e-9c0d-1e2f3a4b5c6d/chat`
 
 El chat de n8n del flujo 02 (botón **Open chat** o la URL pública del Chat Trigger) muestra la ejecución nodo por nodo: úsalo para la explicación técnica. El front (`front/index.html`) usa las mismas URL para el público no técnico.
 

@@ -47,6 +47,18 @@ descarga Qdrant, lo arranca, crea la colección `pitwall_kb` (1024 dimensiones) 
    Alternativa manual: **Credentials → Add credential** (`Ollama` y `Qdrant API`) y menú `...` → **Import from file** con cada JSON, eligiendo la credencial en cada nodo.
 3. Reinicia n8n (Ctrl+C y `start_n8n.ps1`). El importador deja activos `02`, `03` y `04`; si importaste a mano, publica esos tres. Las URL de los webhooks quedan iguales a las del front porque los ids están fijos en los JSON.
 
+## 2b. Podium (base separada de logros históricos)
+
+`setup_windows.ps1` la construye solo. A mano:
+
+```powershell
+python scripts\qdrant_setup.py --collection historia_pilotos
+python scripts\build_kb_pilotos.py      # descarga la carrera de cada piloto de 2026 desde 1950 (2-4 min la primera vez)
+python scripts\ingest_ollama.py --collection historia_pilotos --kb kb\processed\kb_pilotos.jsonl
+```
+
+El flujo `05` (lo importa `n8n_import.ps1`) atiende `front/podium.html`.
+
 ## 3. Front
 
 ```powershell
@@ -57,7 +69,8 @@ Abre `http://localhost:8765`. Copia las fotos y el video de Envato a `front/asse
 
 ## 4. Verificar
 
-- `http://localhost:6333/dashboard#/collections/pitwall_kb` debe mostrar 1.056 puntos de 1024 dimensiones.
+- `http://localhost:6333/dashboard#/collections/pitwall_kb` debe mostrar 1.056 puntos de 1024 dimensiones, y `historia_pilotos` unos 220.
+- En `http://localhost:8765/podium.html`, pregunta "¿Cuántas victorias tiene Lewis Hamilton?".
 - `python scripts\ingest_ollama.py --query "puntos por ganar una carrera"` debe devolver la guía de puntos y el artículo A2.2 del reglamento.
 - En el front, pregunta "¿Cuántos puntos da ganar una carrera en 2026?" y abre "¿Cómo llegué a esta respuesta?".
 - La primera respuesta tarda más (Ollama carga el modelo en la GPU); las siguientes salen en 10-30 s con una RTX 4060.

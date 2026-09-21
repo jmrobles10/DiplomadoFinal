@@ -30,3 +30,7 @@ New-Item -ItemType Directory -Force $env:N8N_USER_FOLDER | Out-Null
 Write-Host "PitWall :: n8n en http://localhost:5678  (datos en $($env:N8N_USER_FOLDER))"
 Write-Host "La primera vez tarda 2-3 minutos creando la base de datos; espera a ver 'Editor is now accessible'."
 n8n start
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "`nEl servicio termino con error (codigo $LASTEXITCODE). Revisa el mensaje de arriba." -ForegroundColor Red
+  Read-Host "Pulsa Enter para cerrar"
+}

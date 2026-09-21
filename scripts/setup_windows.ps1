@@ -46,6 +46,10 @@ Write-Host "`n[6/7] Vectorizando la base de conocimiento con Ollama (bge-m3, loc
 $idx = "kb\processed\vectors_index.json"
 $restaurable = (Test-Path $idx) -and ((Get-Content $idx -Raw | ConvertFrom-Json).model -eq "bge-m3")
 if ($restaurable) { python scripts\qdrant_restore.py } else { python scripts\ingest_ollama.py }
+Write-Host "      Podium: base separada de logros históricos por piloto (descarga el historial desde 1950; 2-4 minutos)"
+python scripts\qdrant_setup.py --collection historia_pilotos
+python scripts\build_kb_pilotos.py
+if (Test-Path "kb\processed\vectors_index_historia_pilotos.json") { python scripts\qdrant_restore.py --collection historia_pilotos } else { python scripts\ingest_ollama.py --collection historia_pilotos --kb kb\processed\kb_pilotos.jsonl }
 
 Write-Host "`n[7/7] Arrancando n8n en segundo plano (la primera vez tarda 2-3 minutos)"
 Start-Process powershell -ArgumentList "-NoProfile","-ExecutionPolicy","Bypass","-File","$root\scripts\start_n8n.ps1" -WindowStyle Minimized

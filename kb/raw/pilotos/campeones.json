@@ -1,0 +1,610 @@
+{
+ "1950": {
+  "driverId": "farina",
+  "nombre": "Nino Farina",
+  "nacionalidad": "Italian",
+  "puntos": "30",
+  "victorias": "3",
+  "equipo": "Alfa Romeo"
+ },
+ "1951": {
+  "driverId": "fangio",
+  "nombre": "Juan Fangio",
+  "nacionalidad": "Argentine",
+  "puntos": "31",
+  "victorias": "3",
+  "equipo": "Alfa Romeo"
+ },
+ "1952": {
+  "driverId": "ascari",
+  "nombre": "Alberto Ascari",
+  "nacionalidad": "Italian",
+  "puntos": "36",
+  "victorias": "6",
+  "equipo": "Ferrari"
+ },
+ "1953": {
+  "driverId": "ascari",
+  "nombre": "Alberto Ascari",
+  "nacionalidad": "Italian",
+  "puntos": "34.5",
+  "victorias": "5",
+  "equipo": "Ferrari"
+ },
+ "1954": {
+  "driverId": "fangio",
+  "nombre": "Juan Fangio",
+  "nacionalidad": "Argentine",
+  "puntos": "42",
+  "victorias": "6",
+  "equipo": "Maserati"
+ },
+ "1955": {
+  "driverId": "fangio",
+  "nombre": "Juan Fangio",
+  "nacionalidad": "Argentine",
+  "puntos": "40",
+  "victorias": "4",
+  "equipo": "Mercedes"
+ },
+ "1956": {
+  "driverId": "fangio",
+  "nombre": "Juan Fangio",
+  "nacionalidad": "Argentine",
+  "puntos": "30",
+  "victorias": "3",
+  "equipo": "Ferrari"
+ },
+ "1957": {
+  "driverId": "fangio",
+  "nombre": "Juan Fangio",
+  "nacionalidad": "Argentine",
+  "puntos": "40",
+  "victorias": "4",
+  "equipo": "Maserati"
+ },
+ "1958": {
+  "driverId": "hawthorn",
+  "nombre": "Mike Hawthorn",
+  "nacionalidad": "British",
+  "puntos": "42",
+  "victorias": "1",
+  "equipo": "Ferrari"
+ },
+ "1959": {
+  "driverId": "jack_brabham",
+  "nombre": "Jack Brabham",
+  "nacionalidad": "Australian",
+  "puntos": "31",
+  "victorias": "2",
+  "equipo": "Cooper-Climax"
+ },
+ "1960": {
+  "driverId": "jack_brabham",
+  "nombre": "Jack Brabham",
+  "nacionalidad": "Australian",
+  "puntos": "43",
+  "victorias": "5",
+  "equipo": "Cooper-Climax"
+ },
+ "1961": {
+  "driverId": "phil_hill",
+  "nombre": "Phil Hill",
+  "nacionalidad": "American",
+  "puntos": "34",
+  "victorias": "2",
+  "equipo": "Ferrari"
+ },
+ "1962": {
+  "driverId": "hill",
+  "nombre": "Graham Hill",
+  "nacionalidad": "British",
+  "puntos": "42",
+  "victorias": "4",
+  "equipo": "BRM"
+ },
+ "1963": {
+  "driverId": "clark",
+  "nombre": "Jim Clark",
+  "nacionalidad": "British",
+  "puntos": "54",
+  "victorias": "7",
+  "equipo": "Lotus-Climax"
+ },
+ "1964": {
+  "driverId": "surtees",
+  "nombre": "John Surtees",
+  "nacionalidad": "British",
+  "puntos": "40",
+  "victorias": "2",
+  "equipo": "Ferrari"
+ },
+ "1965": {
+  "driverId": "clark",
+  "nombre": "Jim Clark",
+  "nacionalidad": "British",
+  "puntos": "54",
+  "victorias": "6",
+  "equipo": "Lotus-Climax"
+ },
+ "1966": {
+  "driverId": "jack_brabham",
+  "nombre": "Jack Brabham",
+  "nacionalidad": "Australian",
+  "puntos": "42",
+  "victorias": "4",
+  "equipo": "Brabham-Repco"
+ },
+ "1967": {
+  "driverId": "hulme",
+  "nombre": "Denny Hulme",
+  "nacionalidad": "New Zealander",
+  "puntos": "51",
+  "victorias": "2",
+  "equipo": "Brabham-Repco"
+ },
+ "1968": {
+  "driverId": "hill",
+  "nombre": "Graham Hill",
+  "nacionalidad": "British",
+  "puntos": "48",
+  "victorias": "3",
+  "equipo": "Lotus-Ford"
+ },
+ "1969": {
+  "driverId": "stewart",
+  "nombre": "Jackie Stewart",
+  "nacionalidad": "British",
+  "puntos": "63",
+  "victorias": "6",
+  "equipo": "Matra-Ford"
+ },
+ "1970": {
+  "driverId": "rindt",
+  "nombre": "Jochen Rindt",
+  "nacionalidad": "Austrian",
+  "puntos": "45",
+  "victorias": "5",
+  "equipo": "Team Lotus"
+ },
+ "1971": {
+  "driverId": "stewart",
+  "nombre": "Jackie Stewart",
+  "nacionalidad": "British",
+  "puntos": "62",
+  "victorias": "6",
+  "equipo": "Tyrrell"
+ },
+ "1972": {
+  "driverId": "emerson_fittipaldi",
+  "nombre": "Emerson Fittipaldi",
+  "nacionalidad": "Brazilian",
+  "puntos": "61",
+  "victorias": "5",
+  "equipo": "Team Lotus"
+ },
+ "1973": {
+  "driverId": "stewart",
+  "nombre": "Jackie Stewart",
+  "nacionalidad": "British",
+  "puntos": "71",
+  "victorias": "5",
+  "equipo": "Tyrrell"
+ },
+ "1974": {
+  "driverId": "emerson_fittipaldi",
+  "nombre": "Emerson Fittipaldi",
+  "nacionalidad": "Brazilian",
+  "puntos": "55",
+  "victorias": "3",
+  "equipo": "McLaren"
+ },
+ "1975": {
+  "driverId": "lauda",
+  "nombre": "Niki Lauda",
+  "nacionalidad": "Austrian",
+  "puntos": "64.5",
+  "victorias": "5",
+  "equipo": "Ferrari"
+ },
+ "1976": {
+  "driverId": "hunt",
+  "nombre": "James Hunt",
+  "nacionalidad": "British",
+  "puntos": "69",
+  "victorias": "6",
+  "equipo": "McLaren"
+ },
+ "1977": {
+  "driverId": "lauda",
+  "nombre": "Niki Lauda",
+  "nacionalidad": "Austrian",
+  "puntos": "70",
+  "victorias": "3",
+  "equipo": "Ferrari"
+ },
+ "1978": {
+  "driverId": "mario_andretti",
+  "nombre": "Mario Andretti",
+  "nacionalidad": "American",
+  "puntos": "64",
+  "victorias": "6",
+  "equipo": "Team Lotus"
+ },
+ "1979": {
+  "driverId": "scheckter",
+  "nombre": "Jody Scheckter",
+  "nacionalidad": "South African",
+  "puntos": "51",
+  "victorias": "3",
+  "equipo": "Ferrari"
+ },
+ "1980": {
+  "driverId": "jones",
+  "nombre": "Alan Jones",
+  "nacionalidad": "Australian",
+  "puntos": "67",
+  "victorias": "5",
+  "equipo": "Williams"
+ },
+ "1981": {
+  "driverId": "piquet",
+  "nombre": "Nelson Piquet",
+  "nacionalidad": "Brazilian",
+  "puntos": "50",
+  "victorias": "3",
+  "equipo": "Brabham"
+ },
+ "1982": {
+  "driverId": "keke_rosberg",
+  "nombre": "Keke Rosberg",
+  "nacionalidad": "Finnish",
+  "puntos": "44",
+  "victorias": "1",
+  "equipo": "Williams"
+ },
+ "1983": {
+  "driverId": "piquet",
+  "nombre": "Nelson Piquet",
+  "nacionalidad": "Brazilian",
+  "puntos": "59",
+  "victorias": "3",
+  "equipo": "Brabham"
+ },
+ "1984": {
+  "driverId": "lauda",
+  "nombre": "Niki Lauda",
+  "nacionalidad": "Austrian",
+  "puntos": "72",
+  "victorias": "5",
+  "equipo": "McLaren"
+ },
+ "1985": {
+  "driverId": "prost",
+  "nombre": "Alain Prost",
+  "nacionalidad": "French",
+  "puntos": "73",
+  "victorias": "5",
+  "equipo": "McLaren"
+ },
+ "1986": {
+  "driverId": "prost",
+  "nombre": "Alain Prost",
+  "nacionalidad": "French",
+  "puntos": "72",
+  "victorias": "4",
+  "equipo": "McLaren"
+ },
+ "1987": {
+  "driverId": "piquet",
+  "nombre": "Nelson Piquet",
+  "nacionalidad": "Brazilian",
+  "puntos": "73",
+  "victorias": "3",
+  "equipo": "Williams"
+ },
+ "1988": {
+  "driverId": "senna",
+  "nombre": "Ayrton Senna",
+  "nacionalidad": "Brazilian",
+  "puntos": "90",
+  "victorias": "8",
+  "equipo": "McLaren"
+ },
+ "1989": {
+  "driverId": "prost",
+  "nombre": "Alain Prost",
+  "nacionalidad": "French",
+  "puntos": "76",
+  "victorias": "4",
+  "equipo": "McLaren"
+ },
+ "1990": {
+  "driverId": "senna",
+  "nombre": "Ayrton Senna",
+  "nacionalidad": "Brazilian",
+  "puntos": "78",
+  "victorias": "6",
+  "equipo": "McLaren"
+ },
+ "1991": {
+  "driverId": "senna",
+  "nombre": "Ayrton Senna",
+  "nacionalidad": "Brazilian",
+  "puntos": "96",
+  "victorias": "7",
+  "equipo": "McLaren"
+ },
+ "1992": {
+  "driverId": "mansell",
+  "nombre": "Nigel Mansell",
+  "nacionalidad": "British",
+  "puntos": "108",
+  "victorias": "9",
+  "equipo": "Williams"
+ },
+ "1993": {
+  "driverId": "prost",
+  "nombre": "Alain Prost",
+  "nacionalidad": "French",
+  "puntos": "99",
+  "victorias": "7",
+  "equipo": "Williams"
+ },
+ "1994": {
+  "driverId": "michael_schumacher",
+  "nombre": "Michael Schumacher",
+  "nacionalidad": "German",
+  "puntos": "92",
+  "victorias": "8",
+  "equipo": "Benetton"
+ },
+ "1995": {
+  "driverId": "michael_schumacher",
+  "nombre": "Michael Schumacher",
+  "nacionalidad": "German",
+  "puntos": "102",
+  "victorias": "9",
+  "equipo": "Benetton"
+ },
+ "1996": {
+  "driverId": "damon_hill",
+  "nombre": "Damon Hill",
+  "nacionalidad": "British",
+  "puntos": "97",
+  "victorias": "8",
+  "equipo": "Williams"
+ },
+ "1997": {
+  "driverId": "villeneuve",
+  "nombre": "Jacques Villeneuve",
+  "nacionalidad": "Canadian",
+  "puntos": "81",
+  "victorias": "7",
+  "equipo": "Williams"
+ },
+ "1998": {
+  "driverId": "hakkinen",
+  "nombre": "Mika Häkkinen",
+  "nacionalidad": "Finnish",
+  "puntos": "100",
+  "victorias": "8",
+  "equipo": "McLaren"
+ },
+ "1999": {
+  "driverId": "hakkinen",
+  "nombre": "Mika Häkkinen",
+  "nacionalidad": "Finnish",
+  "puntos": "76",
+  "victorias": "5",
+  "equipo": "McLaren"
+ },
+ "2000": {
+  "driverId": "michael_schumacher",
+  "nombre": "Michael Schumacher",
+  "nacionalidad": "German",
+  "puntos": "108",
+  "victorias": "9",
+  "equipo": "Ferrari"
+ },
+ "2001": {
+  "driverId": "michael_schumacher",
+  "nombre": "Michael Schumacher",
+  "nacionalidad": "German",
+  "puntos": "123",
+  "victorias": "9",
+  "equipo": "Ferrari"
+ },
+ "2002": {
+  "driverId": "michael_schumacher",
+  "nombre": "Michael Schumacher",
+  "nacionalidad": "German",
+  "puntos": "144",
+  "victorias": "11",
+  "equipo": "Ferrari"
+ },
+ "2003": {
+  "driverId": "michael_schumacher",
+  "nombre": "Michael Schumacher",
+  "nacionalidad": "German",
+  "puntos": "93",
+  "victorias": "6",
+  "equipo": "Ferrari"
+ },
+ "2004": {
+  "driverId": "michael_schumacher",
+  "nombre": "Michael Schumacher",
+  "nacionalidad": "German",
+  "puntos": "148",
+  "victorias": "13",
+  "equipo": "Ferrari"
+ },
+ "2005": {
+  "driverId": "alonso",
+  "nombre": "Fernando Alonso",
+  "nacionalidad": "Spanish",
+  "puntos": "133",
+  "victorias": "7",
+  "equipo": "Renault"
+ },
+ "2006": {
+  "driverId": "alonso",
+  "nombre": "Fernando Alonso",
+  "nacionalidad": "Spanish",
+  "puntos": "134",
+  "victorias": "7",
+  "equipo": "Renault"
+ },
+ "2007": {
+  "driverId": "raikkonen",
+  "nombre": "Kimi Räikkönen",
+  "nacionalidad": "Finnish",
+  "puntos": "110",
+  "victorias": "6",
+  "equipo": "Ferrari"
+ },
+ "2008": {
+  "driverId": "hamilton",
+  "nombre": "Lewis Hamilton",
+  "nacionalidad": "British",
+  "puntos": "98",
+  "victorias": "5",
+  "equipo": "McLaren"
+ },
+ "2009": {
+  "driverId": "button",
+  "nombre": "Jenson Button",
+  "nacionalidad": "British",
+  "puntos": "95",
+  "victorias": "6",
+  "equipo": "Brawn"
+ },
+ "2010": {
+  "driverId": "vettel",
+  "nombre": "Sebastian Vettel",
+  "nacionalidad": "German",
+  "puntos": "256",
+  "victorias": "5",
+  "equipo": "Red Bull"
+ },
+ "2011": {
+  "driverId": "vettel",
+  "nombre": "Sebastian Vettel",
+  "nacionalidad": "German",
+  "puntos": "392",
+  "victorias": "11",
+  "equipo": "Red Bull"
+ },
+ "2012": {
+  "driverId": "vettel",
+  "nombre": "Sebastian Vettel",
+  "nacionalidad": "German",
+  "puntos": "281",
+  "victorias": "5",
+  "equipo": "Red Bull"
+ },
+ "2013": {
+  "driverId": "vettel",
+  "nombre": "Sebastian Vettel",
+  "nacionalidad": "German",
+  "puntos": "397",
+  "victorias": "13",
+  "equipo": "Red Bull"
+ },
+ "2014": {
+  "driverId": "hamilton",
+  "nombre": "Lewis Hamilton",
+  "nacionalidad": "British",
+  "puntos": "384",
+  "victorias": "11",
+  "equipo": "Mercedes"
+ },
+ "2015": {
+  "driverId": "hamilton",
+  "nombre": "Lewis Hamilton",
+  "nacionalidad": "British",
+  "puntos": "381",
+  "victorias": "10",
+  "equipo": "Mercedes"
+ },
+ "2016": {
+  "driverId": "rosberg",
+  "nombre": "Nico Rosberg",
+  "nacionalidad": "German",
+  "puntos": "385",
+  "victorias": "9",
+  "equipo": "Mercedes"
+ },
+ "2017": {
+  "driverId": "hamilton",
+  "nombre": "Lewis Hamilton",
+  "nacionalidad": "British",
+  "puntos": "363",
+  "victorias": "9",
+  "equipo": "Mercedes"
+ },
+ "2018": {
+  "driverId": "hamilton",
+  "nombre": "Lewis Hamilton",
+  "nacionalidad": "British",
+  "puntos": "408",
+  "victorias": "11",
+  "equipo": "Mercedes"
+ },
+ "2019": {
+  "driverId": "hamilton",
+  "nombre": "Lewis Hamilton",
+  "nacionalidad": "British",
+  "puntos": "413",
+  "victorias": "11",
+  "equipo": "Mercedes"
+ },
+ "2020": {
+  "driverId": "hamilton",
+  "nombre": "Lewis Hamilton",
+  "nacionalidad": "British",
+  "puntos": "347",
+  "victorias": "11",
+  "equipo": "Mercedes"
+ },
+ "2021": {
+  "driverId": "max_verstappen",
+  "nombre": "Max Verstappen",
+  "nacionalidad": "Dutch",
+  "puntos": "395.5",
+  "victorias": "10",
+  "equipo": "Red Bull"
+ },
+ "2022": {
+  "driverId": "max_verstappen",
+  "nombre": "Max Verstappen",
+  "nacionalidad": "Dutch",
+  "puntos": "454",
+  "victorias": "15",
+  "equipo": "Red Bull"
+ },
+ "2023": {
+  "driverId": "max_verstappen",
+  "nombre": "Max Verstappen",
+  "nacionalidad": "Dutch",
+  "puntos": "575",
+  "victorias": "19",
+  "equipo": "Red Bull"
+ },
+ "2024": {
+  "driverId": "max_verstappen",
+  "nombre": "Max Verstappen",
+  "nacionalidad": "Dutch",
+  "puntos": "437",
+  "victorias": "9",
+  "equipo": "Red Bull"
+ },
+ "2025": {
+  "driverId": "norris",
+  "nombre": "Lando Norris",
+  "nacionalidad": "British",
+  "puntos": "423",
+  "victorias": "7",
+  "equipo": "McLaren"
+ }
+}

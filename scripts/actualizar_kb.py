@@ -26,6 +26,7 @@ import os
 import sys
 import time
 import traceback
+import urllib.error
 import urllib.request
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -95,11 +96,15 @@ def qdrant_ids():
             return ids
 
 
-def sync_qdrant(conservar_obsoletos):
+def sync_qdrant(conservar_obsoletos, kb_path=None, collection=None):
     import ingest_ollama as ing
+    global COLLECTION
+    kb_path = kb_path or KB
+    if collection:
+        COLLECTION = collection
     ing.check_ollama()
     docs = {}
-    for l in open(KB, encoding="utf-8"):
+    for l in open(kb_path, encoding="utf-8"):
         d = json.loads(l); docs[d["id"]] = d
     existentes = qdrant_ids()
     nuevos = [docs[i] for i in docs if i not in existentes]
@@ -151,19 +156,42 @@ def run(args):
             build_kb.main()
         else:
             print("== 3/4 Fragmentos: las fuentes no cambiaron, no se reconstruye")
-        print("== 4/4 Sincronización con Qdrant")
-        resumen = sync_qdrant(args.conservar_obsoletos)
+        print("== 4/5 Sincronización con Qdrant (pitwall_kb)")
+        resumen = sync_qdrant(args.conservar_obsoletos, KB, "pitwall_kb")
         entrada.update(resumen)
         if resumen["nuevos"] or resumen["eliminados"]:
-            qdrant_export.main()
+            qdrant_export.main("pitwall_kb")
             st["ultima_actualizacion"] = now().isoformat()
+        # Base separada de logros históricos por piloto (colección historia_pilotos)
+        print("== 5/5 Palmarés: logros históricos por piloto (historia_pilotos)")
+        try:
+            import build_kb_pilotos
+            hay_resultados_nuevos = any("jolpica" in c for c in cambios) or args.forzar or not os.path.exists(build_kb_pilotos.OUT)
+            if hay_resultados_nuevos:
+                build_kb_pilotos.main(refresh=True)
+            else:
+                print("  sin resultados nuevos de la temporada: no se reconstruye")
+            status_col = qdrant("GET", f"/collections/historia_pilotos", timeout=15) if True else None
+            res_p = sync_qdrant(args.conservar_obsoletos, build_kb_pilotos.OUT, "historia_pilotos")
+            entrada["palmares"] = res_p
+            resumen["palmares"] = res_p
+            if res_p["nuevos"] or res_p["eliminados"]:
+                qdrant_export.main("historia_pilotos")
+                st["ultima_actualizacion"] = now().isoformat()
+        except urllib.error.HTTPError as e:
+            print(f"  la colección historia_pilotos no existe todavía ({e}); créala con qdrant_setup.py --collection historia_pilotos")
+        except Exception as e:
+            entrada["palmares_error"] = repr(e)
+            print("  palmarés: error", repr(e))
         st["ultima_revision"] = now().isoformat()
         st["ultimo_resultado"] = resumen
         st["fuentes_cambiadas"] = cambios
         save_state(st)
         entrada["fin"] = now().isoformat(); entrada["estado"] = "ok"
         log(entrada)
-        print(json.dumps({"accion": "actualizado" if (resumen["nuevos"] or resumen["eliminados"]) else "sin_cambios", **resumen, "fuentes_cambiadas": cambios, "duracion_s": (now() - inicio).seconds}, ensure_ascii=False))
+        p = resumen.get("palmares") or {}
+        hubo = resumen["nuevos"] or resumen["eliminados"] or p.get("nuevos") or p.get("eliminados")
+        print(json.dumps({"accion": "actualizado" if hubo else "sin_cambios", **resumen, "fuentes_cambiadas": cambios, "duracion_s": (now() - inicio).seconds}, ensure_ascii=False))
     except Exception as e:
         entrada["fin"] = now().isoformat(); entrada["estado"] = "error"; entrada["error"] = repr(e)
         log(entrada)

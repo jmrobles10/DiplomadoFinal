@@ -29,7 +29,7 @@ Usuario ──► Front (HTML/JS, blanco y negro) ──► n8n local (Chat Trig
 
 | Componente de la consigna | Implementación |
 |---|---|
-| Interfaz de entrada | `front/index.html` (usuarios no técnicos) y el chat de n8n (explicación técnica) |
+| Interfaz de entrada | `front/index.html` (PitWall) y `front/podium.html` (Podium), más el chat de n8n (explicación técnica) |
 | Base de conocimiento | Reglamentos FIA 2026 A/B/C/D, temporada 2026 (API Jolpica), narrativa (Wikipedia), 11 guías propias en español. Se actualiza sola de forma incremental (flujo 04) |
 | Recuperación | Búsqueda semántica en Qdrant (top 6) en cada turno, con la pregunta reformulada según el historial; el agente además tiene la búsqueda como herramienta |
 | Modelo de lenguaje | `qwen3:8b` en Ollama (local, gratis, tool calling). Embeddings `bge-m3` (multilingüe) también en Ollama |
@@ -54,8 +54,8 @@ Usuario ──► Front (HTML/JS, blanco y negro) ──► n8n local (Chat Trig
 ## Estructura del repositorio
 
 ```
-front/        Página web del asistente (sin frameworks)
-workflows/    Flujos de n8n listos para importar (01 ingesta, 02 agente RAG, 03 chat directo) + README
+front/        Páginas web de PitWall (index.html) y Podium (podium.html), sin frameworks
+workflows/    Flujos de n8n listos para importar (01 ingesta, 02 agente RAG, 03 chat directo, 04 actualización, 05 Podium) + README
 kb/           Base de conocimiento: docs_es/ (guías propias), processed/ (fragmentos listos), raw/ (fuentes, no versionadas)
 scripts/      Descarga de fuentes, extracción de PDF, construcción de la base, ingesta a Qdrant, arranque de servicios
 docs/         Banco de preguntas de demo, lista de recursos gráficos
@@ -112,6 +112,19 @@ La base se mantiene sola, en local y sin costo, con `scripts/actualizar_kb.py` (
   `python scripts/actualizar_kb.py --estado` los muestra; `--forzar` reconstruye todo; `--conservar-obsoletos` no borra.
 - **Límite**: las guías propias de `kb/docs_es/` son texto escrito a mano y no se regeneran solas (la 08, "la temporada
   hasta hoy", envejece); los datos de resultados y clasificaciones sí se actualizan porque salen de la API.
+
+## Podium: logros históricos por piloto (RAG separado)
+
+Segunda sección del front (`front/podium.html`) con su propio asistente, **Podium**, para la historia de los pilotos:
+palmarés (debut, victorias, podios, poles, títulos, equipos), lista de victorias y trayectoria año a año de los 23
+pilotos que han corrido en 2026, campeón del mundo de cada temporada desde 1950, rankings entre los pilotos actuales y
+más de sesenta categorías de récords de todos los tiempos.
+
+Está completamente separado de PitWall: colección de Qdrant propia (`historia_pilotos`, construida por
+`scripts/build_kb_pilotos.py` con la API Jolpica desde 1950 y la lista de récords de Wikipedia), flujo de n8n propio
+(`05`, mismo diseño que el `02`) con su webhook, su memoria y su personalidad, y sesión e historial de chat propios en
+el navegador. Si le preguntan por el reglamento o la temporada 2026, remite a PitWall. El flujo `04` también mantiene
+esta base al día tras cada carrera.
 
 ## Fuentes
 

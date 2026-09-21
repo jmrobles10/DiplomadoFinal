@@ -19,8 +19,11 @@ sys.stdout.reconfigure(encoding="utf-8")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 QDRANT = "http://localhost:6333"
 COLLECTION = "pitwall_kb"
-OUT_VEC = os.path.join(ROOT, "kb", "processed", "vectors.f32")
-OUT_IDX = os.path.join(ROOT, "kb", "processed", "vectors_index.json")
+if "--collection" in sys.argv:
+    COLLECTION = sys.argv[sys.argv.index("--collection") + 1]
+SUFIJO = "" if COLLECTION == "pitwall_kb" else "_" + COLLECTION
+OUT_VEC = os.path.join(ROOT, "kb", "processed", f"vectors{SUFIJO}.f32")
+OUT_IDX = os.path.join(ROOT, "kb", "processed", f"vectors_index{SUFIJO}.json")
 
 
 def post(path, body):
@@ -30,7 +33,13 @@ def post(path, body):
         return json.loads(r.read().decode("utf-8"))
 
 
-def main():
+def main(collection=None):
+    global COLLECTION, OUT_VEC, OUT_IDX
+    if collection:
+        COLLECTION = collection
+        suf = "" if collection == "pitwall_kb" else "_" + collection
+        OUT_VEC = os.path.join(ROOT, "kb", "processed", f"vectors{suf}.f32")
+        OUT_IDX = os.path.join(ROOT, "kb", "processed", f"vectors_index{suf}.json")
     ids, vec = [], array("f")
     offset, dims = None, None
     while True:

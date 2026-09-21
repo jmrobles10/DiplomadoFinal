@@ -41,6 +41,8 @@ Si falta alguno, la página muestra un bloque gris con el nombre del archivo en 
 | `loop-pista.mp4` | Video en bucle de la sección "Cómo funciona" | MP4 H.264 sin audio, 16:9, máximo 15 s y 8 MB |
 | `detalle-boxes.jpg` | Póster del video mientras carga | JPG 16:9 |
 | `detalle-bandera.jpg` | Sección "Dos modos" | JPG vertical 4:5 |
+| `detalle-podio.jpg` | Banda "Podium" al final del inicio | JPG vertical 4:5, mínimo 1000 px |
+| `hero-podium.jpg` | Foto principal de `podium.html` (celebración en el podio) | JPG horizontal 3:2, mínimo 1600 px de ancho |
 
 Al descargar, Envato pide licenciar cada ítem a un proyecto: usa **PitWall**. No uses fotos con logos de equipos en primer plano.
 

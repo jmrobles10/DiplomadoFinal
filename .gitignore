@@ -9,6 +9,8 @@ tools/
 # ---- Fuentes crudas pesadas (se descargan con scripts/download_sources.py)
 kb/raw/*.pdf
 kb/raw/wiki_2026_season.json
+kb/raw/pilotos/*_results.json
+kb/raw/pilotos/wiki_records.json
 
 # ---- Progreso local de ingesta y cachés
 kb/processed/ingest_progress.json

@@ -64,6 +64,7 @@ Mostrar el panel "Pensando" del front o el nodo de la herramienta en n8n: consul
 - Thinking visible y honesto: pasos reales del agente, no una animación.
 - Evaluador como segunda opinión barata.
 - Todo local: n8n, Qdrant, Ollama y el front corren en el mismo PC; no hay ninguna API externa ni costo por pregunta.
+- Podium, la segunda sección: un RAG separado (colección, flujo, memoria y chat propios) sobre la historia de los pilotos desde 1950; demuestra que la misma arquitectura sirve para otra base sin mezclar conocimientos.
 - La base se actualiza sola: cada 6 h y con cada consulta (en segundo plano) se revisan la API de resultados, Wikipedia y la página de reglamentos de la FIA; como el id de cada fragmento es el hash de su contenido, solo se vectoriza lo nuevo y se retira lo obsoleto, sin duplicar ni reescribir lo demás.
 
 ## 12. Dificultades encontradas [1:00]

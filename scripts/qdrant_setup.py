@@ -16,7 +16,7 @@ import urllib.error
 sys.stdout.reconfigure(encoding="utf-8")
 
 QDRANT = "http://localhost:6333"
-COLLECTION = "pitwall_kb"
+COLLECTION = "pitwall_kb"        # o --collection historia_pilotos
 VECTOR_SIZE = 1024          # bge-m3 (Ollama, local). Con --dims N se puede cambiar (3072 para gemini-embedding-2)
 DISTANCE = "Cosine"
 PAYLOAD_INDEXES = {         # filtros rápidos por metadatos (n8n guarda los metadatos bajo "metadata.*")
@@ -38,8 +38,10 @@ def call(method, path, body=None):
 
 
 def main():
-    global VECTOR_SIZE
+    global VECTOR_SIZE, COLLECTION
     recreate = "--recreate" in sys.argv
+    if "--collection" in sys.argv:
+        COLLECTION = sys.argv[sys.argv.index("--collection") + 1]
     if "--dims" in sys.argv:
         VECTOR_SIZE = int(sys.argv[sys.argv.index("--dims") + 1])
     status, info = call("GET", "/")
