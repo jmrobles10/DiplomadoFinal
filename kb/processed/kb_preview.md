@@ -4,18 +4,6 @@
 {
   "generado": "2026-09-20",
   "tipos": {
-    "reglamento": {
-      "fragmentos": 923,
-      "chars_total": 1077777,
-      "chars_promedio": 1167,
-      "chars_max": 4750
-    },
-    "temporada": {
-      "fragmentos": 24,
-      "chars_total": 53967,
-      "chars_promedio": 2248,
-      "chars_max": 3543
-    },
     "guia": {
       "fragmentos": 80,
       "chars_total": 80099,
@@ -27,6 +15,18 @@
       "chars_total": 34619,
       "chars_promedio": 1193,
       "chars_max": 1884
+    },
+    "reglamento": {
+      "fragmentos": 923,
+      "chars_total": 1077777,
+      "chars_promedio": 1167,
+      "chars_max": 4750
+    },
+    "temporada": {
+      "fragmentos": 24,
+      "chars_total": 53967,
+      "chars_promedio": 2248,
+      "chars_max": 3543
     }
   },
   "total_fragmentos": 1056,
@@ -34,7 +34,7 @@
 }
 ```
 
-## reglamento:A · 41713e9a4cd91247
+## reglamento:A · 2568919c8483af42
 
 ```json
 {
@@ -61,7 +61,7 @@ ARTICLE A1: GENERAL PRINCIPLES
 
 ---
 
-## reglamento:A · 09e2694703ecc85d
+## reglamento:A · e999b131bb3c5c68
 
 ```json
 {
@@ -97,7 +97,7 @@ Regulations unless stated otherwise.
 
 ---
 
-## reglamento:B · 90bf4def114b1d23
+## reglamento:B · 94adb7875d05db8d
 
 ```json
 {
@@ -124,7 +124,7 @@ ARTICLE B1: ORGANISATION OF A COMPETITION Advisory Committee: SAC Governance: F1
 
 ---
 
-## reglamento:B · f212bcdd319c0bf1
+## reglamento:B · 4cfb2f64245b263d
 
 ```json
 {
@@ -154,7 +154,7 @@ B1.1.3 Unless written permission has been given by the FIA to do otherwise, the 
 
 ---
 
-## reglamento:C · 0379fb8766211af3
+## reglamento:C · 0e04f57c5d450f35
 
 ```json
 {
@@ -181,7 +181,7 @@ ARTICLE C1: GENERAL PRINCIPLES 7
 
 ---
 
-## reglamento:C · 396f5daf138e916e
+## reglamento:C · 69d1207f8f19c607
 
 ```json
 {
@@ -208,7 +208,7 @@ C1.1 Amendments to these Technical Regulations 7
 
 ---
 
-## reglamento:D · e8a6873b23f06419
+## reglamento:D · f9edbe56dcde4ed8
 
 ```json
 {
@@ -235,7 +235,7 @@ ARTICLE D1: GENERAL PRINCIPLES
 
 ---
 
-## reglamento:D · 350f42ceee63c966
+## reglamento:D · 92a851fea65466e6
 
 ```json
 {
@@ -269,7 +269,7 @@ sanctions set out below that may be applied in case of failure to comply.
 
 ---
 
-## temporada:calendario · 282a05e4434d2e54
+## temporada:calendario · 00eb3dc58ecd9c7a
 
 ```json
 {
@@ -298,7 +298,7 @@ Ronda 10: Gran Premio de Bélgica (Belg
 
 ---
 
-## temporada:resultado_carrera · d13f46d4975ba9d0
+## temporada:resultado_carrera · f3a525f37b1aca4c
 
 ```json
 {
@@ -332,7 +332,7 @@ Resultados del Gran Premio de Australia 2026 (ronda 1 de 23), disputado el 8 de 
 
 ---
 
-## temporada:resultado_carrera · c97f29efdde9be2d
+## temporada:resultado_carrera · e7b6158b0c6b10ad
 
 ```json
 {
@@ -367,7 +367,7 @@ Resultados del Gran Premio de China 2026 (ronda 2 de 23), disputado el 15 de mar
 
 ---
 
-## temporada:resultado_sprint · 8a7a483bd0ffd5b9
+## temporada:resultado_sprint · 8b553578f4cd3ba6
 
 ```json
 {
@@ -401,7 +401,7 @@ Resultados de la carrera Sprint del Gran Premio de China 2026 (ronda 2), fin de 
 
 ---
 
-## temporada:resultado_sprint · 1d0b4702d4398367
+## temporada:resultado_sprint · e9b6e5af33c285ac
 
 ```json
 {
@@ -435,7 +435,7 @@ Resultados de la carrera Sprint del Gran Premio de Miami 2026 (ronda 4), fin de 
 
 ---
 
-## temporada:clasificacion_pilotos · 4e324b8db475a3b7
+## temporada:clasificacion_pilotos · 6730fb88cfa1fd1b
 
 ```json
 {
@@ -473,7 +473,7 @@ Clasificación del Campeonato Mundial de Pilotos de Fórmula 1 2026 tras 14 rond
 
 ---
 
-## temporada:clasificacion_constructores · 05896cec9a5fea12
+## temporada:clasificacion_constructores · 82bbb1621116eba2
 
 ```json
 {
@@ -504,7 +504,7 @@ Clasificación del Campeonato Mundial de Constructores de Fórmula 1 2026 tras 1
 
 ---
 
-## temporada:equipos_pilotos · abec6a7de26de6b6
+## temporada:equipos_pilotos · fa52c9586b30e791
 
 ```json
 {
@@ -531,7 +531,7 @@ Mercedes: George Russell (British, dorsal 63, nacido el 15 de febrero de 1998; r
 
 ---
 
-## temporada:ganadores · c6cba2ca75a084ad
+## temporada:ganadores · fe256b22741c14e6
 
 ```json
 {
@@ -566,7 +566,7 @@ Victorias por piloto: Andrea Kimi Antonelli: 8; George Russell: 2; Lando Norris:
 
 ---
 
-## temporada_narrativa: · b4974b9e17d34992
+## temporada_narrativa: · 285f64b3b9d8cba9
 
 ```json
 {
@@ -591,7 +591,7 @@ Ford returned to Formula One as an engine supplier for the first time since it p
 
 ---
 
-## temporada_narrativa: · cf5ad88cadb2f17e
+## temporada_narrativa: · d1326db5706e0e37
 
 ```json
 {
@@ -612,7 +612,7 @@ Renault ceased to provide engines for Alpine from 2026 after achieving poor resu
 
 ---
 
-## guia:Introducción · b7053ea8327b4628
+## guia:Introducción · 475ecc2a6c264b48
 
 ```json
 {
@@ -635,7 +635,7 @@ Si eres nuevo en la F1, esta guía te da el panorama en palabras simples. No nec
 
 ---
 
-## guia:Dos cambios grandes al mismo tiempo · de1d27000a91f346
+## guia:Dos cambios grandes al mismo tiempo · 1942f033f7b05914
 
 ```json
 {
@@ -658,7 +658,7 @@ El propio reglamento dice para qué sirven las nuevas formas del carro: fomentar
 
 ---
 
-## guia:El carro: más pequeño, más liviano, con piso plano · 12b08424364e3173
+## guia:El carro: más pequeño, más liviano, con piso plano · 688dbbb5dc8b8f14
 
 ```json
 {
@@ -681,7 +681,7 @@ Los neumáticos también son más angostos: según Wikipedia, se redujo el ancho
 
 ---
 
-## guia:Alas que se mueven: aerodinámica activa · c9c7724f76c013a8
+## guia:Alas que se mueven: aerodinámica activa · c93c9f2d61b5435f
 
 ```json
 {
@@ -702,7 +702,7 @@ Esto reemplaza al DRS, el sistema de las temporadas anteriores que solo podía u
 
 ---
 
-## guia:El motor: mitad gasolina, mitad electricidad · a6664e98166e4be7
+## guia:El motor: mitad gasolina, mitad electricidad · bfd5bd70212cbaec
 
 ```json
 {
@@ -725,7 +725,7 @@ El combustible también cambió: debe ser un combustible sostenible avanzado ("A
 
 ---
 
-## guia:Seguridad y parrilla nueva · 476dde01dd1f8d4e
+## guia:Seguridad y parrilla nueva · bcbe0cb68fd4f69a
 
 ```json
 {
@@ -746,7 +746,7 @@ En la parrilla, 2026 trajo un equipo más: Cadillac entró como undécimo equipo
 
 ---
 
-## guia:Introducción · 35df90d997224e55
+## guia:Introducción · 6d03b8ac8386ce65
 
 ```json
 {
@@ -769,7 +769,7 @@ La idea es sencilla. En las curvas el carro necesita pegarse al piso; en las rec
 
 ---
 
-## guia:Los dos modos: qué significan Corner Mode y Straight Mode · 94ddebb25edd050f
+## guia:Los dos modos: qué significan Corner Mode y Straight Mode · 4afde44446a9d2a6
 
 ```json
 {
@@ -796,7 +796,7 @@ Hay un detalle importante: fuera del cambio entre los dos modos o de una falla d
 
 ---
 
-## guia:Quién controla el sistema y qué pasa si falla · d80da2ca136e2930
+## guia:Quién controla el sistema y qué pasa si falla · 5cfc15dee4c4a230
 
 ```json
 {
@@ -821,7 +821,7 @@ El reglamento también exige topes físicos para que el flap no pueda girar más
 
 ---
 
-## guia:Quién puede usarla y dónde · 53256dc12bb26fdd
+## guia:Quién puede usarla y dónde · 036593ea165797c2
 
 ```json
 {
@@ -844,7 +844,7 @@ El piloto solo puede activar el sistema cuando la electrónica de control le avi
 
 ---
 
-## guia:Quién puede usarla y dónde · 3695ea8a8c501aa1
+## guia:Quién puede usarla y dónde · a72351a8e17dc16f
 
 ```json
 {
@@ -865,7 +865,7 @@ Según Wikipedia, el único Gran Premio de 2026 en el que se desactivó por comp
 
 ---
 
-## guia:Qué vas a notar como espectador · 3fd48948b6407477
+## guia:Qué vas a notar como espectador · decde64578ca7d59
 
 ```json
 {
@@ -888,7 +888,7 @@ Dos palabras que oirás en las transmisiones: "modo recta" o "modo rectas" (Stra
 
 ---
 
-## guia:Qué se quedó igual y qué desapareció · b3d80551ee07efc6
+## guia:Qué se quedó igual y qué desapareció · 007c5e560fdd9a1f
 
 ```json
 {
@@ -911,7 +911,7 @@ Con el MGU-H fuera, todo el peso de la parte eléctrica cae sobre el MGU-K.
 
 ---
 
-## guia:El MGU-K: el corazón eléctrico · ded826336b83c0ff
+## guia:El MGU-K: el corazón eléctrico · a6842d904ab47b21
 
 ```json
 {
@@ -936,7 +936,7 @@ Según Wikipedia, la parte de combustión bajó de potencia respecto a la genera
 
 ---
 
-## guia:La batería, la recarga y por qué importa tanto · 03bec9622f4f573a
+## guia:La batería, la recarga y por qué importa tanto · 028ce2dee4171ea5
 
 ```json
 {
@@ -961,7 +961,7 @@ Por eso en 2026 los pilotos hablan tanto de "recharge", de frenar más temprano 
 
 ---
 
-## guia:La batería, la recarga y por qué importa tanto · b4798324431be27c
+## guia:La batería, la recarga y por qué importa tanto · 5b5579cb3f09ea87
 
 ```json
 {
@@ -980,7 +980,7 @@ Un detalle con consecuencias de seguridad: el voltaje máximo de trabajo en el c
 
 ---
 
-## guia:El combustible sostenible · 21ec2edfed076a0a
+## guia:El combustible sostenible · 6b5168864f529645
 
 ```json
 {
@@ -1001,7 +1001,7 @@ Una regla adicional que limita los trucos: la unidad de potencia debe operarse e
 
 ---
 
-## guia:Quién fabrica qué, y quién usa qué · 4eb46d5daaf56d70
+## guia:Quién fabrica qué, y quién usa qué · ab5de158ed0ce865
 
 ```json
 {
@@ -1030,7 +1030,7 @@ Cadillac entró usando unidades de potencia y cajas de cambios de Ferrari, con l
 
 ---
 
-## guia:Cuántos motores puede usar un piloto · efd6f434fc58738c
+## guia:Cuántos motores puede usar un piloto · ac1a471223d36667
 
 ```json
 {
@@ -1051,7 +1051,7 @@ Si un piloto se pasa de la cuota hay sanción en la parrilla: la primera vez que
 
 ---
 
-## guia:Cómo se decide quién puede usar Overtake · 04709df74653c381
+## guia:Cómo se decide quién puede usar Overtake · 90f6fe23f3484dfe
 
 ```json
 {
@@ -1076,7 +1076,7 @@ En entrenamientos libres y clasificación la regla es más simple: Overtake est�
 
 ---
 
-## guia:Cuándo se habilita y cuándo se apaga · 7e9c9886e2fec8f9
+## guia:Cuándo se habilita y cuándo se apaga · e6309ea2189a8e33
 
 ```json
 {
@@ -1103,7 +1103,7 @@ Si el sistema que le avisa al piloto que tiene Overtake disponible se daña, el 
 
 ---
 
-## guia:Qué tanta potencia extra es · 742ee60fba696fc6
+## guia:Qué tanta potencia extra es · 84e9948c23c949b6
 
 ```json
 {
@@ -1130,7 +1130,7 @@ Además, el reglamento permite cosechar hasta 0,5 MJ de energía adicional en ca
 
 ---
 
-## guia:Boost: el botón del piloto · 9f2ea7b48c1da228
+## guia:Boost: el botón del piloto · 6baf8135d474a5a4
 
 ```json
 {
@@ -1153,7 +1153,7 @@ Todo esto suena abstracto, pero describe algo que sí vas a ver: en 2026, en el 
 
 ---
 
-## guia:Recharge: cosechar energía · 83afb45ad143e9dc
+## guia:Recharge: cosechar energía · 67631b263cbd4dac
 
 ```json
 {
@@ -1177,7 +1177,7 @@ Como el límite por vuelta es de 8,5 MJ (Artículo C5.2.10) y la batería solo p
 
 ---
 
-## guia:Overtake y aerodinámica activa no son lo mismo · 0876b181b22bf895
+## guia:Overtake y aerodinámica activa no son lo mismo · 4e9d979eac6373a8
 
 ```json
 {
@@ -1201,7 +1201,7 @@ Un piloto puede ir en Straight Mode sin tener Overtake. Cuando tiene los dos, el
 
 ---
 
-## guia:El fin de semana normal · 61305bc6847380c5
+## guia:El fin de semana normal · 286dcced8c6fe942
 
 ```json
 {
@@ -1222,7 +1222,7 @@ Los libres no reparten puntos: sirven para aprender el circuito, probar el regla
 
 ---
 
-## guia:La clasificación: Q1, Q2 y Q3 · b165926f46a59227
+## guia:La clasificación: Q1, Q2 y Q3 · a06df75da0d9cbfd
 
 ```json
 {
@@ -1251,7 +1251,7 @@ Hay una regla de mínimo rendimiento: quien sea eliminado en Q1 con una vuelta q
 
 ---
 
-## guia:El fin de semana con sprint · 384a34234520afda
+## guia:El fin de semana con sprint · cf299e0240365e58
 
 ```json
 {
@@ -1278,7 +1278,7 @@ La carrera equivale al menor número de vueltas completas que supere los 305 km,
 
 ---
 
-## guia:Los puntos · cbf3ed469e5cdfd1
+## guia:Los puntos · ee25d40bbdc1e541
 
 ```json
 {
@@ -1305,7 +1305,7 @@ Si dos carros empatan en una posición, los puntos se suman y se reparten por ig
 
 ---
 
-## guia:Parc fermé: por qué el carro se "congela" · a58ece76fb8bc308
+## guia:Parc fermé: por qué el carro se "congela" · c06ff069bbcf3b5c
 
 ```json
 {
@@ -1328,7 +1328,7 @@ Hay una excepción práctica: el alerón delantero sí se puede ajustar, porque 
 
 ---
 
-## guia:Neumáticos: qué recibe cada piloto · 160e92d9bb71a995
+## guia:Neumáticos: qué recibe cada piloto · 8e4f3039851bac3f
 
 ```json
 {
@@ -1354,7 +1354,7 @@ Dos reglas cambian cómo se corre:
 
 ---
 
-## guia:Las banderas y los paneles luminosos · 1768a190f12c246f
+## guia:Las banderas y los paneles luminosos · 790c4d4860801ab3
 
 ```json
 {
@@ -1378,7 +1378,7 @@ Las instrucciones oficiales se dan con las señales del Código Deportivo Intern
 
 ---
 
-## guia:Límites de pista · b71cc543a31c30e9
+## guia:Límites de pista · 3ed16a83c13d61d1
 
 ```json
 {
@@ -1401,7 +1401,7 @@ En pit lane hay un límite de 80 km/h durante toda la competencia (Artículo B1.
 
 ---
 
-## guia:Virtual Safety Car (VSC) · 62b0a66e563fbf52
+## guia:Virtual Safety Car (VSC) · dcc7f7dd778fc927
 
 ```json
 {
@@ -1424,7 +1424,7 @@ Para terminar se envía "VSC ENDING", y entre 10 y 15 segundos después los pane
 
 ---
 
-## guia:Safety Car (SC) · 2f95b0a36c018bb2
+## guia:Safety Car (SC) · 3485d65695a53624
 
 ```json
 {
@@ -1447,7 +1447,7 @@ Tampoco se puede adelantar hasta pasar la línea de meta por primera vez despué
 
 ---
 
-## guia:Bandera roja: cuando la carrera se suspende · a9b27c9928d2f158
+## guia:Bandera roja: cuando la carrera se suspende · 4636af8bdb7a3424
 
 ```json
 {
@@ -1466,7 +1466,7 @@ Si el Director de Carrera considera necesario suspender la carrera o el sprint, 
 
 ---
 
-## guia:Las sanciones más comunes · 68d9fdf4c3ce3b27
+## guia:Las sanciones más comunes · 885e92463bb4b543
 
 ```json
 {
@@ -1498,7 +1498,7 @@ En libres y clasificación los comisarios pueden borrar tiempos de vuelta o hace
 
 ---
 
-## guia:Cómo se cumple una sanción de tiempo · 87d029090ee7d456
+## guia:Cómo se cumple una sanción de tiempo · 1400bf89e1324f54
 
 ```json
 {
@@ -1523,7 +1523,7 @@ Casi ninguna admite apelación: el reglamento excluye las impuestas bajo los inc
 
 ---
 
-## guia:Los equipos punteros: Mercedes, Ferrari y McLaren · f83c42183127dfed
+## guia:Los equipos punteros: Mercedes, Ferrari y McLaren · a385ff3a500c61e9
 
 ```json
 {
@@ -1548,7 +1548,7 @@ Sobre los números: se asignan de forma permanente y van del 1 al 99, con la ún
 
 ---
 
-## guia:Red Bull y Racing Bulls · 779c588f3d26e3eb
+## guia:Red Bull y Racing Bulls · 09cb26f99a4da761
 
 ```json
 {
@@ -1571,7 +1571,7 @@ El motivo, según Wikipedia, es que Hadjar sufrió una lesión de muñeca durant
 
 ---
 
-## guia:Los dos grandes cambios de 2026: Cadillac y Audi · 9fa5c7d08034e67d
+## guia:Los dos grandes cambios de 2026: Cadillac y Audi · 57a883012d66f48d
 
 ```json
 {
@@ -1594,7 +1594,7 @@ Cadillac empezó usando unidades de potencia y cajas de cambios de Ferrari, con 
 
 ---
 
-## guia:Los demás equipos · fc0f9fbe53d3f9d2
+## guia:Los demás equipos · 9116ad4dfd985c8a
 
 ```json
 {
@@ -1619,7 +1619,7 @@ Los 11 equipos y sus pilotos en 2026 — Los demás equipos
 
 ---
 
-## guia:Cómo quedó el campeonato de constructores tras catorce carreras · 91fc3b0988bb5a74
+## guia:Cómo quedó el campeonato de constructores tras catorce carreras · a82c5c3b3c645bcd
 
 ```json
 {
@@ -1652,7 +1652,7 @@ Vale la pena una aclaración sobre el campeonato de constructores: se otorga al 
 
 ---
 
-## guia:Una guía rápida de motorizaciones · b63ed683875d3992
+## guia:Una guía rápida de motorizaciones · a698f4fade225ae9
 
 ```json
 {
@@ -1679,7 +1679,7 @@ Los chasis de 2026 llevan nombres como F1 W17 (Mercedes), SF-26 (Ferrari), MCL40
 
 ---
 
-## guia:Cómo empezó el año · aa4869f2e04fa577
+## guia:Cómo empezó el año · f263b8919d5dcd3f
 
 ```json
 {
@@ -1700,7 +1700,7 @@ El calendario original tenía veinticuatro carreras, pero el Gran Premio de Arab
 
 ---
 
-## guia:Las primeras carreras: Mercedes se adelanta · 4e7fb3317d5adb85
+## guia:Las primeras carreras: Mercedes se adelanta · e98e4e59bb140632
 
 ```json
 {
@@ -1723,7 +1723,7 @@ En Miami entraron en vigor cambios a la unidad de potencia que se habían prepar
 
 ---
 
-## guia:El campeonato se abre un poco · 3a3f6155927d21a8
+## guia:El campeonato se abre un poco · 920ab533ab39bf28
 
 ```json
 {
@@ -1748,7 +1748,7 @@ En Monza, Antonelli firmó la carrera más llamativa del año: ganó desde el pu
 
 ---
 
-## guia:Ganadores carrera por carrera · 77e953d55f39acda
+## guia:Ganadores carrera por carrera · a55fe30f28b768d1
 
 ```json
 {
@@ -1782,7 +1782,7 @@ De los cinco sprints celebrados, Russell ganó tres (China, Canadá y Países Ba
 
 ---
 
-## guia:El campeonato de pilotos tras catorce carreras · ef2901df4aa74779
+## guia:El campeonato de pilotos tras catorce carreras · fd0f8faa84323dbc
 
 ```json
 {
@@ -1814,7 +1814,7 @@ Un dato curioso: Verstappen es sexto con 145 puntos sin haber ganado ninguna car
 
 ---
 
-## guia:Qué falta · f39d32ad323a0f05
+## guia:Qué falta · 1b06f8824d493ab2
 
 ```json
 {
@@ -1845,7 +1845,7 @@ Con nueve carreras y un sprint por delante, quedan como máximo 233 puntos en ju
 
 ---
 
-## guia:El fin de semana y las sesiones · 178ca718c9e27c18
+## guia:El fin de semana y las sesiones · 728659e40613a699
 
 ```json
 {
@@ -1876,7 +1876,7 @@ Glosario de Fórmula 1 (español / inglés) — El fin de semana y las sesiones
 
 ---
 
-## guia:El carro y la tecnología de 2026 · 5a7d10dc4bf976c6
+## guia:El carro y la tecnología de 2026 · 36aa164e94db5aa6
 
 ```json
 {
@@ -1909,7 +1909,7 @@ Glosario de Fórmula 1 (español / inglés) — El carro y la tecnología de 202
 
 ---
 
-## guia:Estrategia y neumáticos · a5ef64434692f262
+## guia:Estrategia y neumáticos · fa0d5ac491704012
 
 ```json
 {
@@ -1944,7 +1944,7 @@ Glosario de Fórmula 1 (español / inglés) — Estrategia y neumáticos
 
 ---
 
-## guia:Banderas, señales y procedimientos · 0f5f21454bc91acb
+## guia:Banderas, señales y procedimientos · 8a7a15d87e127a13
 
 ```json
 {
@@ -1972,7 +1972,7 @@ Glosario de Fórmula 1 (español / inglés) — Banderas, señales y procedimien
 
 ---
 
-## guia:Sanciones y autoridades · e18b2937fe46c3f5
+## guia:Sanciones y autoridades · c262327c13457eac
 
 ```json
 {
@@ -2000,7 +2000,7 @@ Glosario de Fórmula 1 (español / inglés) — Sanciones y autoridades
 
 ---
 
-## guia:Organización y dinero · 31928088fdb6cccd
+## guia:Organización y dinero · 262bee1f3dd8a470
 
 ```json
 {
@@ -2024,7 +2024,7 @@ Glosario de Fórmula 1 (español / inglés) — Organización y dinero
 
 ---
 
-## guia:Antes de prender la transmisión · 7e451ac402b87abf
+## guia:Antes de prender la transmisión · 5b3213c5d16859f5
 
 ```json
 {
@@ -2045,7 +2045,7 @@ Una carrera equivale al menor número de vueltas completas que supere los 305 km
 
 ---
 
-## guia:Los primeros minutos: la salida · 0a2c9cb686ad4953
+## guia:Los primeros minutos: la salida · 6cbea91464c5518f
 
 ```json
 {
@@ -2066,7 +2066,7 @@ Qué mirar: quién reacciona mejor en los primeros metros, quién aprovecha el r
 
 ---
 
-## guia:Qué mirar cuando parece que no pasa nada · bd4277d28bd94e6e
+## guia:Qué mirar cuando parece que no pasa nada · 5c953e75427a8f8c
 
 ```json
 {
@@ -2087,7 +2087,7 @@ En 2026 hay un elemento nuevo que sí es visible: la aerodinámica activa. En la
 
 ---
 
-## guia:Cómo leer la tabla de tiempos · 02a25489555d76c3
+## guia:Cómo leer la tabla de tiempos · d4fdacc522f1d1fc
 
 ```json
 {
@@ -2113,7 +2113,7 @@ Un tercer número que ayuda: la cantidad de paradas ya hechas. Dos pilotos separ
 
 ---
 
-## guia:La estrategia de neumáticos · 9deb175d4319d175
+## guia:La estrategia de neumáticos · d0487956efb49a4d
 
 ```json
 {
@@ -2141,7 +2141,7 @@ Ninguna es siempre mejor. Depende de cuánto se degraden los neumáticos ese dí
 
 ---
 
-## guia:Las paradas en boxes · 4a4c434f42c45bad
+## guia:Las paradas en boxes · 821380aad55036b5
 
 ```json
 {
@@ -2162,7 +2162,7 @@ Qué mirar: si alguna rueda se demora, y si el carro sale a pista con espacio li
 
 ---
 
-## guia:La radio del equipo · 8bd0011f1b26aaca
+## guia:La radio del equipo · eaf7a874343c69c9
 
 ```json
 {
@@ -2187,7 +2187,7 @@ La transmisión abre canales de radio entre piloto e ingeniero, y ahí está la 
 
 ---
 
-## guia:Por dónde empezar esta temporada · 8dea87289d450561
+## guia:Por dónde empezar esta temporada · 6058c0e875f2ccfa
 
 ```json
 {
@@ -2212,7 +2212,7 @@ Un último dato útil: para quedar clasificado en el resultado final hay que hab
 
 ---
 
-## guia:Para qué existe · 207187b86e22c4ea
+## guia:Para qué existe · 0bd6dfc243826f73
 
 ```json
 {
@@ -2233,7 +2233,7 @@ Los tres objetivos declarados son promover el equilibrio competitivo, promover l
 
 ---
 
-## guia:La cifra de 2026 · 9065461484397d18
+## guia:La cifra de 2026 · 718974ee37855c38
 
 ```json
 {
@@ -2258,7 +2258,7 @@ Hay un segundo techo, separado, para los fabricantes de unidades de potencia: un
 
 ---
 
-## guia:Qué queda por fuera del techo · 4e4ddb77235be1f0
+## guia:Qué queda por fuera del techo · 8c70af2e3669921e
 
 ```json
 {
@@ -2292,7 +2292,7 @@ Los bonos de empleados se excluyen con un tope: el menor entre el 20 % de la rem
 
 ---
 
-## guia:Ajustes que suben o bajan el cálculo · fd2a33fc995e15aa
+## guia:Ajustes que suben o bajan el cálculo · fe686ad332fbcd57
 
 ```json
 {
@@ -2314,7 +2314,7 @@ El Artículo D6.1.1 permite una serie de ajustes. Dos tienen efecto práctico y 
 
 ---
 
-## guia:Cómo se vigila · 12930a0043d2e5a2
+## guia:Cómo se vigila · 84d941a1384faf7f
 
 ```json
 {
@@ -2337,7 +2337,7 @@ El organismo que vigila es la Cost Cap Administration, que monitorea el cumplimi
 
 ---
 
-## guia:Los tipos de incumplimiento y sus sanciones · 88c8faba50dda5a2
+## guia:Los tipos de incumplimiento y sus sanciones · c5733b1aa8a62a7e
 
 ```json
 {
@@ -2360,7 +2360,7 @@ El reglamento distingue tres categorías (Artículo D10):
 
 ---
 
-## guia:Los tipos de incumplimiento y sus sanciones · a13d78e6a2a000fe
+## guia:Los tipos de incumplimiento y sus sanciones · 13db02f8a3c0977c
 
 ```json
 {

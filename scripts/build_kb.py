@@ -628,6 +628,15 @@ def main():
     write_jsonl(os.path.join(CHUNKS, "guias.jsonl"), g_docs); all_docs += g_docs
     print(f"[guias] {len(g_docs)} fragmentos")
 
+    # id definitivo y único por fragmento: hash del tipo + contenido (estable entre reconstrucciones si el texto no cambia)
+    seen_ids = {}
+    for d in all_docs:
+        base = hashlib.sha1((d["metadata"].get("tipo", "") + "|" + d["content"]).encode("utf-8")).hexdigest()[:16]
+        n = seen_ids.get(base, 0); seen_ids[base] = n + 1
+        d["id"] = base if n == 0 else f"{base}-{n}"
+    assert len({d["id"] for d in all_docs}) == len(all_docs), "ids duplicados"
+    for tipo, fname in [("reglamento", "reglamentos.jsonl"), ("temporada", "temporada.jsonl"), ("temporada_narrativa", "narrativa.jsonl"), ("guia", "guias.jsonl")]:
+        write_jsonl(os.path.join(CHUNKS, fname), [d for d in all_docs if d["metadata"]["tipo"] == tipo])
     write_jsonl(os.path.join(OUT, "kb_all.jsonl"), all_docs)
     for tipo, group in defaultdict(list, {t: [d for d in all_docs if d["metadata"]["tipo"] == t] for t in {d["metadata"]["tipo"] for d in all_docs}}).items():
         sizes = [len(d["content"]) for d in group]

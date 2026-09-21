@@ -55,6 +55,12 @@ docs/         Banco de preguntas de demo, lista de recursos gráficos
 sql/          Esquema alternativo para Supabase (no usado en la versión local)
 ```
 
+## Instalar en otro PC
+
+Guía completa en [docs/INSTALACION.md](docs/INSTALACION.md). Resumen: clonar, ejecutar
+`scripts\setup_windows.ps1` (instala n8n, descarga Qdrant y restaura los vectores exportados sin gastar API),
+crear el usuario y las dos credenciales en n8n, importar los tres flujos y publicar 02 y 03.
+
 ## Cómo ejecutarlo en local (Windows)
 
 Requisitos: Node 24, Python 3.12 y una API key de Google AI Studio (la capa gratuita para usuarios nuevos limita a 20 respuestas/día con gemini-3.6-flash; con facturación activa el proyecto cuesta centavos).

@@ -1,18 +1,6 @@
 {
   "generado": "2026-09-20",
   "tipos": {
-    "reglamento": {
-      "fragmentos": 923,
-      "chars_total": 1077777,
-      "chars_promedio": 1167,
-      "chars_max": 4750
-    },
-    "temporada": {
-      "fragmentos": 24,
-      "chars_total": 53967,
-      "chars_promedio": 2248,
-      "chars_max": 3543
-    },
     "guia": {
       "fragmentos": 80,
       "chars_total": 80099,
@@ -24,6 +12,18 @@
       "chars_total": 34619,
       "chars_promedio": 1193,
       "chars_max": 1884
+    },
+    "reglamento": {
+      "fragmentos": 923,
+      "chars_total": 1077777,
+      "chars_promedio": 1167,
+      "chars_max": 4750
+    },
+    "temporada": {
+      "fragmentos": 24,
+      "chars_total": 53967,
+      "chars_promedio": 2248,
+      "chars_max": 3543
     }
   },
   "total_fragmentos": 1056,
