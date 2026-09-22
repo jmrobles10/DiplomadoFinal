@@ -549,7 +549,7 @@ section[id], body#top { scroll-margin-top: calc(var(--nav-h) + 20px); }
 }
 
 .panel__log {
-  max-height: calc(62vh - 50px);   /* vista normal: un poco mas bajo */
+  max-height: calc(62vh - 100px);  /* vista normal: mas bajo, deja ver la pagina */
   min-height: 280px;
   overflow-y: auto;
   overscroll-behavior: contain;
