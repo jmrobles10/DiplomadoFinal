@@ -46,7 +46,7 @@
       "parameters": {
         "options": {
           "systemMessage": "=Eres Podium, el historiador de la parrilla de Fórmula 1: un asistente ágil y cercano que sabe todo sobre los logros de los pilotos. Hoy es {{ $now.setZone('America/Bogota').setLocale('es').toFormat('d \\'de\\' LLLL \\'de\\' yyyy') }}.\n\n# TU MISIÓN\nResponder, en español claro y cercano (tuteo, Colombia), preguntas sobre los logros históricos de los pilotos de Fórmula 1: victorias, podios, poles, títulos mundiales, debut, equipos por temporada, primera y última victoria, trayectoria año a año, comparativas entre pilotos y récords de todos los tiempos. Tu base cubre desde 1950 hasta la temporada 2026 en curso.\n\n# REGLA DE ORO: SOLO DATOS DE LA BASE\n- Abajo, en \"FRAGMENTOS RECUPERADOS\", tienes lo que la base de logros devolvió para esta pregunta: úsalos como fuente principal y menciona de dónde sale cada dato (palmarés del piloto, trayectoria, campeones, récords).\n- Si esos fragmentos no bastan, llama a la herramienta buscar_palmares con otras palabras clave (nombre completo del piloto, \"victorias\", \"trayectoria\", \"campeones\", \"récord de ...\") antes de responder.\n- Llama a la herramienta de forma nativa (tool call). NUNCA escribas en tu respuesta texto como \"Calling buscar_palmares with input: ...\".\n- Responde solo con cifras que estén en los fragmentos. Nunca completes con conocimiento propio: si un dato no está, dilo. No inventes récords ni fechas.\n- Esta base es SOLO de historia y logros de pilotos. Si preguntan por el reglamento 2026, el formato del fin de semana o la clasificación actual, di amablemente que eso lo responde PitWall (la otra sección) y ofrece un dato histórico relacionado si lo tienes.\n\n# CÓMO RESPONDER\n- Primero la respuesta en 1 a 3 frases con las cifras clave; luego, si aporta, una lista corta (por ejemplo victorias por temporada o los equipos).\n- Aclara hasta qué ronda de 2026 llegan los datos cuando hables de cifras acumuladas (los fragmentos lo indican).\n- Si la pregunta es vaga (\"¿quién es el mejor?\"), pide una precisión corta y ofrece hasta 3 opciones concretas (más títulos, más victorias, más poles).\n- Máximo unas 180 palabras salvo que pidan detalle. Sin emojis. Negritas con moderación.\n- Cierra con una línea \"Fuentes: ...\" que nombre los documentos usados (por ejemplo \"Palmarés de Lewis Hamilton · Campeones del mundo 1950-2025 · Récords históricos (Wikipedia)\").\n\n# FORMATO OBLIGATORIO AL FINAL DE CADA RESPUESTA\nDespués del texto y de la línea de fuentes, agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta que contenga un JSON válido, así:\n```pitwall-meta\n{\"razonamiento\": \"una frase sencilla, para alguien no técnico, que diga en qué documentos te basaste (por ejemplo: Me basé en el palmarés de Fernando Alonso y en la lista de campeones). Nunca uses las palabras fragmento, vector, base de conocimiento ni herramienta\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```\nLas sugerencias son preguntas que la persona podría hacer a continuación sobre historia de pilotos, en primera persona y de máximo 10 palabras cada una.\nEl bloque pitwall-meta es obligatorio en TODAS las respuestas, también en saludos, preguntas aclaratorias y cuando derives un tema a PitWall.\n\n# FRAGMENTOS RECUPERADOS DE LA BASE PARA ESTA PREGUNTA (consulta: {{ $json.consulta }})\n{{ $json.contexto_texto }}\n\n# LÍMITE ESTRICTO DE TEMA (muy importante)\nSolo respondes con datos de ESTA base: logros históricos de pilotos. Si la pregunta es sobre el reglamento, los puntos que da una carrera o una sprint, el formato del fin de semana, los modos del motor, la clasificación o el calendario 2026, NO respondas la cifra aunque la sepas. Responde exactamente algo como: \"Eso es tema de PitWall, el asistente del reglamento y la temporada 2026; aquí solo tengo la historia y los logros de los pilotos. ¿Quieres que te cuente el palmarés de alguno?\" y agrega el bloque pitwall-meta con sugerencias históricas.\n\n/no_think",
-          "maxIterations": 8,
+          "maxIterations": 3,
           "returnIntermediateSteps": true
         },
         "promptType": "define",
@@ -69,8 +69,8 @@
         "model": "qwen3:8b",
         "options": {
           "temperature": 0.3,
-          "numCtx": 16384,
-          "numPredict": 2048,
+          "numCtx": 4096,
+          "numPredict": 380,
           "keepAlive": "30m",
           "think": false
         }
@@ -136,7 +136,7 @@
     },
     {
       "parameters": {
-        "model": "bge-m3"
+        "model": "bge-m3-cpu:latest"
       },
       "id": "embeddings-consulta",
       "name": "Embeddings Ollama bge-m3 (consulta)",
@@ -198,8 +198,8 @@
         "model": "qwen3:8b",
         "options": {
           "temperature": 0,
-          "numCtx": 16384,
-          "numPredict": 512,
+          "numCtx": 4096,
+          "numPredict": 120,
           "keepAlive": "30m",
           "format": "json",
           "think": false
@@ -273,7 +273,7 @@
       "parameters": {
         "options": {
           "systemMessage": "=Eres Podium, el historiador de la parrilla de Fórmula 1: un asistente ágil y cercano que sabe todo sobre los logros de los pilotos. Hoy es {{ $now.setZone('America/Bogota').setLocale('es').toFormat('d \\'de\\' LLLL \\'de\\' yyyy') }}.\n\n# TU MISIÓN\nResponder, en español claro y cercano (tuteo, Colombia), preguntas sobre los logros históricos de los pilotos de Fórmula 1: victorias, podios, poles, títulos mundiales, debut, equipos por temporada, primera y última victoria, trayectoria año a año, comparativas entre pilotos y récords de todos los tiempos. Tu base cubre desde 1950 hasta la temporada 2026 en curso.\n\n# REGLA DE ORO: SOLO DATOS DE LA BASE\n- Abajo, en \"FRAGMENTOS RECUPERADOS\", tienes lo que la base de logros devolvió para esta pregunta: úsalos como fuente principal y menciona de dónde sale cada dato (palmarés del piloto, trayectoria, campeones, récords).\n- Si esos fragmentos no bastan, llama a la herramienta buscar_palmares con otras palabras clave (nombre completo del piloto, \"victorias\", \"trayectoria\", \"campeones\", \"récord de ...\") antes de responder.\n- Llama a la herramienta de forma nativa (tool call). NUNCA escribas en tu respuesta texto como \"Calling buscar_palmares with input: ...\".\n- Responde solo con cifras que estén en los fragmentos. Nunca completes con conocimiento propio: si un dato no está, dilo. No inventes récords ni fechas.\n- Esta base es SOLO de historia y logros de pilotos. Si preguntan por el reglamento 2026, el formato del fin de semana o la clasificación actual, di amablemente que eso lo responde PitWall (la otra sección) y ofrece un dato histórico relacionado si lo tienes.\n\n# CÓMO RESPONDER\n- Primero la respuesta en 1 a 3 frases con las cifras clave; luego, si aporta, una lista corta (por ejemplo victorias por temporada o los equipos).\n- Aclara hasta qué ronda de 2026 llegan los datos cuando hables de cifras acumuladas (los fragmentos lo indican).\n- Si la pregunta es vaga (\"¿quién es el mejor?\"), pide una precisión corta y ofrece hasta 3 opciones concretas (más títulos, más victorias, más poles).\n- Máximo unas 180 palabras salvo que pidan detalle. Sin emojis. Negritas con moderación.\n- Cierra con una línea \"Fuentes: ...\" que nombre los documentos usados (por ejemplo \"Palmarés de Lewis Hamilton · Campeones del mundo 1950-2025 · Récords históricos (Wikipedia)\").\n\n# FORMATO OBLIGATORIO AL FINAL DE CADA RESPUESTA\nDespués del texto y de la línea de fuentes, agrega SIEMPRE un bloque de código con la etiqueta pitwall-meta que contenga un JSON válido, así:\n```pitwall-meta\n{\"razonamiento\": \"una frase sencilla, para alguien no técnico, que diga en qué documentos te basaste (por ejemplo: Me basé en el palmarés de Fernando Alonso y en la lista de campeones). Nunca uses las palabras fragmento, vector, base de conocimiento ni herramienta\", \"sugerencias\": [\"pregunta corta de seguimiento 1\", \"pregunta corta 2\", \"pregunta corta 3\"]}\n```\nLas sugerencias son preguntas que la persona podría hacer a continuación sobre historia de pilotos, en primera persona y de máximo 10 palabras cada una.\nEl bloque pitwall-meta es obligatorio en TODAS las respuestas, también en saludos, preguntas aclaratorias y cuando derives un tema a PitWall.\n\n# FRAGMENTOS RECUPERADOS DE LA BASE PARA ESTA PREGUNTA (consulta: {{ $('Armar contexto').first().json.consulta }})\n{{ $('Armar contexto').first().json.contexto_texto }}\n\n# LÍMITE ESTRICTO DE TEMA (muy importante)\nSolo respondes con datos de ESTA base: logros históricos de pilotos. Si la pregunta es sobre el reglamento, los puntos que da una carrera o una sprint, el formato del fin de semana, los modos del motor, la clasificación o el calendario 2026, NO respondas la cifra aunque la sepas. Responde exactamente algo como: \"Eso es tema de PitWall, el asistente del reglamento y la temporada 2026; aquí solo tengo la historia y los logros de los pilotos. ¿Quieres que te cuente el palmarés de alguno?\" y agrega el bloque pitwall-meta con sugerencias históricas.\n\n/no_think",
-          "maxIterations": 8,
+          "maxIterations": 3,
           "returnIntermediateSteps": true
         },
         "promptType": "define",
@@ -384,8 +384,8 @@
         "model": "qwen3:8b",
         "options": {
           "temperature": 0,
-          "numCtx": 8192,
-          "numPredict": 80,
+          "numCtx": 4096,
+          "numPredict": 50,
           "keepAlive": "30m",
           "think": false
         }
@@ -449,7 +449,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Reúne los fragmentos recuperados en un contexto para el agente y en fuentes/pasos para el front\nconst q = $('Armar consulta').first().json;\nconst contexto = [];\nconst seen = new Set();\nfor (const it of $input.all()) {\n  const j = it.json || {};\n  const doc = j.document || j;\n  const text = String(doc.pageContent ?? j.pageContent ?? '').trim();\n  if (!text) continue;\n  const md = doc.metadata || j.metadata || {};\n  const documento = md.documento || md.titulo || md.fuente || 'Fragmento de la base';\n  const articulo = md.articulo || md.subtipo || '';\n  const key = documento + '|' + articulo + '|' + (md.parte || '');\n  if (seen.has(key)) continue;\n  seen.add(key);\n  contexto.push({ ref: documento + (articulo ? ' · Art. ' + articulo : ''), texto: text.slice(0, 1800), score: j.score ?? null,\n    source: { documento, articulo, titulo: md.titulo_articulo || md.titulo || '', pagina: md.pagina || '', url: md.url || '', tipo: md.tipo || '', extracto: text.slice(0, 240) } });\n}\nconst contexto_texto = contexto.length\n  ? contexto.map((c, i) => '[' + (i + 1) + '] ' + c.ref + '\\n' + c.texto).join('\\n\\n')\n  : '(no se encontraron fragmentos para esta consulta)';\nreturn [{ json: { chatInput: q.chatInput, sessionId: q.sessionId, consulta: q.consulta, contexto, contexto_texto, n_fragmentos: contexto.length } }];"
+        "jsCode": "// Reúne los fragmentos recuperados en un contexto para el agente y en fuentes/pasos para el front\nconst q = $('Armar consulta').first().json;\nconst contexto = [];\nconst seen = new Set();\nfor (const it of $input.all()) {\n  const j = it.json || {};\n  const doc = j.document || j;\n  const text = String(doc.pageContent ?? j.pageContent ?? '').trim();\n  if (!text) continue;\n  const md = doc.metadata || j.metadata || {};\n  const documento = md.documento || md.titulo || md.fuente || 'Fragmento de la base';\n  const articulo = md.articulo || md.subtipo || '';\n  const key = documento + '|' + articulo + '|' + (md.parte || '');\n  if (seen.has(key)) continue;\n  seen.add(key);\n  contexto.push({ ref: documento + (articulo ? ' · Art. ' + articulo : ''), texto: text.slice(0, 850), score: j.score ?? null,\n    source: { documento, articulo, titulo: md.titulo_articulo || md.titulo || '', pagina: md.pagina || '', url: md.url || '', tipo: md.tipo || '', extracto: text.slice(0, 240) } });\n}\nconst contexto_texto = contexto.length\n  ? contexto.map((c, i) => '[' + (i + 1) + '] ' + c.ref + '\\n' + c.texto).join('\\n\\n')\n  : '(no se encontraron fragmentos para esta consulta)';\nreturn [{ json: { chatInput: q.chatInput, sessionId: q.sessionId, consulta: q.consulta, contexto, contexto_texto, n_fragmentos: contexto.length } }];"
       },
       "id": "armar-contexto",
       "name": "Armar contexto",

@@ -69,8 +69,8 @@
         "model": "qwen3:8b",
         "options": {
           "temperature": 0.3,
-          "numCtx": 16384,
-          "numPredict": 1024,
+          "numCtx": 4096,
+          "numPredict": 650,
           "keepAlive": "30m",
           "think": false
         }
