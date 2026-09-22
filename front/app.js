@@ -788,6 +788,7 @@ async function preguntarSeguro(texto, modo) {
 
 const estado = {
   sid: "",
+  foco: false,
   modo: "rag",
   ocupado: false,
   historial: [],
@@ -807,9 +808,13 @@ const dom = {
   etiquetaDemo: $("#demo-tag"),
   /* dos interruptores: el de la tarjeta del chat y el del menú de teléfono.
      Son grupos de radio distintos para que los dos puedan quedar marcados. */
-  radios: $$('input[name="modo"], input[name="modo-nav"]'),
+  radios: $$('input[name="modo"], input[name="modo-nav"], input[name="modo-foco"]'),
   chipsHero: $("#mission-chips"),
   nav: $("#nav"),
+  panel: $("#panel"),
+  telon: $("#telon"),
+  cerrarFoco: $("#btn-cerrar-foco"),
+  nuevaFoco: $("#btn-nueva-foco"),
   navBoton: $("#nav-toggle"),
 };
 
@@ -1260,6 +1265,73 @@ function nuevaConversacion() {
   dom.input.focus();
 }
 
+
+/* =========================================================
+   MODO FOCO · la conversación pasa a primer plano
+   El panel crece desde su sitio real hasta ocupar la pantalla
+   y el resto de la página queda desenfocada detrás.
+   ========================================================= */
+
+function movimientoReducido() {
+  try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }
+}
+
+/** Anima el panel entre dos posiciones medidas (técnica FLIP). */
+function animarPanel(antes, despues) {
+  if (movimientoReducido() || !dom.panel.animate) return;
+  const dx = antes.left - despues.left;
+  const dy = antes.top - despues.top;
+  const ex = despues.width ? antes.width / despues.width : 1;
+  const ey = despues.height ? antes.height / despues.height : 1;
+  dom.panel.animate(
+    [
+      { transform: "translate(" + dx + "px, " + dy + "px) scale(" + ex + ", " + ey + ")", transformOrigin: "top left" },
+      { transform: "none", transformOrigin: "top left" },
+    ],
+    { duration: 420, easing: "cubic-bezier(.2, .8, .2, 1)" }
+  );
+}
+
+function abrirFoco() {
+  if (estado.foco || !dom.panel || !dom.telon) return;
+  estado.foco = true;
+  const antes = dom.panel.getBoundingClientRect();
+
+  dom.telon.hidden = false;
+  void dom.telon.offsetWidth;            // fuerza el reflujo para que el fundido corra
+  dom.telon.setAttribute("data-visible", "true");
+
+  dom.panel.classList.add("panel--foco");
+  dom.panel.setAttribute("role", "dialog");
+  dom.panel.setAttribute("aria-modal", "true");
+  dom.panel.setAttribute("aria-label", "Conversación");
+  document.body.classList.add("con-foco");
+
+  animarPanel(antes, dom.panel.getBoundingClientRect());
+  alFinal();
+  window.setTimeout(function () { try { dom.input.focus({ preventScroll: true }); } catch (e) {} }, 80);
+}
+
+function cerrarFoco() {
+  if (!estado.foco || !dom.panel) return;
+  estado.foco = false;
+  const antes = dom.panel.getBoundingClientRect();
+
+  dom.panel.classList.remove("panel--foco");
+  dom.panel.removeAttribute("role");
+  dom.panel.removeAttribute("aria-modal");
+  dom.panel.removeAttribute("aria-label");
+  document.body.classList.remove("con-foco");
+
+  animarPanel(antes, dom.panel.getBoundingClientRect());
+
+  if (dom.telon) {
+    dom.telon.removeAttribute("data-visible");
+    window.setTimeout(function () { if (!estado.foco) dom.telon.hidden = true; }, 360);
+  }
+  alFinal();
+}
+
 function conectarEventos() {
   dom.form.addEventListener("submit", function (ev) {
     ev.preventDefault();
@@ -1280,6 +1352,12 @@ function conectarEventos() {
   });
 
   const placeholderOriginal = dom.input.getAttribute("placeholder") || "";
+  dom.input.addEventListener("focus", abrirFoco);
+  dom.input.addEventListener("click", abrirFoco);
+  if (dom.cerrarFoco) dom.cerrarFoco.addEventListener("click", cerrarFoco);
+  if (dom.nuevaFoco) dom.nuevaFoco.addEventListener("click", nuevaConversacion);
+  if (dom.telon) dom.telon.addEventListener("click", cerrarFoco);
+
   dom.input.addEventListener("input", function () {
     ajustarAlto();
     if (dom.input.placeholder !== placeholderOriginal) dom.input.placeholder = placeholderOriginal;
@@ -1316,7 +1394,9 @@ function conectarEventos() {
     a.addEventListener("click", cerrarMenu);
   });
   document.addEventListener("keydown", function (ev) {
-    if (ev.key === "Escape") cerrarMenu();
+    if (ev.key !== "Escape") return;
+    if (estado.foco) { cerrarFoco(); return; }
+    cerrarMenu();
   });
   window.addEventListener("resize", function () {
     if (window.innerWidth >= 900) cerrarMenu();
@@ -1329,7 +1409,8 @@ function conectarEventos() {
     ev.preventDefault();
     if (estado.ocupado) return;
     const texto = boton.getAttribute("data-prompt") || boton.textContent;
-    const zona = document.getElementById("zona-chat");
+    if (!estado.foco) abrirFoco();
+    const zona = estado.foco ? null : document.getElementById("zona-chat");
     if (zona && zona.scrollIntoView) {
       try { zona.scrollIntoView({ block: "start", behavior: "smooth" }); } catch (e) { zona.scrollIntoView(); }
     }

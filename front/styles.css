@@ -549,7 +549,7 @@ section[id], body#top { scroll-margin-top: calc(var(--nav-h) + 20px); }
 }
 
 .panel__log {
-  max-height: 62vh;
+  max-height: calc(62vh - 50px);   /* vista normal: un poco mas bajo */
   min-height: 280px;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -949,3 +949,111 @@ section[id], body#top { scroll-margin-top: calc(var(--nav-h) + 20px); }
     background: var(--line);
   }
 }
+
+/* =========================================================
+   16 · MODO FOCO · la conversación ocupa la pantalla
+   Al escribir, el chat pasa a primer plano y el resto de la
+   página queda desenfocada detrás. Se cierra con el botón,
+   con Escape o tocando fuera.
+   ========================================================= */
+
+.telon {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(8, 8, 8, .48);
+  backdrop-filter: blur(16px) saturate(.8);
+  -webkit-backdrop-filter: blur(16px) saturate(.8);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .34s ease;
+}
+.telon[data-visible="true"] { opacity: 1; pointer-events: auto; }
+
+body.con-foco { overflow: hidden; }
+
+.panel--foco {
+  position: fixed;
+  z-index: 95;
+  inset: 24px;                 /* mismo margen arriba, abajo y a los lados */
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px 20px;
+  box-shadow: 0 34px 90px rgba(0, 0, 0, .38);
+  will-change: transform;
+}
+
+/* el historial se estira para ocupar todo el alto disponible */
+.panel--foco .panel__log {
+  flex: 1 1 auto;
+  max-height: none;
+  min-height: 0;
+}
+.panel--foco .composer { flex: 0 0 auto; }
+
+/* barra superior: solo existe en modo foco */
+.panel__barra { display: none; }
+.panel--foco .panel__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 2px 4px 14px;
+}
+/* el interruptor de modo queda centrado entre el titulo y los botones */
+.switch--foco { display: none; }
+.panel--foco .switch--foco {
+  display: block;
+  flex: 0 0 auto;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+}
+.panel--foco .switch--foco .switch__track { margin: 0; }
+.panel__titulo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.panel__cerrar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.panel__cerrar:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.panel__cerrar .ico { width: 18px; height: 18px; }
+
+/* el contenido entra escalonado cuando se abre */
+@keyframes subeContenido {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.panel--foco .panel__barra { animation: subeContenido .38s .06s both cubic-bezier(.2, .8, .2, 1); }
+.panel--foco .composer     { animation: subeContenido .38s .12s both cubic-bezier(.2, .8, .2, 1); }
+
+@media (max-width: 720px) {
+  .panel--foco { inset: 0; border-radius: 0; padding: 12px; }
+  .panel--foco .panel__barra { justify-content: center; }
+  .panel--foco .switch--foco { order: 3; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .telon { transition: none; }
+  .panel--foco .panel__barra,
+  .panel--foco .composer { animation: none; }
+}
+
+.panel__acciones { display: inline-flex; gap: 8px; }

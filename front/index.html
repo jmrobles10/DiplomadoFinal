@@ -288,7 +288,27 @@
         <p class="chat__modo" id="chat-mode-tag">Modo · Con RAG</p>
       </header>
 
-      <div class="panel">
+      <div class="panel" id="panel">
+
+        <div class="panel__barra">
+          <span class="panel__titulo">Conversación con PitWall</span>
+          <fieldset class="switch switch--foco">
+            <legend class="sr-only">Modo de respuesta</legend>
+            <div class="switch__track">
+              <input class="switch__input" type="radio" name="modo-foco" id="modo-foco-rag" value="rag" checked>
+              <label class="switch__label" for="modo-foco-rag">Con RAG</label>
+              <input class="switch__input" type="radio" name="modo-foco" id="modo-foco-directo" value="directo">
+              <label class="switch__label" for="modo-foco-directo">Sin RAG</label>
+            </div>
+          </fieldset>
+          <span class="panel__acciones">
+            <button class="panel__cerrar" type="button" id="btn-nueva-foco">Nueva</button>
+            <button class="panel__cerrar" type="button" id="btn-cerrar-foco">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-cerrar"/></svg>
+            Cerrar
+            </button>
+          </span>
+        </div>
 
         <div class="panel__log" id="messages" role="log" aria-live="polite" aria-relevant="additions text"
              aria-label="Conversación con PitWall" tabindex="0"></div>
@@ -502,6 +522,8 @@
     </div>
   </div>
 </footer>
+
+<div class="telon" id="telon" hidden></div>
 
 <script src="app.js"></script>
 </body>
