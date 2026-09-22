@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 title PitWall - arranque
 cd /d "%~dp0"
 set "WAIT=%SystemRoot%\System32\timeout.exe"
@@ -10,30 +10,34 @@ echo ============================================================
 echo.
 
 REM ---------- 1. Ollama, modelos de IA ----------
-curl -s -m 3 http://127.0.0.1:11434/api/tags >nul 2>&1
+curl -s -m 5 http://127.0.0.1:11434/api/tags >nul 2>&1
 if %errorlevel%==0 (
   echo [1/4] Ollama ya esta corriendo
 ) else (
   echo [1/4] Arrancando Ollama...
   set "OLLAMA_EXE=%LOCALAPPDATA%\Programs\Ollama\ollama.exe"
-  if exist "%OLLAMA_EXE%" (
-    start "PitWall - Ollama" /min "%OLLAMA_EXE%" serve
+  if exist "!OLLAMA_EXE!" (
+    start "PitWall - Ollama" /min "!OLLAMA_EXE!" serve
   ) else (
     start "PitWall - Ollama" /min ollama serve
   )
 )
 
 REM ---------- 2. Qdrant, base vectorial ----------
-curl -s -m 3 http://localhost:6333/ >nul 2>&1
+REM Puede quedar vivo pero sin responder tras un cierre brusco. En ese caso se
+REM reinicia, porque si no cada pregunta se queda esperando hasta agotar el tiempo.
+curl -s -m 8 http://localhost:6333/ >nul 2>&1
 if %errorlevel%==0 (
-  echo [2/4] Qdrant ya esta corriendo
+  echo [2/4] Qdrant ya esta corriendo y responde
 ) else (
   echo [2/4] Arrancando Qdrant...
+  powershell -NoProfile -Command "if (Get-Process qdrant -ErrorAction SilentlyContinue) { Write-Host '      estaba vivo pero sin responder: se reinicia' }"
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\stop_qdrant.ps1" >nul 2>&1
   start "PitWall - Qdrant" /min powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\start_qdrant.ps1"
 )
 
 REM ---------- 3. n8n, agentes ----------
-curl -s -m 3 http://localhost:5678/healthz >nul 2>&1
+curl -s -m 5 http://localhost:5678/healthz >nul 2>&1
 if %errorlevel%==0 (
   echo [3/4] n8n ya esta corriendo
 ) else (
@@ -42,7 +46,7 @@ if %errorlevel%==0 (
 )
 
 REM ---------- 4. Front, pagina web ----------
-curl -s -m 3 http://localhost:8765/ >nul 2>&1
+curl -s -m 5 http://localhost:8765/ >nul 2>&1
 if %errorlevel%==0 (
   echo [4/4] Front ya esta corriendo
 ) else (
@@ -56,10 +60,10 @@ set /a intentos=0
 :esperar
 set /a intentos+=1
 set listo=1
-curl -s -m 2 http://127.0.0.1:11434/api/tags >nul 2>&1 || set listo=0
-curl -s -m 2 http://localhost:6333/ >nul 2>&1 || set listo=0
-curl -s -m 2 http://localhost:5678/healthz >nul 2>&1 || set listo=0
-curl -s -m 2 http://localhost:8765/ >nul 2>&1 || set listo=0
+curl -s -m 3 http://127.0.0.1:11434/api/tags >nul 2>&1 || set listo=0
+curl -s -m 3 http://localhost:6333/ >nul 2>&1 || set listo=0
+curl -s -m 3 http://localhost:5678/healthz >nul 2>&1 || set listo=0
+curl -s -m 3 http://localhost:8765/ >nul 2>&1 || set listo=0
 if %listo%==1 goto ok
 if %intentos% geq 60 goto fallo
 <nul set /p "=."
@@ -75,9 +79,12 @@ echo    Podium   -^>  http://localhost:8765/podium.html
 echo    n8n      -^>  http://localhost:5678
 echo    Qdrant   -^>  http://localhost:6333/dashboard
 echo.
-echo  Las ventanas minimizadas "PitWall - ..." son los servicios: no las cierres mientras uses el chat.
+echo  Para que las respuestas salgan rapido, cierra antes las aplicaciones que usan la
+echo  tarjeta grafica: fondo de pantalla animado, Teams, Chrome, WhatsApp y PowerPoint.
+echo.
+echo  Las ventanas minimizadas "PitWall - ..." son los servicios: no las cierres.
 echo  Para apagar todo: detener_pitwall.bat
-"%WAIT%" /t 3 /nobreak >nul
+"%WAIT%" /t 4 /nobreak >nul
 start "" http://localhost:8765
 "%WAIT%" /t 5 /nobreak >nul
 exit /b 0
